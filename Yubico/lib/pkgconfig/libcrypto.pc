@@ -1,0 +1,12 @@
+prefix=/home/klas/code/c/yubico-piv-tool/tmp64/root
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: OpenSSL-libcrypto
+Description: OpenSSL cryptography library
+Version: 0.1.6
+Requires: 
+Libs: -L${libdir} -lcrypto
+Libs.private: -lws2_32 -lgdi32 -lcrypt32
+Cflags: -I${includedir} 
