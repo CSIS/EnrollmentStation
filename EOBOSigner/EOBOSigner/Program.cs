@@ -13,7 +13,7 @@ namespace PKCS10Test
         {
             if (args.Length != 4)
             {
-                Console.WriteLine("Usage: Signer.exe [enrollmentKey] [user] [request.csr] [target.crt]");
+                Console.WriteLine("Usage: Signer.exe [EnrollmentCertificateThumbprint] [BehalfOfUser] [PathToCSR] [OutputFileName]");
                 return;
             }
 
@@ -28,7 +28,6 @@ namespace PKCS10Test
             const int CR_DISP_ISSUED = 0x3;
             const int CR_DISP_UNDER_SUBMISSION = 0x5;
             const int CR_OUT_BASE64 = 0x1;
-            const int CR_OUT_CHAIN = 0x100;
 
             X509Store store = new X509Store("My", StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadOnly);
@@ -65,7 +64,7 @@ namespace PKCS10Test
             // Check the submission status
             if (CR_DISP_ISSUED != iDisposition) // Not enrolled
             {
-                var strDisposition = objCertRequest.GetDispositionMessage();
+                string strDisposition = objCertRequest.GetDispositionMessage();
 
                 if (CR_DISP_UNDER_SUBMISSION == iDisposition)
                 {
