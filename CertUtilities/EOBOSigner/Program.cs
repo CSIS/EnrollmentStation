@@ -5,10 +5,17 @@ using System.Security.Cryptography.X509Certificates;
 using CERTCLIENTLib;
 using CERTENROLLLib;
 
-namespace PKCS10Test
+namespace EOBOSigner
 {
     class Program
     {
+        private const int CC_UIPICKCONFIG = 0x1;
+        private const int CR_IN_BASE64 = 0x1;
+        private const int CR_IN_FORMATANY = 0;
+        private const int CR_DISP_ISSUED = 0x3;
+        private const int CR_DISP_UNDER_SUBMISSION = 0x5;
+        private const int CR_OUT_BASE64 = 0x1;
+
         static void Main(string[] args)
         {
             if (args.Length != 4)
@@ -21,13 +28,6 @@ namespace PKCS10Test
             string argsUser = args[1];
             string argsCsr = args[2];
             string argsCrt = args[3];
-
-            const int CC_UIPICKCONFIG = 0x1;
-            const int CR_IN_BASE64 = 0x1;
-            const int CR_IN_FORMATANY = 0;
-            const int CR_DISP_ISSUED = 0x3;
-            const int CR_DISP_UNDER_SUBMISSION = 0x5;
-            const int CR_OUT_BASE64 = 0x1;
 
             X509Store store = new X509Store("My", StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadOnly);
