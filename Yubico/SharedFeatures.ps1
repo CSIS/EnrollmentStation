@@ -32,7 +32,6 @@ function Generate-RandomStringHex
 
         if ($p.ExitCode -ne 0)
         {
-	        throw "Error getting random data. Missing Yubico HSM?"
         }
 
         $string
