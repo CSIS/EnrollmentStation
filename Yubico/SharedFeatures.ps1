@@ -302,6 +302,11 @@ function Get-StringSecurely
         [string] $FileName
     )
 
+    if (!(Test-Path $FileName))
+    {
+        throw "File $FileName does not exist. Has it been generated?"
+    }
+
     # TODO: Decrypt file
     Get-Content -Path $FileName
 }
