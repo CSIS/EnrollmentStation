@@ -47,9 +47,14 @@ Sign-OnBehalfOf -EnrollmentAgentCert $enrollmentThumbprint -User $newUser -Reque
 Write-Host "Setting cert"
 Yubico-Importcert -ManagementKey $mgmKey -CertificateFile $fileCert
 
+Write-Host "Reading cert Serial Number"
+$certObject = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+$certObject.Import($fileCert)
+$certSerial = $certObject.SerialNumber
+
 Write-Host "Logging configuration"
 
-$line = "ID: $id; User: $newUser; PUK: $newPuk"
+$line = "ID: $id; User: $newUser; PUK: $newPuk; SerialNumber: $certSerial"
 
 [System.IO.File]::AppendAllText($fileLog, "$line`n")
 
