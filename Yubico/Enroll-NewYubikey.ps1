@@ -3,8 +3,10 @@
 # TODO: Enrollment Agent thumbprint
 $enrollmentThumbprint = "89A22802E373A986C9961D414422A873B912B05E"
 
+$useYubicHsm = Prompt-YesNo -Title "Use YubicoHSM" -Message "Use a Yubico HSM to generate entropy?" -YesText "Yes, use HSM" -NoText "No, use Windows RNG" 
+
 $newPin = Request-SecurePassword -Question "Set new PIN (max 8 characters)"
-$newPuk = Generate-RandomString -Length 8
+$newPuk = Generate-RandomString -Length 8 -UseYubicoHsm $useYubicHsm
 $newUser = Read-Host "Enter username to Enroll for (Domain\User)"
 $mgmKey = Get-StringSecurely -FileName "$pwd\ManagementKey.bin"
 
@@ -35,6 +37,7 @@ Write-Host "Generating new private key"
 Yubico-GenerateKey -ManagementKey $mgmKey -OutputFile $filePublicKey
 
 Write-Host "Generating new CSR"
+
 Yubico-GenerateCSR -Pin $newPin -PublicKey $filePublicKey -RequestFile $fileCsr
 
 Write-Host "Signing key"

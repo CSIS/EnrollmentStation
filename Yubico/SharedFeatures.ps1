@@ -3,12 +3,30 @@
     # http://www.peterprovost.org/blog/2007/06/22/Quick-n-Dirty-PowerShell-Password-Generator/
     param ( 
         [int] $Length = 12,
-        [string] $Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345678"
+        [string] $Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345678",
+        [bool] $UseYubicoHsm = $false
     )
-
+    
     $bytes = new-object "System.Byte[]" $Length
-    $rnd = new-object System.Security.Cryptography.RNGCryptoServiceProvider
-    $rnd.GetBytes($bytes)
+    if ($UseYubicoHsm -eq $true)
+    {
+        $p = Start-Process .\bin\HSMRNG.exe $Length -NoNewWindow -Wait -RedirectStandardOutput tmp -PassThru
+        $string = Get-Content tmp
+        Remove-ItemIfExists tmp
+
+        if ($p.ExitCode -ne 0)
+        {
+	        throw "Error getting random data. Missing Yubico HSM? Returncode was " + $p.ExitCode
+        }
+
+        $bytes = Hex-ToByteArray($string)
+    }
+    else
+    {
+        $rnd = new-object System.Security.Cryptography.RNGCryptoServiceProvider
+        $rnd.GetBytes($bytes)
+    }
+
     $result = ""
     for( $i=0; $i -lt $Length; $i++ )
     {
@@ -48,6 +66,12 @@ function Generate-RandomStringHex
 
         $string
     }
+}
+
+function Hex-ToByteArray($string)
+{
+    # http://www.beefycode.com/post/Convert-FromHex-PowerShell-Filter.aspx
+    $string -replace '^0x', '' -split "(?<=\G\w{2})(?=\w{2})" | %{ [Convert]::ToByte( $_, 16 ) }
 }
 
 function Request-SecurePassword
