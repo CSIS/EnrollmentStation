@@ -9,6 +9,17 @@ namespace RevokeCert
     {
         private const int CC_UIPICKCONFIG = 0x1;
 
+        private enum RevokeReason
+        {
+            CRL_REASON_UNSPECIFIED = 0,
+            CRL_REASON_KEY_COMPROMISE = 1,
+            CRL_REASON_CA_COMPROMISE = 2,
+            CRL_REASON_AFFILIATION_CHANGED = 3,
+            CRL_REASON_SUPERSEDED = 4,
+            CRL_REASON_CESSATION_OF_OPERATION = 5,
+            CRL_REASON_CERTIFICATE_HOLD = 6
+        }
+
         static int Main(string[] args)
         {
             if (args.Length < 1)
@@ -27,18 +38,16 @@ namespace RevokeCert
             return success ? 0 : 1;
         }
 
-        public static bool RevokeCert(string config, string serial)
+        private static bool RevokeCert(string config, string serial)
         {
             //config= "192.168.71.128\\My-CA"
             //serial = "614870cd000000000014"
-
-            const int CRL_REASON_UNSPECIFIED = 0;
 
             CCertAdmin admin = null;
             try
             {
                 admin = new CCertAdmin();
-                admin.RevokeCertificate(config, serial, CRL_REASON_UNSPECIFIED, DateTime.Now);
+                admin.RevokeCertificate(config, serial, (int)RevokeReason.CRL_REASON_CESSATION_OF_OPERATION, DateTime.Now);
 
                 return true;
             }
