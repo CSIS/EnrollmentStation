@@ -20,17 +20,34 @@
 function Generate-RandomStringHex
 {
     param ( 
-        [int] $LengthBytes = 12
+        [int] $LengthBytes = 12,
+        [bool] $UseYubicoHsm = $false
     )
 
-    $bytes = new-object "System.Byte[]" $LengthBytes
-    $rnd = new-object System.Security.Cryptography.RNGCryptoServiceProvider
-    $rnd.GetBytes($bytes)
-    
-    $string = ""
-    $bytes | foreach { $string = $string + $_.ToString("X2") }
+    if ($UseYubicoHsm -eq $true)
+    {
+        $p = Start-Process .\bin\HSMRNG.exe $LengthBytes -NoNewWindow -Wait -RedirectStandardOutput tmp -PassThru
+        $string = Get-Content tmp
+        Remove-ItemIfExists tmp
 
-    $string
+        if ($p.ExitCode -ne 0)
+        {
+	        throw "Error getting random data. Missing Yubico HSM?"
+        }
+
+        $string
+    }
+    else
+    {
+        $bytes = new-object "System.Byte[]" $LengthBytes
+        $rnd = new-object System.Security.Cryptography.RNGCryptoServiceProvider
+        $rnd.GetBytes($bytes)
+    
+        $string = ""
+        $bytes | foreach { $string = $string + $_.ToString("X2") }
+
+        $string
+    }
 }
 
 function Request-SecurePassword

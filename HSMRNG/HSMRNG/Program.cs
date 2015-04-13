@@ -13,12 +13,12 @@ namespace HSMRNG
         private const byte YSM_RESPONSE = 0x80;
         private const byte YSM_MAX_PKT_SIZE = 0x60;
 
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             if (args.Length < 1)
             {
                 Console.WriteLine("Usage: HSMRNG [NumberOfBytes]");
-                return;
+                return 1;
             }
 
             int numBytes = int.Parse(args[0]);
@@ -26,13 +26,13 @@ namespace HSMRNG
             if (numBytes <= 0)
             {
                 Console.WriteLine("Number of bytes must be 1 or more");
-                return;
+                return 2;
             }
 
             if (numBytes > YSM_MAX_PKT_SIZE - 1)
             {
                 Console.WriteLine("Number of bytes can't exceed " + (YSM_MAX_PKT_SIZE - 1));
-                return;
+                return 3;
             }
 
             SerialPort device = null;
@@ -58,7 +58,7 @@ namespace HSMRNG
             if (device == null)
             {
                 Console.WriteLine("Found no YubiHSM device.");
-                return;
+                return 4;
             }
 
             device.ReadTimeout = 5000;
@@ -71,7 +71,7 @@ namespace HSMRNG
             catch (Exception ex)
             {
                 Console.WriteLine("There was an error opening the device. Error: " + ex.Message);
-                return;
+                return 5;
             }
 
             byte[] cmdBuffer = { (byte)numBytes };
@@ -85,7 +85,7 @@ namespace HSMRNG
             catch (Exception)
             {
                 Console.WriteLine("Failed writing to the YubiHSM device. Try reconnecting it.");
-                return;
+                return 6;
             }
 
             byte[] result = new byte[2];
@@ -97,7 +97,7 @@ namespace HSMRNG
             catch (Exception)
             {
                 Console.WriteLine("Failed reading from the YubiHSM device. Try reconnecting it.");
-                return;
+                return 7;
             }
 
             if (result[1] != (YSM_RANDOM_GENERATE | YSM_RESPONSE))
@@ -113,13 +113,15 @@ namespace HSMRNG
             catch (Exception)
             {
                 Console.WriteLine("Failed reading from the YubiHSM device. Try reconnecting it.");
-                return;
+                return 8;
             }
 
             Console.WriteLine(Skip1ToHex(result));
 
             if (device.IsOpen)
                 device.Close();
+
+            return 0;
         }
 
         private static string Skip1ToHex(byte[] bytes)
