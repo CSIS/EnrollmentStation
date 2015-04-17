@@ -287,11 +287,7 @@ function Sign-OnBehalfOf
 
 function Revoke-Certificate
 {
-    # TODO: Fix params
     param (
-        [string] $EnrollmentAgentCert = "0102030405060708010203040506070801020304",
-        [string] $User = "Domain\User",
-        [string] $RequestFile = "request.csr",
         [string] $SerialNumber = "00010203040506070809"
     )
 

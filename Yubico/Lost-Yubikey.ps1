@@ -39,15 +39,16 @@ Write-Host "Revoking"
 $newLogLines = @()
 foreach ($i in $logLines)
 {
-    if ($i.Contains($id))
+    if (!$i.Contains($id))
     {
-        # Skip line
+        $newLogLines = $newLogLines + $i
+
+        # Skip line (keep it)
         continue
     }
     
-    $newLogLines = $newLogLines + $i
-
     # Revoke
+
     Write-Host "TODO: Revoke $i"
 }
 

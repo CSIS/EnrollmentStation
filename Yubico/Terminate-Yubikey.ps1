@@ -5,7 +5,12 @@ $fileLog = "$pwd\log.txt"
 $mgmKey = Get-StringSecurely -FileName "$pwd\ManagementKey.bin"
 
 $id = Yubico-GetDeviceId
-$logLines = [System.IO.File]::ReadAllLines($fileLog)
+$logLines = @()
+
+if (Test-Path $fileLog)
+{
+    $logLines = [System.IO.File]::ReadAllLines($fileLog)
+}
 
 Write-Host "Finding previously assigned yubikeys"
 
@@ -23,12 +28,22 @@ foreach ($i in $logLines)
 
 if (!$foundAny)
 {
-    Write-Error "The inserted yubikey id was not found in the log"
+    $confirm = Prompt-YesNo -Title "Not found" -Message "The inserted yubikey id was not found in the log, would you like to just reset it?" -YesText "Yes, reset the yubikey" -NoText "No, abort"
+
+    if (!$confirm)
+    {
+        Write-Error "The inserted yubikey id was not found in the log"
+    }
+    
+    Write-Host "Resetting YubiKey ID: $id"
+    Yubico-ResetDevice
+    Yubico-SetCHUID
+    
     return
 }
 
 # Confirm
-$confirm = Prompt-YesNo -Title "Terminate Yubikey" -Message "Terminate the yubikey inserted?" -YesText "Yes, remove it" -NoText "No, abort" 
+$confirm = Prompt-YesNo -Title "Terminate Yubikey" -Message "Terminate the yubikey inserted, and revoke the certificate(s)?" -YesText "Yes, reset and revoke" -NoText "No, abort" 
 
 if ($confirm -eq $false)
 {
@@ -39,19 +54,33 @@ if ($confirm -eq $false)
 # Re-write log without the lines to be removed
 Write-Host "Updating log"
 $newLogLines = @()
+$serialsToRevoke = @()
 foreach ($i in $logLines)
 {
-    if ($i.Contains($id))
+    if ($i.Contains("ID: " + $id))
     {
-        # Skip line
+        # Skip line (remove it)
+        $serialsToRevoke += $i.Split(";")[3].Trim()
+
         continue
     }
 
     $newLogLines = $newLogLines + $i
 }
 
-[System.IO.File]::WriteAllLines($fileLog, $newLogLines)
+# Revoke
+Write-Host "Revoking" $serialsToRevoke.Length "keys"
+
+foreach ($serial in $serialsToRevoke)
+{
+    Write-Host "Revoking " $serial
+    Revoke-Certificate -SerialNumber $serial
+}
 
 # Reset Yubikey
-Write-Host "Resetting device"
+Write-Host "Resetting YubiKey ID: $id"
 Yubico-ResetDevice
+Yubico-SetCHUID
+
+# Write out log
+[System.IO.File]::WriteAllLines($fileLog, $newLogLines)
