@@ -1,20 +1,19 @@
 ﻿. .\SharedFeatures.ps1
 
-# TODO: Enrollment Agent thumbprint
-$enrollmentThumbprint = "89A22802E373A986C9961D414422A873B912B05E"
-
-$mgmKey = Get-StringSecurely -FileName "$pwd\ManagementKey.bin"
-
-$useYubicHsm = Prompt-YesNo -Title "Use YubicoHSM" -Message "Use a Yubico HSM to generate entropy?" -YesText "Yes, use HSM" -NoText "No, use Windows RNG" 
-
-$newPin = Request-SecurePassword -Question "Set new PIN (max 8 characters)"
-$newPuk = Generate-RandomString -Length 8 -UseYubicoHsm $useYubicHsm
-$newUser = Read-Host "Enter username to Enroll for (Domain\User)"
-
 $fileLog = "$pwd\log.txt"
+$fileEa = "$pwd\enrollmentagent.txt"
 $filePublicKey = "$pwd\public.pem"
 $fileCsr = "$pwd\request.csr"
 $fileCert = "$pwd\cert.crt"
+
+$enrollmentThumbprint = Get-String -FileName $fileEa -FailFast $true
+$mgmKey = Get-StringSecurely -FileName "$pwd\ManagementKey.bin"
+
+$useYubicoHsm = Prompt-YesNo -Title "Use YubicoHSM" -Message "Use a Yubico HSM to generate entropy?" -YesText "Yes, use HSM" -NoText "No, use Windows RNG" 
+
+$newPin = Request-SecurePassword -Question "Set new PIN (max 8 characters)"
+$newPuk = Generate-RandomString -Length 8 -UseYubicoHsm $useYubicoHsm
+$newUser = Read-Host "Enter username to Enroll for (Domain\User)"
 
 $id = Yubico-GetDeviceId
 sleep 5

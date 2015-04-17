@@ -285,6 +285,54 @@ function Sign-OnBehalfOf
     }
 }
 
+function Revoke-Certificate
+{
+    # TODO: Fix params
+    param (
+        [string] $EnrollmentAgentCert = "0102030405060708010203040506070801020304",
+        [string] $User = "Domain\User",
+        [string] $RequestFile = "request.csr",
+        [string] $SerialNumber = "00010203040506070809"
+    )
+
+    $p = Start-Process .\bin\RevokeCert.exe -ArgumentList "$SerialNumber" -Wait -NoNewWindow -PassThru
+
+    if ($p.ExitCode -ne 0)
+    {
+	    throw "Error revoking cert. Return code was " + $p.ExitCode
+    }
+}
+
+function Store-String
+{
+    param (
+        [string] $FileName,
+        [string] $Text
+    )
+
+    Set-Content -Path $FileName -Value $Text -Force
+}
+
+function Get-String
+{
+    param (
+        [string] $FileName,
+        [bool] $FailFast = $true
+    )
+
+    if (!(Test-Path $FileName))
+    {
+        if ($FailFast)
+        {
+            throw "File $FileName does not exist. Has it been generated?"
+        }
+        
+        return ""
+    }
+
+    Get-Content -Path $FileName
+}
+
 function Store-StringSecurely
 {
     param (
