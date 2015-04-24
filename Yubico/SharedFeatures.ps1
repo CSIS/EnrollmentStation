@@ -115,10 +115,11 @@ function Yubico-ResetDevice
 function Yubico-SetManagementKey
 {
     param (
+        [string] $OldManagementKey = "010203040506070801020304050607080102030405060708",
         [string] $NewManagementKey = "010203040506070801020304050607080102030405060708"
     )
 
-    $p = Start-Process .\bin\yubico-piv-tool -ArgumentList "-a set-mgm-key -n $NewManagementKey" -Wait -NoNewWindow -PassThru
+    $p = Start-Process .\bin\yubico-piv-tool -ArgumentList "-k $OldManagementKey -a set-mgm-key -n $NewManagementKey" -Wait -NoNewWindow -PassThru
 
     if ($p.ExitCode -ne 0)
     {
@@ -180,8 +181,7 @@ function Yubico-SetTriesCount
 
     if ($p.ExitCode -ne 0)
     {
-        $p.ExitCode
-	    throw "Error setting PIN/PUK tries, error code ${$p.ExitCode}"
+	    throw "Error setting PIN/PUK tries, error code was " + $p.ExitCode
     }
 }
 
@@ -218,7 +218,7 @@ function Yubico-GenerateCSR
 {
     param (
         [string] $Pin = "123456",
-        [string] $PublicKey= "123456",
+        [string] $PublicKey= "public.pem",
         [string] $RequestFile = "request.csr"
     )
 
