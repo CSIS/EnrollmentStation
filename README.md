@@ -6,16 +6,30 @@ This is a work in progress.
 
 ### Dependencies
 
-* Item 1
-* Item 2
+* Windows PKI (Active Directory Certificate Services)
+* Enrollment Agent Certificate (see prerequisites)
+* CCID cards from Yubico (currently Premium NEO and Premium NEO-N)
+* (optional) YubiHSM
 
 ## Todo
 
 * Improve YubiHSM handling (remember choices, fail if missing and previously used)
-* Add more interactive texts to advise the user when its safe to remove a Yubikey
 * Handle more diverse PKI setups (possibly store a favourite CA in an options)
+* Add more interactive texts to advise the user when its safe to remove a Yubikey
 * Store some strings encrypted (e.g. Management Key)
 * Verify data from AD (e.g. specified usernames to enroll on behalf of)
+
+## Prerequisites
+
+To use this tool you'll need an Enrollment Agent Certificate which allows you to enroll certificates on behalf of other users. This certificate template is available on a default Windows PKI installation, but is normally not permitted for any users other than Domain Admins to use. 
+
+To permit a single user to enroll the Enrollment Agent Certificate, log on to your CA and open the Certificate Authority control panel. Right click the `Certificate Templates` folder and chose `Manage`. Find the `Enrollment Agent` template, right click on it and chose `Properties`. In the security tab, allow your specific user to `Enroll` the certificate.
+
+After a while, the template should be available to you through the Certificates snap-in in MMC.
+
+To enroll the `Enrollment Agent` certificate for a user, log on to your enrollment station as your enrollment user and open MMC. In MMC, add the Certificates snap-in for the current user, and expand the Personal folder. Right click on the Certificates folder and chose `Request new Certificate`. Follow the interactive guide, and select the `Enrollment Agent` template when prompted to.
+
+You can now proceed with the First-run steps below.
 
 ## Operations
 
