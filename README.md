@@ -1,73 +1,81 @@
-# CSIS Enrollment Station using Yubico Smartcard
+# Enrollment Station using YubiKey Smart Cards
 
-A SmartCard enrollment station for use in enterprises utilising Microsoft Active Directory Certificate Services and certificate-based logons. This software package will streamline some operations such as enrolling and terminating Smart Card devices.
+A Smart Card enrollment station for use in enterprises with Microsoft Active Directory Certificate Services and certificate-based logons. This software package will streamline some operations such as enrolling and terminating Smart Card devices.
 
-This is a work in progress.
+This project is an entry in the YubiKing competition and should be considered a work in progress.
 
 ### Dependencies
-
 * Windows PKI (Active Directory Certificate Services)
 * Enrollment Agent Certificate (see prerequisites)
-* CCID cards from Yubico (currently Premium NEO and Premium NEO-N)
+* CCID smart cards from Yubico (currently Premium NEO and Premium NEO-N)
 * (optional) YubiHSM
 
-## Todo
+## Prerequisites
+To use this tool you will need an Enrollment Agent Certificate which allows you to enroll certificates on behalf of other users. This certificate template is available on a default Active Directory Certificate Services (Windows CA) installation, but is normally not permitted for any users other than Domain Admins. For added security, create a dedicated user which is used as the enrollment station user.
 
+**A. Setup Enrollment Agent certificate template permissions**
+1. Log on to your Windows Certificate Authority
+2. Open the Certificate Authority control panel
+3. Right click the 'Certificate Templates' folder and chose 'Manage'
+4. Find the 'Enrollment Agent' template, right click on it and chose 'Properties'
+5. In the security tab, allow your enrollment station user to enroll the certificate.
+
+After a while, the template should be available to the enrollment station user through the Certificates snap-in in MMC.
+
+**B. Enroll the 'Enrollment Agent' certificate**
+1. Log on to your enrollment station as your enrollment user and open MMC.
+2. In MMC, add the Certificates snap-in for the current user, and expand the Personal folder.
+3. Right click on the Certificates folder and chose 'Request new Certificate'. Follow the wizard, and select the 'Enrollment Agent' template when asked for template.
+
+After setting up the Enrollment Agent certificate, you need a YubiKey set to CCID Smart Card mode.
+
+**C. Changing YubiKey to CCID Smart Card mode**
+1. Download YubiKey NEO Manager from here https://developers.yubico.com/yubikey-neo-manager/Releases/
+2. Under 'Devices' select 'YubiKey NEO'
+3. Click 'Change connection mode'
+4. Tick 'CCID* and click 'OK'
+
+### First-run
+Run 'Discover-EnrollmentAgent.ps1' to locate the thumbprint of the local Enrollment Agent certificate. The script will store the results in enrollmentagent.txt which will be read by the other scripts.
+
+Run 'Generate-ManagementKey.ps1' to generate a 24 byte management key. The results are stored in 'ManagementKey.bin' for use on all future YubiKeys. For added security, make sure nobody but the enrollment station user can read the file.
+
+## Operations
+
+### Enrolling a user 
+Run 'Enroll-NewYubikey.ps1' and follow the wizard. You will need to specify which user to enroll on behalf of, as well as set up a secure PIN and PUK code for the YubiKey.
+
+### Termination of a Yubikey
+To terminate a YubiKey, insert it into the enrollment station and run the 'Terminate-Yubikey.ps1'. It will do the following: 
+* Reset the Yubikey, thus removing the data stored on it
+* Revoke the certificate enrolled on the Yubikey (using data from the log created during enrollment)
+
+If the YubiKey is lost or stolen, run 'Lost-Yubikey.ps1' instead. 
+
+### Powershell CMDlet
+The 'SharedFeatures.ps1' file contains common functionality used by the other scripts. These are:
+
+* 'Generate-RandomString' generates a printable string - optionally using YubiHSM
+* 'Generate-RandomStringHex' generates a HEX string - optionally using YubiHSM
+* 'Yubico-ResetDevice'
+* 'Yubico-SetManagementKey'
+* 'Yubico-SetPin'
+* 'Yubico-SetPuk'
+* 'Yubico-SetTriesCount'
+* 'Yubico-SetCHUID'
+* 'Yubico-GenerateKey'
+* 'Yubico-GenerateCSR'
+* 'Yubico-Importcert'
+* 'Yubico-GetDeviceId'
+* 'Sign-OnBehalfOf' signs a certificate request on behalf of another user using the specified Enrollment Agent certificate
+* 'Revoke-Certificate' revokes a specific certificate
+
+Import the functionality by opening PowerShell in the folder with the 'SharedFeatures.ps1' file and write '. .\SharedFeatures.ps1'
+Now you can call 'Generate-RandomString' and it will output a 12 characters random string.
+
+## Todo
 * Improve YubiHSM handling (remember choices, fail if missing and previously used)
 * Handle more diverse PKI setups (possibly store a favourite CA in an options)
 * Add more interactive texts to advise the user when its safe to remove a Yubikey
 * Store some strings encrypted (e.g. Management Key)
 * Verify data from AD (e.g. specified usernames to enroll on behalf of)
-
-## Prerequisites
-
-To use this tool you'll need an Enrollment Agent Certificate which allows you to enroll certificates on behalf of other users. This certificate template is available on a default Windows PKI installation, but is normally not permitted for any users other than Domain Admins to use. 
-
-To permit a single user to enroll the Enrollment Agent Certificate, log on to your CA and open the Certificate Authority control panel. Right click the `Certificate Templates` folder and chose `Manage`. Find the `Enrollment Agent` template, right click on it and chose `Properties`. In the security tab, allow your specific user to `Enroll` the certificate.
-
-After a while, the template should be available to you through the Certificates snap-in in MMC.
-
-To enroll the `Enrollment Agent` certificate for a user, log on to your enrollment station as your enrollment user and open MMC. In MMC, add the Certificates snap-in for the current user, and expand the Personal folder. Right click on the Certificates folder and chose `Request new Certificate`. Follow the interactive guide, and select the `Enrollment Agent` template when prompted to.
-
-You can now proceed with the First-run steps below.
-
-## Operations
-
-There are basically two operations (enroll and terminate/lost), as well as a few first-time setup operations.
-
-### First-run
-
-`Discover-EnrollmentAgent.ps1` is run to locate the Thumbprint of the local Enrollment Agent certificate. This script is interactive and will store its results to `enrollmentagent.txt`.
-
-`Generate-ManagementKey.ps1` is run to generate a 24-byte management key in `ManagementKey.bin` for use on all future Yubikeys. This should be stored securely.
-
-### Enrolling 
-
-`Enroll-NewYubikey.ps1` is an interactive guide to help specify which user to enroll for, as well as set up a secure `PIN`, `PUK` and `Management Key` for the inserted Yubikey.
-
-### Termination and Lost Yubikeys
-
-`Terminate-Yubikey.ps1` is used to Terminate an inserted Yubikey. This will 
-* Reset the Yubikey, thus removing the data stored on it
-* Revoke the certificate enrolled on the Yubikey (using data from the `log`)
-
-`Lost-Yubikey.ps1` is used to revoke a single certificate to which you do not have the Yubikey (hence a lost Yubikey). It will use only the information in the `log` to find the relevant certificate certificate. 
-
-### Shared features
-
-There are a series of cmdlets in the `SharedFeatures.ps1` file. These are:
-
-* `Generate-RandomString` generates a printable string - possibly using YubiHSM
-* `Generate-RandomStringHex` generates a HEX string - possibly using YubiHSM
-* `Yubico-ResetDevice`
-* `Yubico-SetManagementKey`
-* `Yubico-SetPin`
-* `Yubico-SetPuk`
-* `Yubico-SetTriesCount`
-* `Yubico-SetCHUID`
-* `Yubico-GenerateKey`
-* `Yubico-GenerateCSR`
-* `Yubico-Importcert`
-* `Yubico-GetDeviceId`
-* `Sign-OnBehalfOf` signs a certificate request on behalf of another user using the specified Enrollment Agent certificate
-* `Revoke-Certificate` revokes a specific certificate
