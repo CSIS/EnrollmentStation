@@ -390,3 +390,17 @@ function Remove-ItemIfExists
         Remove-Item $path
     }
 }
+
+function Display-DoNotRemove
+{
+    Write-Host -ForegroundColor Red "**************************************"
+    Write-Host -ForegroundColor Red "***    Do not remove the Yubikey   ***"
+    Write-Host -ForegroundColor Red "**************************************"
+}
+
+function Display-MayRemove
+{
+    Write-Host -ForegroundColor Green "**************************************"
+    Write-Host -ForegroundColor Green "***   You may remove the Yubikey   ***"
+    Write-Host -ForegroundColor Green "**************************************"
+}

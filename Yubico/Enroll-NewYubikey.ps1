@@ -15,6 +15,8 @@ $newPin = Request-SecurePassword -Question "Set new PIN (max 8 characters)"
 $newPuk = Generate-RandomString -Length 8 -UseYubicoHsm $useYubicoHsm
 $newUser = Read-Host "Enter username to Enroll for (Domain\User)"
 
+Display-DoNotRemove
+
 $id = Yubico-GetDeviceId
 sleep 5
 
@@ -62,3 +64,5 @@ Write-Host "Clearing intermediate files"
 Remove-ItemIfExists $filePublicKey
 Remove-ItemIfExists $fileCsr
 Remove-ItemIfExists $fileCert
+
+Display-MayRemove
