@@ -142,3 +142,4 @@ Now you can call `Generate-RandomString` and it will output a 12 characters rand
 * Add more interactive texts to advise the user when its safe to remove a Yubikey
 * Store some strings encrypted (e.g. Management Key)
 * Verify data from AD (e.g. specified usernames to enroll on behalf of)
+* Describe revoke procedure and requirements thereto (permissions, COM object .. )

@@ -51,8 +51,9 @@ namespace RevokeCert
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.Error.WriteLine(ex.Message);
                 return false;
             }
             finally
