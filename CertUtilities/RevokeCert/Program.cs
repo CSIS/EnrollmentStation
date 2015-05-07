@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using CERTADMINLib;
-using CERTCLIENTLib;
+using CERTCLILib;
 
 namespace RevokeCert
 {

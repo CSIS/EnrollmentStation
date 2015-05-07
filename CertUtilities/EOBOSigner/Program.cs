@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using CERTCLIENTLib;
+using CERTCLILib;
 using CERTENROLLLib;
 
 namespace EOBOSigner
@@ -20,7 +20,7 @@ namespace EOBOSigner
         {
             if (args.Length != 4)
             {
-                Console.WriteLine("Usage: Signer.exe [EnrollmentCertificateThumbprint] [BehalfOfUser] [PathToCSR] [OutputFileName]");
+                Console.WriteLine("Usage: Signer.exe [EnrollmentCertificateThumbprint] [BehalfOfUser] [PathToCSR] [OutputFileName] [CertificateTemplate]");
                 return;
             }
 
@@ -28,6 +28,7 @@ namespace EOBOSigner
             string argsUser = args[1];
             string argsCsr = args[2];
             string argsCrt = args[3];
+            string argsCrtTmpl = args[4];
 
             X509Store store = new X509Store("My", StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadOnly);
@@ -40,7 +41,7 @@ namespace EOBOSigner
 
             // Create a CMC outer request and initialize
             CX509CertificateRequestCmc cmcReq = new CX509CertificateRequestCmc();
-            cmcReq.InitializeFromInnerRequestTemplateName(pkcs10Req, "SmartcardLogon");
+            cmcReq.InitializeFromInnerRequestTemplateName(pkcs10Req, argsCrtTmpl);
             cmcReq.RequesterName = argsUser;
 
             CSignerCertificate signer = new CSignerCertificate();
