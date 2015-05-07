@@ -14,6 +14,7 @@ $useYubicoHsm = Prompt-YesNo -Title "Use YubicoHSM" -Message "Use a Yubico HSM t
 $newPin = Request-SecurePassword -Question "Set new PIN (max 8 characters)"
 $newPuk = Generate-RandomString -Length 8 -UseYubicoHsm $useYubicoHsm
 $newUser = Read-Host "Enter username to Enroll for (Domain\User)"
+$certificateTemplate = Read-Host "Enter custom Certificate Template to use (SmartCardLogon)"
 
 Display-DoNotRemove
 
@@ -43,7 +44,7 @@ Write-Host "Generating new CSR"
 Yubico-GenerateCSR -Pin $newPin -PublicKey $filePublicKey -RequestFile $fileCsr
 
 Write-Host "Signing key"
-Sign-OnBehalfOf -EnrollmentAgentCert $enrollmentThumbprint -User $newUser -RequestFile $fileCsr -CertificateFile $fileCert
+Sign-OnBehalfOf -EnrollmentAgentCert $enrollmentThumbprint -User $newUser -RequestFile $fileCsr -CertificateFile $fileCert -CertificateTemplate $certificateTemplate
 
 Write-Host "Setting cert"
 Yubico-Importcert -ManagementKey $mgmKey -CertificateFile $fileCert

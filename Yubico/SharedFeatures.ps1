@@ -274,10 +274,11 @@ function Sign-OnBehalfOf
         [string] $EnrollmentAgentCert = "0102030405060708010203040506070801020304",
         [string] $User = "Domain\User",
         [string] $RequestFile = "request.csr",
-        [string] $CertificateFile = "cert.crt"
+        [string] $CertificateFile = "cert.crt",
+        [string] $CertificateTemplate = "SmartcardLogon"
     )
 
-    $p = Start-Process .\bin\EOBOSigner -ArgumentList "$EnrollmentAgentCert $User $RequestFile $CertificateFile" -Wait -NoNewWindow -PassThru
+    $p = Start-Process .\bin\EOBOSigner -ArgumentList "$EnrollmentAgentCert $User $RequestFile $CertificateFile $CertificateTemplate" -Wait -NoNewWindow -PassThru
 
     if ($p.ExitCode -ne 0)
     {
