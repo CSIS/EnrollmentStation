@@ -1,9 +1,17 @@
-﻿using System;
+﻿// IF COMPILING ON WINDOWS 8 OR NEWER, IF NOT COMMENT IT OUT
+#define WIN8_COMPILE
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using CERTCLILib;
 using CERTENROLLLib;
+
+#if WIN8_COMPILE
+ using CERTCLILib;
+#else
+ using CERTCLIENTLib;
+#endif
 
 namespace EOBOSigner
 {
