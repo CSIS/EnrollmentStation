@@ -26,7 +26,7 @@ namespace EOBOSigner
 
         static void Main(string[] args)
         {
-            if (args.Length != 4)
+            if (args.Length != 5)
             {
                 Console.WriteLine("Usage: Signer.exe [EnrollmentCertificateThumbprint] [BehalfOfUser] [PathToCSR] [OutputFileName] [CertificateTemplate]");
                 return;
