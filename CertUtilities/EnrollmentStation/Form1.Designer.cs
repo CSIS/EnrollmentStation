@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cmdYubikeyReset = new System.Windows.Forms.Button();
+            this.cmdYubikeyTerminate = new System.Windows.Forms.Button();
+            this.cmdYubikeyEnroll = new System.Windows.Forms.Button();
             this.cmdViewCertificate = new System.Windows.Forms.Button();
             this.lblYubikeyEnrollState = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -47,13 +50,11 @@
             this.lblYubikeySerial = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hSMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmdYubikeyEnroll = new System.Windows.Forms.Button();
-            this.cmdYubikeyTerminate = new System.Windows.Forms.Button();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.revokeLostSmartcardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmdYubikeyReset = new System.Windows.Forms.Button();
+            this.changeResetPINToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hSMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -86,6 +87,36 @@
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Yubikey Details";
+            // 
+            // cmdYubikeyReset
+            // 
+            this.cmdYubikeyReset.Location = new System.Drawing.Point(623, 103);
+            this.cmdYubikeyReset.Name = "cmdYubikeyReset";
+            this.cmdYubikeyReset.Size = new System.Drawing.Size(75, 23);
+            this.cmdYubikeyReset.TabIndex = 18;
+            this.cmdYubikeyReset.Text = "Reset";
+            this.cmdYubikeyReset.UseVisualStyleBackColor = true;
+            this.cmdYubikeyReset.Click += new System.EventHandler(this.cmdYubikeyReset_Click);
+            // 
+            // cmdYubikeyTerminate
+            // 
+            this.cmdYubikeyTerminate.Location = new System.Drawing.Point(623, 74);
+            this.cmdYubikeyTerminate.Name = "cmdYubikeyTerminate";
+            this.cmdYubikeyTerminate.Size = new System.Drawing.Size(75, 23);
+            this.cmdYubikeyTerminate.TabIndex = 17;
+            this.cmdYubikeyTerminate.Text = "Terminate";
+            this.cmdYubikeyTerminate.UseVisualStyleBackColor = true;
+            this.cmdYubikeyTerminate.Click += new System.EventHandler(this.cmdYubikeyTerminate_Click);
+            // 
+            // cmdYubikeyEnroll
+            // 
+            this.cmdYubikeyEnroll.Location = new System.Drawing.Point(623, 46);
+            this.cmdYubikeyEnroll.Name = "cmdYubikeyEnroll";
+            this.cmdYubikeyEnroll.Size = new System.Drawing.Size(75, 23);
+            this.cmdYubikeyEnroll.TabIndex = 16;
+            this.cmdYubikeyEnroll.Text = "Enroll";
+            this.cmdYubikeyEnroll.UseVisualStyleBackColor = true;
+            this.cmdYubikeyEnroll.Click += new System.EventHandler(this.cmdYubikeyEnroll_Click);
             // 
             // cmdViewCertificate
             // 
@@ -253,6 +284,29 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.revokeLostSmartcardToolStripMenuItem,
+            this.changeResetPINToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // revokeLostSmartcardToolStripMenuItem
+            // 
+            this.revokeLostSmartcardToolStripMenuItem.Name = "revokeLostSmartcardToolStripMenuItem";
+            this.revokeLostSmartcardToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.revokeLostSmartcardToolStripMenuItem.Text = "Revoke lost smartcard";
+            this.revokeLostSmartcardToolStripMenuItem.Click += new System.EventHandler(this.revokeLostSmartcardToolStripMenuItem_Click);
+            // 
+            // changeResetPINToolStripMenuItem
+            // 
+            this.changeResetPINToolStripMenuItem.Name = "changeResetPINToolStripMenuItem";
+            this.changeResetPINToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.changeResetPINToolStripMenuItem.Text = "Change/Reset PIN";
+            this.changeResetPINToolStripMenuItem.Click += new System.EventHandler(this.changeResetPINToolStripMenuItem_Click);
+            // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -265,59 +319,14 @@
             // hSMToolStripMenuItem
             // 
             this.hSMToolStripMenuItem.Name = "hSMToolStripMenuItem";
-            this.hSMToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.hSMToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.hSMToolStripMenuItem.Text = "HSM";
             this.hSMToolStripMenuItem.Click += new System.EventHandler(this.hSMToolStripMenuItem_Click);
-            // 
-            // cmdYubikeyEnroll
-            // 
-            this.cmdYubikeyEnroll.Location = new System.Drawing.Point(623, 46);
-            this.cmdYubikeyEnroll.Name = "cmdYubikeyEnroll";
-            this.cmdYubikeyEnroll.Size = new System.Drawing.Size(75, 23);
-            this.cmdYubikeyEnroll.TabIndex = 16;
-            this.cmdYubikeyEnroll.Text = "Enroll";
-            this.cmdYubikeyEnroll.UseVisualStyleBackColor = true;
-            this.cmdYubikeyEnroll.Click += new System.EventHandler(this.cmdYubikeyEnroll_Click);
-            // 
-            // cmdYubikeyTerminate
-            // 
-            this.cmdYubikeyTerminate.Location = new System.Drawing.Point(623, 74);
-            this.cmdYubikeyTerminate.Name = "cmdYubikeyTerminate";
-            this.cmdYubikeyTerminate.Size = new System.Drawing.Size(75, 23);
-            this.cmdYubikeyTerminate.TabIndex = 17;
-            this.cmdYubikeyTerminate.Text = "Terminate";
-            this.cmdYubikeyTerminate.UseVisualStyleBackColor = true;
-            this.cmdYubikeyTerminate.Click += new System.EventHandler(this.cmdYubikeyTerminate_Click);
-            // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.revokeLostSmartcardToolStripMenuItem});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.toolsToolStripMenuItem.Text = "Tools";
-            // 
-            // revokeLostSmartcardToolStripMenuItem
-            // 
-            this.revokeLostSmartcardToolStripMenuItem.Name = "revokeLostSmartcardToolStripMenuItem";
-            this.revokeLostSmartcardToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.revokeLostSmartcardToolStripMenuItem.Text = "Revoke lost smartcard";
-            this.revokeLostSmartcardToolStripMenuItem.Click += new System.EventHandler(this.revokeLostSmartcardToolStripMenuItem_Click);
-            // 
-            // cmdYubikeyReset
-            // 
-            this.cmdYubikeyReset.Location = new System.Drawing.Point(623, 103);
-            this.cmdYubikeyReset.Name = "cmdYubikeyReset";
-            this.cmdYubikeyReset.Size = new System.Drawing.Size(75, 23);
-            this.cmdYubikeyReset.TabIndex = 18;
-            this.cmdYubikeyReset.Text = "Reset";
-            this.cmdYubikeyReset.UseVisualStyleBackColor = true;
-            this.cmdYubikeyReset.Click += new System.EventHandler(this.cmdYubikeyReset_Click);
             // 
             // configureToolStripMenuItem
             // 
             this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
-            this.configureToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.configureToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.configureToolStripMenuItem.Text = "Configure";
             this.configureToolStripMenuItem.Click += new System.EventHandler(this.configureToolStripMenuItem_Click);
             // 
@@ -328,7 +337,10 @@
             this.ClientSize = new System.Drawing.Size(727, 257);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Form1";
             this.Text = "Form1";
             this.groupBox2.ResumeLayout(false);
@@ -369,6 +381,7 @@
         private System.Windows.Forms.ToolStripMenuItem revokeLostSmartcardToolStripMenuItem;
         private System.Windows.Forms.Button cmdYubikeyReset;
         private System.Windows.Forms.ToolStripMenuItem configureToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeResetPINToolStripMenuItem;
     }
 }
 

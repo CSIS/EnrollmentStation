@@ -465,5 +465,12 @@ namespace EnrollmentStation
                 _settings = Settings.Load(FileSettings);
             }
         }
+
+        private void changeResetPINToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DlgChangePin changePin = new DlgChangePin(_dataStore);
+
+            changePin.ShowDialog();
+        }
     }
 }

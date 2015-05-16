@@ -69,6 +69,12 @@
     <Compile Include="Code\YubicoPivReturnCode.cs" />
     <Compile Include="Code\YubikeyNeoManager.cs" />
     <Compile Include="Code\YubikeyPivTool.cs" />
+    <Compile Include="DlgChangePin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DlgChangePin.Designer.cs">
+      <DependentUpon>DlgChangePin.cs</DependentUpon>
+    </Compile>
     <Compile Include="DlgEnroll.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,6 +101,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="DlgChangePin.resx">
+      <DependentUpon>DlgChangePin.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DlgEnroll.resx">
       <DependentUpon>DlgEnroll.cs</DependentUpon>
     </EmbeddedResource>

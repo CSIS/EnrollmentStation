@@ -134,6 +134,14 @@ namespace EnrollmentStation.Code
             return YkPivAuthenticate(_state, managementKey) == YubicoPivReturnCode.YKPIV_OK;
         }
 
+        public int GetPinTriesLeft()
+        {
+            int triesLeft = -1;
+            YkPivVerifyPin(_state, null, ref triesLeft);
+
+            return triesLeft;
+        }
+
         public bool VerifyPin(string pin, out int remainingTries)
         {
             int triesLeft = -1;
@@ -482,6 +490,25 @@ namespace EnrollmentStation.Code
                     randomPin = "DROWSSAP";
                 }
             } while (tmpRemaining > 0);
+        }
+
+        public bool UnblockPin(string puk, string newPin)
+        {
+            byte[] templ = { 0, YKPIV_INS_RESET_RETRY, 0, 0x80 };
+            byte[] inData = new byte[16];
+            byte[] outData = new byte[256];
+            int outLength = outData.Length, sw = -1;
+
+            for (int i = 0; i < inData.Length; i++)
+                inData[i] = 0xFF;
+
+            // Set up PUK and NEWPUK
+            Encoding.ASCII.GetBytes(puk, 0, Math.Min(8, puk.Length), inData, 0);
+            Encoding.ASCII.GetBytes(newPin, 0, Math.Min(8, newPin.Length), inData, 8);
+
+            YubicoPivReturnCode code = YkPivTransferData(_state, templ, inData, inData.Length, outData, ref outLength, ref sw);
+
+            return code == YubicoPivReturnCode.YKPIV_OK;
         }
 
         public void BlockPuk()

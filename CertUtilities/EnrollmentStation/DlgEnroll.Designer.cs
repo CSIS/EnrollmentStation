@@ -200,18 +200,20 @@
             // txtPinAgain
             // 
             this.txtPinAgain.Location = new System.Drawing.Point(108, 39);
+            this.txtPinAgain.MaxLength = 8;
             this.txtPinAgain.Name = "txtPinAgain";
             this.txtPinAgain.PasswordChar = '*';
-            this.txtPinAgain.Size = new System.Drawing.Size(158, 20);
+            this.txtPinAgain.Size = new System.Drawing.Size(81, 20);
             this.txtPinAgain.TabIndex = 3;
             this.txtPinAgain.TextChanged += new System.EventHandler(this.txtPin_TextChanged);
             // 
             // txtPin
             // 
             this.txtPin.Location = new System.Drawing.Point(108, 13);
+            this.txtPin.MaxLength = 8;
             this.txtPin.Name = "txtPin";
             this.txtPin.PasswordChar = '*';
-            this.txtPin.Size = new System.Drawing.Size(158, 20);
+            this.txtPin.Size = new System.Drawing.Size(81, 20);
             this.txtPin.TabIndex = 2;
             this.txtPin.TextChanged += new System.EventHandler(this.txtPin_TextChanged);
             // 

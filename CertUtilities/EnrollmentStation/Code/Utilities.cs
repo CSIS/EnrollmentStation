@@ -33,7 +33,7 @@ namespace EnrollmentStation.Code
             return arr;
         }
 
-        public static int GetHexVal(char hex)
+        private static int GetHexVal(char hex)
         {
             int val = (int)hex;
             //For uppercase A-F letters:
