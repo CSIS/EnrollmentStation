@@ -1,0 +1,2 @@
+﻿This tool is only included because I couldn't figure out how to create a CSR in the enrollment phase.
+It should be removed once that part is in place.

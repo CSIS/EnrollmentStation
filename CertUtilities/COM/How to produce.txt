@@ -1,0 +1,4 @@
+The com libraries are made into files usable from .NET by a tool called "tlbimp.exe" from the .NET SDK.
+It has been run on these files, and produced *Lib.dll files.
+
+f.ex. certcli.dll => CERTCLIENTLib.dll
