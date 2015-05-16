@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CERTCLIENTLib;
@@ -83,7 +85,51 @@ namespace EnrollmentStation
 
         private void lblAgentCertificate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            _settings.EnrollmentAgentCertificate = "07C3F21783B06583974C14A2AE89C1EABED4954E";
+            X509Store store = new X509Store(StoreName.My);
+
+            store.Open(OpenFlags.ReadOnly);
+
+            X509Certificate2Collection eligible = new X509Certificate2Collection();
+            try
+            {
+                foreach (X509Certificate2 certificate in store.Certificates)
+                {
+                    if (!certificate.HasPrivateKey)
+                        continue;
+
+                    // Enhanced Key Usage is 2.5.29.37
+                    X509EnhancedKeyUsageExtension ekuExtension = null;
+                    foreach (X509Extension extension in certificate.Extensions)
+                    {
+                        if (extension.Oid.Value == "2.5.29.37")
+                            ekuExtension = (X509EnhancedKeyUsageExtension)extension;
+                    }
+
+                    if (ekuExtension == null)
+                        continue;
+
+                    // Certificate Request Agent is 1.3.6.1.4.1.311.20.2.1
+                    bool canBeUsed = false;
+                    foreach (Oid oid in ekuExtension.EnhancedKeyUsages)
+                    {
+                        if (oid.Value == "1.3.6.1.4.1.311.20.2.1")
+                            canBeUsed = true;
+                    }
+
+                    if (canBeUsed)
+                        eligible.Add(certificate);
+                }
+            }
+            finally 
+            {
+                store.Close();
+            }
+
+            X509Certificate2Collection selected = X509Certificate2UI.SelectFromCollection(eligible, "Chose a certificate", "Pick an enrollment agent certificate to use.", X509SelectionFlag.SingleSelection);
+
+            foreach (X509Certificate2 certificate in selected)
+                _settings.EnrollmentAgentCertificate = certificate.Thumbprint;
+
             UpdateView();
         }
 
