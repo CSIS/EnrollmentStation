@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
 
 namespace EnrollmentStation
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private YubikeyNeoManager _neoManager;
         private DataStore _dataStore;
@@ -19,7 +18,7 @@ namespace EnrollmentStation
         private const string FileStore = "store.xml";
         private const string FileSettings = "settings.xml";
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
         }
@@ -27,7 +26,8 @@ namespace EnrollmentStation
         private void hSMToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DlgHsmSettings dialog = new DlgHsmSettings();
-            dialog.Show();
+
+            dialog.ShowDialog();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -471,6 +471,11 @@ namespace EnrollmentStation
             DlgChangePin changePin = new DlgChangePin(_dataStore);
 
             changePin.ShowDialog();
+        }
+
+        private void cmdExit_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

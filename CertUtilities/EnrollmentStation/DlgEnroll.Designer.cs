@@ -288,6 +288,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DlgEnroll";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Enroll new SmartCard";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

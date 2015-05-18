@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtCaTemplate = new System.Windows.Forms.TextBox();
             this.lblCA = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.cmdSave = new System.Windows.Forms.Button();
@@ -40,8 +42,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.txtDomain = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtCaTemplate = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -58,6 +58,23 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Certificate Authority";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 35);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(51, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Template";
+            // 
+            // txtCaTemplate
+            // 
+            this.txtCaTemplate.Location = new System.Drawing.Point(119, 32);
+            this.txtCaTemplate.Name = "txtCaTemplate";
+            this.txtCaTemplate.Size = new System.Drawing.Size(100, 20);
+            this.txtCaTemplate.TabIndex = 2;
+            this.txtCaTemplate.TextChanged += new System.EventHandler(this.txtCaTemplate_TextChanged);
             // 
             // lblCA
             // 
@@ -168,23 +185,6 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Domain";
             // 
-            // txtCaTemplate
-            // 
-            this.txtCaTemplate.Location = new System.Drawing.Point(119, 32);
-            this.txtCaTemplate.Name = "txtCaTemplate";
-            this.txtCaTemplate.Size = new System.Drawing.Size(100, 20);
-            this.txtCaTemplate.TabIndex = 2;
-            this.txtCaTemplate.TextChanged += new System.EventHandler(this.txtCaTemplate_TextChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 35);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(51, 13);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "Template";
-            // 
             // DlgSettings
             // 
             this.AcceptButton = this.cmdSave;
@@ -200,6 +200,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DlgSettings";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

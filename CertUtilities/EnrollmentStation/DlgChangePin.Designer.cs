@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblPinTriesLeft = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.lblInstructions = new System.Windows.Forms.Label();
             this.lblResetPossible = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -43,8 +45,6 @@
             this.txtPinNew = new System.Windows.Forms.TextBox();
             this.cmdReset = new System.Windows.Forms.Button();
             this.cmdChange = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.lblPinTriesLeft = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -64,6 +64,24 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Yubikey";
+            // 
+            // lblPinTriesLeft
+            // 
+            this.lblPinTriesLeft.AutoSize = true;
+            this.lblPinTriesLeft.Location = new System.Drawing.Point(113, 64);
+            this.lblPinTriesLeft.Name = "lblPinTriesLeft";
+            this.lblPinTriesLeft.Size = new System.Drawing.Size(73, 13);
+            this.lblPinTriesLeft.TabIndex = 7;
+            this.lblPinTriesLeft.Text = "lblPinTriesLeft";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 64);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(64, 13);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "PIN tries left";
             // 
             // lblInstructions
             // 
@@ -201,28 +219,11 @@
             this.cmdChange.UseVisualStyleBackColor = true;
             this.cmdChange.Click += new System.EventHandler(this.cmdChange_Click);
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 64);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(64, 13);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "PIN tries left";
-            // 
-            // lblPinTriesLeft
-            // 
-            this.lblPinTriesLeft.AutoSize = true;
-            this.lblPinTriesLeft.Location = new System.Drawing.Point(113, 64);
-            this.lblPinTriesLeft.Name = "lblPinTriesLeft";
-            this.lblPinTriesLeft.Size = new System.Drawing.Size(73, 13);
-            this.lblPinTriesLeft.TabIndex = 7;
-            this.lblPinTriesLeft.Text = "lblPinTriesLeft";
-            // 
             // DlgChangePin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.cmdClose;
             this.ClientSize = new System.Drawing.Size(360, 272);
             this.Controls.Add(this.cmdChange);
             this.Controls.Add(this.cmdReset);
@@ -233,6 +234,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DlgChangePin";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "DlgChangePin";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

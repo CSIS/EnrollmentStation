@@ -31,7 +31,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.lblYubiHsmPresent = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
+            this.cmdOk = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -62,25 +62,25 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "Present";
             // 
-            // button2
+            // cmdOk
             // 
-            this.button2.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button2.Location = new System.Drawing.Point(99, 52);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "Ok";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.cmdOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.cmdOk.Location = new System.Drawing.Point(99, 52);
+            this.cmdOk.Name = "cmdOk";
+            this.cmdOk.Size = new System.Drawing.Size(75, 23);
+            this.cmdOk.TabIndex = 4;
+            this.cmdOk.Text = "Ok";
+            this.cmdOk.UseVisualStyleBackColor = true;
+            this.cmdOk.Click += new System.EventHandler(this.button2_Click);
             // 
             // DlgHsmSettings
             // 
-            this.AcceptButton = this.button2;
+            this.AcceptButton = this.cmdOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.button2;
+            this.CancelButton = this.cmdOk;
             this.ClientSize = new System.Drawing.Size(279, 83);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.cmdOk);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.lblYubiHsmPresent);
             this.Controls.Add(this.label1);
@@ -88,6 +88,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DlgHsmSettings";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Yubi HSM";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -99,6 +100,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label lblYubiHsmPresent;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button cmdOk;
     }
 }
