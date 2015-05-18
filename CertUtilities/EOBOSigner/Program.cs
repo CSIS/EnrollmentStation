@@ -1,9 +1,17 @@
-﻿using System;
+﻿// IF COMPILING ON WINDOWS 8 OR NEWER, IF NOT COMMENT IT OUT
+#define WIN8_COMPILE
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using CERTCLIENTLib;
 using CERTENROLLLib;
+
+#if WIN8_COMPILE
+ using CERTCLILib;
+#else
+ using CERTCLIENTLib;
+#endif
 
 namespace EOBOSigner
 {
@@ -18,9 +26,9 @@ namespace EOBOSigner
 
         static void Main(string[] args)
         {
-            if (args.Length != 4)
+            if (args.Length != 5)
             {
-                Console.WriteLine("Usage: Signer.exe [EnrollmentCertificateThumbprint] [BehalfOfUser] [PathToCSR] [OutputFileName]");
+                Console.WriteLine("Usage: Signer.exe [EnrollmentCertificateThumbprint] [BehalfOfUser] [PathToCSR] [OutputFileName] [CertificateTemplate]");
                 return;
             }
 
@@ -28,6 +36,7 @@ namespace EOBOSigner
             string argsUser = args[1];
             string argsCsr = args[2];
             string argsCrt = args[3];
+            string argsCrtTmpl = args[4];
 
             X509Store store = new X509Store("My", StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadOnly);
@@ -40,7 +49,7 @@ namespace EOBOSigner
 
             // Create a CMC outer request and initialize
             CX509CertificateRequestCmc cmcReq = new CX509CertificateRequestCmc();
-            cmcReq.InitializeFromInnerRequestTemplateName(pkcs10Req, "SmartcardLogon");
+            cmcReq.InitializeFromInnerRequestTemplateName(pkcs10Req, argsCrtTmpl);
             cmcReq.RequesterName = argsUser;
 
             CSignerCertificate signer = new CSignerCertificate();
