@@ -69,6 +69,7 @@
     <Compile Include="Code\YubicoPivReturnCode.cs" />
     <Compile Include="Code\YubikeyNeoManager.cs" />
     <Compile Include="Code\YubikeyPivTool.cs" />
+    <Compile Include="Code\YubikeyVersions.cs" />
     <Compile Include="DlgChangePin.cs">
       <SubType>Form</SubType>
     </Compile>

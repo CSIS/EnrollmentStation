@@ -32,5 +32,12 @@ namespace EnrollmentStation.Code
 
         [XmlAttribute]
         public DateTime EnrolledAt { get; set; }
+
+        public YubikeyVersions YubikeyVersions { get; set; }
+
+        public EnrolledYubikey()
+        {
+            YubikeyVersions = new YubikeyVersions();
+        }
     }
 }

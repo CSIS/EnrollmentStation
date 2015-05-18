@@ -134,6 +134,11 @@ namespace EnrollmentStation
 
             // 1. Prep device info
             int deviceId = _neoManager.GetSerialNumber();
+            string neoFirmware = _neoManager.GetVersion().ToString();
+            string pivFirmware;
+
+            using (YubikeyPivTool piv = new YubikeyPivTool())
+                pivFirmware = piv.GetVersion();
 
             prgEnroll.Value = 1;
 
@@ -316,6 +321,9 @@ namespace EnrollmentStation
             newEnrollment.Chuid = BitConverter.ToString(chuid).Replace("-", "");
 
             newEnrollment.EnrolledAt = DateTime.UtcNow;
+
+            newEnrollment.YubikeyVersions.NeoFirmware = neoFirmware;
+            newEnrollment.YubikeyVersions.PivApplet = pivFirmware;
 
             _dataStore.Add(newEnrollment);
 
