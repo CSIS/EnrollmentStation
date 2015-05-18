@@ -62,6 +62,7 @@
     <Compile Include="Code\EnrolledYubikey.cs" />
     <Compile Include="Code\CertificateUtilities.cs" />
     <Compile Include="Code\HsmRng.cs" />
+    <Compile Include="Code\RevokeReason.cs" />
     <Compile Include="Code\Settings.cs" />
     <Compile Include="Code\Utilities.cs" />
     <Compile Include="Code\YubicoNeoMode.cs" />
