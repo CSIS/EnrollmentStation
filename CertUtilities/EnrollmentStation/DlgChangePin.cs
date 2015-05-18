@@ -40,7 +40,7 @@ namespace EnrollmentStation
 
                     if (currentCert != null)
                     {
-                        List<EnrolledYubikey> eligible = keys.Where(s=>s.CertificateThumbprint == currentCert.Thumbprint).ToList();
+                        List<EnrolledYubikey> eligible = keys.Where(s => s.Certificate != null && s.Certificate.Thumbprint == currentCert.Thumbprint).ToList();
 
                         if (eligible.Count == 1)
                             _yubikey = eligible.First();

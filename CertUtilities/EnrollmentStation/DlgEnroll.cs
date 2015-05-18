@@ -311,8 +311,12 @@ namespace EnrollmentStation
             EnrolledYubikey newEnrollment = new EnrolledYubikey();
             newEnrollment.DeviceSerial = deviceId;
 
-            newEnrollment.CertificateSerial = cert.SerialNumber;
-            newEnrollment.CertificateThumbprint = cert.Thumbprint;
+            newEnrollment.Certificate.Serial = cert.SerialNumber;
+            newEnrollment.Certificate.Thumbprint = cert.Thumbprint;
+            newEnrollment.Certificate.Subject = cert.Subject;
+            newEnrollment.Certificate.Issuer = cert.Issuer;
+            newEnrollment.Certificate.StartDate = cert.NotBefore;
+            newEnrollment.Certificate.ExpireDate = cert.NotAfter;
 
             newEnrollment.CA = ca;
             newEnrollment.Username = user;

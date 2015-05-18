@@ -289,7 +289,7 @@ namespace EnrollmentStation
 
             serial = _neoManager.GetSerialNumber();
 
-            EnrolledYubikey currentEnrolled = _dataStore.Search(serial).SingleOrDefault(s => s.CertificateSerial == currentCert.SerialNumber);
+            EnrolledYubikey currentEnrolled = _dataStore.Search(serial).SingleOrDefault(s => s.Certificate != null && s.Certificate.Serial == currentCert.SerialNumber);
 
             if (currentEnrolled == null)
             {
@@ -312,7 +312,7 @@ namespace EnrollmentStation
             List<EnrolledYubikey> previous = _dataStore.Search(serial).ToList();
 
             {
-                int otherCertsPreviouslyEnrolledCount = previous.Count(x => x.CertificateSerial != currentCert.SerialNumber);
+                int otherCertsPreviouslyEnrolledCount = previous.Count(x => x.Certificate.Serial != currentCert.SerialNumber);
                 if (otherCertsPreviouslyEnrolledCount > 0)
                 {
                     dlgResult = MessageBox.Show("There has previously been enrolled " + otherCertsPreviouslyEnrolledCount + " certificates for this " +
@@ -334,7 +334,7 @@ namespace EnrollmentStation
             {
                 try
                 {
-                    CertificateUtilities.RevokeCertificate(yubikey.CA, yubikey.CertificateSerial);
+                    CertificateUtilities.RevokeCertificate(yubikey.CA, yubikey.Certificate.Serial);
 
                     // Revoked
                     _dataStore.Remove(yubikey);
@@ -345,7 +345,7 @@ namespace EnrollmentStation
                 catch (Exception ex)
                 {
                     MessageBox.Show(
-                        "Unable to revoke certificate " + yubikey.CertificateSerial + " of " + yubikey.CA +
+                        "Unable to revoke certificate " + yubikey.Certificate.Serial + " of " + yubikey.CA +
                         " enrolled on " + yubikey.EnrolledAt + ". There was an error." + Environment.NewLine +
                         Environment.NewLine + ex.Message, "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
@@ -380,8 +380,14 @@ namespace EnrollmentStation
 
         private void revokeLostSmartcardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO:
-            throw new NotImplementedException();
+            DlgRevokeCertificate revokeCertificate = new DlgRevokeCertificate(_dataStore);
+
+            revokeCertificate.ShowDialog();
+
+            if (revokeCertificate.RevokedAny)
+            {
+                _dataStore.Save(FileStore);
+            }
         }
 
         private void cmdYubikeyEnroll_Click(object sender, EventArgs e)

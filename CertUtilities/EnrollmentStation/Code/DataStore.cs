@@ -28,7 +28,12 @@ namespace EnrollmentStation.Code
 
         public void Remove(string certificateSerial)
         {
-            _yubikeys.RemoveAll(s => s.CertificateSerial == certificateSerial);
+            _yubikeys.RemoveAll(s => s.Certificate != null && s.Certificate.Serial == certificateSerial);
+        }
+
+        public IEnumerable<EnrolledYubikey> Search()
+        {
+            return _yubikeys;
         }
 
         public IEnumerable<EnrolledYubikey> Search(int serialNumber)

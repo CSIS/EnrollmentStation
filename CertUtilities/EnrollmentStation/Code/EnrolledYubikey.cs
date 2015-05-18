@@ -16,12 +16,6 @@ namespace EnrollmentStation.Code
         public string CA { get; set; }
 
         [XmlAttribute]
-        public string CertificateThumbprint { get; set; }
-
-        [XmlAttribute]
-        public string CertificateSerial { get; set; }
-
-        [XmlAttribute]
         public string ManagementKey { get; set; }
 
         [XmlAttribute]
@@ -35,9 +29,12 @@ namespace EnrollmentStation.Code
 
         public YubikeyVersions YubikeyVersions { get; set; }
 
+        public CertificateDetails Certificate { get; set; }
+
         public EnrolledYubikey()
         {
             YubikeyVersions = new YubikeyVersions();
+            Certificate = new CertificateDetails();
         }
     }
 }
