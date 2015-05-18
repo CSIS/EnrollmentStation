@@ -1,5 +1,5 @@
 ﻿// IF COMPILING ON WINDOWS 8 OR NEWER, IF NOT COMMENT IT OUT
-#define WIN8_COMPILE
+// #define WIN8_COMPILE
 
 using System;
 using System.Runtime.InteropServices;
