@@ -59,11 +59,24 @@ namespace EnrollmentStation.Code
 
         public void Save(string file)
         {
+            string bakFile = file + ".bak";
+
             XmlSerializer ser = new XmlSerializer(typeof(List<EnrolledYubikey>));
 
             XDocument doc = new XDocument();
             using (XmlWriter writer = doc.CreateWriter())
                 ser.Serialize(writer, _yubikeys);
+
+            // Keep a backup
+            if (File.Exists(bakFile) && File.Exists(file))
+            {
+                File.Delete(bakFile);
+                File.Move(file, bakFile);
+            }
+            else if (File.Exists(file))
+            {
+                File.Move(file, bakFile);
+            }
 
             doc.Save(file);
         }
