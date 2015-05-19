@@ -67,6 +67,13 @@ namespace EnrollmentStation
             cmdYubikeyTerminate.Enabled = false;
             cmdYubikeyReset.Enabled = false;
 
+            lblYubikeySerial.Text = string.Empty;
+            lblYubikeyMode.Text = string.Empty;
+            lblYubikeyCertificateSubject.Text = string.Empty;
+            lblYubikeyCertificateIssuer.Text = string.Empty;
+            lblYubikeyEnrollState.Text = "<unknown>";
+            lblYubikeyPivVersion.Text = string.Empty;
+
             try
             {
                 bool devicePresent = _neoManager.RefreshDevice();
