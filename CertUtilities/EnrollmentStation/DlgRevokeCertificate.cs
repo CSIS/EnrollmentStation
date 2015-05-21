@@ -33,10 +33,11 @@ namespace EnrollmentStation
                 items =
                     items.Where(s =>
                             (s.Certificate != null &&
-                                (s.Certificate.Serial.Contains(txtFreetext.Text) ||
-                                s.Certificate.Thumbprint.Contains(txtFreetext.Text) ||
-                                s.Certificate.Issuer.Contains(txtFreetext.Text) ||
-                                s.Certificate.Subject.Contains(txtFreetext.Text))) ||
+                                ((s.Certificate.Serial != null && s.Certificate.Serial.Contains(txtFreetext.Text)) ||
+                                (s.Certificate.Thumbprint != null && s.Certificate.Thumbprint.Contains(txtFreetext.Text)) ||
+                                (s.Certificate.Issuer != null && s.Certificate.Issuer.Contains(txtFreetext.Text)) ||
+                                (s.Certificate.Subject != null && s.Certificate.Subject.Contains(txtFreetext.Text)))
+                                ) ||
                             s.DeviceSerial.ToString().Contains(txtFreetext.Text) ||
                             s.CA.Contains(txtFreetext.Text) ||
                             s.ManagementKey.Contains(txtFreetext.Text) ||
