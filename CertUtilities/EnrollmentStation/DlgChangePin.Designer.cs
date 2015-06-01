@@ -235,7 +235,7 @@
             this.MinimizeBox = false;
             this.Name = "DlgChangePin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "DlgChangePin";
+            this.Text = "Change or reset a PIN code";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
