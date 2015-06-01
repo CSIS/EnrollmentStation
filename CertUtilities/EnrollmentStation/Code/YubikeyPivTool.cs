@@ -427,6 +427,25 @@ namespace EnrollmentStation.Code
             return true;
         }
 
+        public bool GetCHUID(out byte[] chuid)
+        {
+            byte[] tmp = new byte[2048];
+            int length = tmp.Length;
+
+            YubicoPivReturnCode code = YkPivFetchObject(_state, YKPIV_OBJ_CHUID, tmp, ref length);
+
+            if (code != YubicoPivReturnCode.YKPIV_OK)
+            {
+                chuid = null;
+                return false;
+            }
+
+            chuid = new byte[length];
+            Array.Copy(tmp, chuid, length);
+
+            return true;
+        }
+
         private static int SetDataLength(byte[] buffer, int offset, int length)
         {
             if (length < 0x80)

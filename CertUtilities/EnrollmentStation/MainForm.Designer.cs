@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cmdExit = new System.Windows.Forms.Button();
             this.cmdYubikeyReset = new System.Windows.Forms.Button();
             this.cmdYubikeyTerminate = new System.Windows.Forms.Button();
             this.cmdYubikeyEnroll = new System.Windows.Forms.Button();
@@ -56,7 +57,7 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hSMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmdExit = new System.Windows.Forms.Button();
+            this.importUnknownSmartcardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -89,6 +90,17 @@
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Yubikey Details";
+            // 
+            // cmdExit
+            // 
+            this.cmdExit.Location = new System.Drawing.Point(623, 189);
+            this.cmdExit.Name = "cmdExit";
+            this.cmdExit.Size = new System.Drawing.Size(75, 23);
+            this.cmdExit.TabIndex = 19;
+            this.cmdExit.TabStop = false;
+            this.cmdExit.Text = "Exit";
+            this.cmdExit.UseVisualStyleBackColor = true;
+            this.cmdExit.Click += new System.EventHandler(this.cmdExit_Click);
             // 
             // cmdYubikeyReset
             // 
@@ -290,7 +302,8 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.revokeLostSmartcardToolStripMenuItem,
-            this.changeResetPINToolStripMenuItem});
+            this.changeResetPINToolStripMenuItem,
+            this.importUnknownSmartcardToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -298,14 +311,14 @@
             // revokeLostSmartcardToolStripMenuItem
             // 
             this.revokeLostSmartcardToolStripMenuItem.Name = "revokeLostSmartcardToolStripMenuItem";
-            this.revokeLostSmartcardToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.revokeLostSmartcardToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.revokeLostSmartcardToolStripMenuItem.Text = "Revoke lost smartcard";
             this.revokeLostSmartcardToolStripMenuItem.Click += new System.EventHandler(this.revokeLostSmartcardToolStripMenuItem_Click);
             // 
             // changeResetPINToolStripMenuItem
             // 
             this.changeResetPINToolStripMenuItem.Name = "changeResetPINToolStripMenuItem";
-            this.changeResetPINToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.changeResetPINToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.changeResetPINToolStripMenuItem.Text = "Change/Reset PIN";
             this.changeResetPINToolStripMenuItem.Click += new System.EventHandler(this.changeResetPINToolStripMenuItem_Click);
             // 
@@ -332,16 +345,12 @@
             this.configureToolStripMenuItem.Text = "Configure";
             this.configureToolStripMenuItem.Click += new System.EventHandler(this.configureToolStripMenuItem_Click);
             // 
-            // cmdExit
+            // importUnknownSmartcardToolStripMenuItem
             // 
-            this.cmdExit.Location = new System.Drawing.Point(623, 189);
-            this.cmdExit.Name = "cmdExit";
-            this.cmdExit.Size = new System.Drawing.Size(75, 23);
-            this.cmdExit.TabIndex = 19;
-            this.cmdExit.TabStop = false;
-            this.cmdExit.Text = "Exit";
-            this.cmdExit.UseVisualStyleBackColor = true;
-            this.cmdExit.Click += new System.EventHandler(this.cmdExit_Click);
+            this.importUnknownSmartcardToolStripMenuItem.Name = "importUnknownSmartcardToolStripMenuItem";
+            this.importUnknownSmartcardToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.importUnknownSmartcardToolStripMenuItem.Text = "Import unknown smartcard";
+            this.importUnknownSmartcardToolStripMenuItem.Click += new System.EventHandler(this.importUnknownSmartcardToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -396,6 +405,7 @@
         private System.Windows.Forms.ToolStripMenuItem configureToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeResetPINToolStripMenuItem;
         private System.Windows.Forms.Button cmdExit;
+        private System.Windows.Forms.ToolStripMenuItem importUnknownSmartcardToolStripMenuItem;
     }
 }
 

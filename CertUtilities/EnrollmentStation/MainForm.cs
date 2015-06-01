@@ -74,6 +74,9 @@ namespace EnrollmentStation
             lblYubikeyEnrollState.Text = "<unknown>";
             lblYubikeyPivVersion.Text = string.Empty;
 
+            changeResetPINToolStripMenuItem.Enabled = false;
+            importUnknownSmartcardToolStripMenuItem.Enabled = false;
+
             try
             {
                 bool devicePresent = _neoManager.RefreshDevice();
@@ -120,9 +123,13 @@ namespace EnrollmentStation
                         lblYubikeyEnrollState.Text = enrolleds.Count + " previous";
 
                         cmdYubikeyTerminate.Enabled = true;
+                        changeResetPINToolStripMenuItem.Enabled = true;
                     }
                     else
+                    {
                         lblYubikeyEnrollState.Text = "No";
+                        importUnknownSmartcardToolStripMenuItem.Enabled = true;
+                    }
                 }
                 else
                 {
@@ -489,6 +496,20 @@ namespace EnrollmentStation
         private void cmdExit_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void importUnknownSmartcardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DlgImport frm = new DlgImport(_dataStore, _settings);
+
+            DialogResult result = frm.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                _dataStore.Save(FileStore);
+            }
+
+            RefreshYubikeyInfo();
         }
     }
 }

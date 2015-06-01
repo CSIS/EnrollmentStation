@@ -90,6 +90,12 @@
     <Compile Include="DlgHsmSettings.Designer.cs">
       <DependentUpon>DlgHsmSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="DlgImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DlgImport.Designer.cs">
+      <DependentUpon>DlgImport.cs</DependentUpon>
+    </Compile>
     <Compile Include="DlgRevokeCertificate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -118,6 +124,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DlgHsmSettings.resx">
       <DependentUpon>DlgHsmSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DlgImport.resx">
+      <DependentUpon>DlgImport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DlgRevokeCertificate.resx">
       <DependentUpon>DlgRevokeCertificate.cs</DependentUpon>
