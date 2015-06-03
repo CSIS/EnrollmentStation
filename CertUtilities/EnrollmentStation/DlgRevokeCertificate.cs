@@ -45,9 +45,10 @@ namespace EnrollmentStation
                 if (dlgResult != DialogResult.Yes)
                     return;
 
-                bool devicePresent = _neoManager.RefreshDevice();
+                DlgPleaseInsertYubikey yubiWaiter = new DlgPleaseInsertYubikey(_yubikey);
+                DialogResult result = yubiWaiter.ShowDialog();
 
-                if (!devicePresent)
+                if (result != DialogResult.OK)
                     return;
 
                 using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
@@ -91,20 +92,7 @@ namespace EnrollmentStation
 
             if (rbTerminate.Checked)
             {
-                X509Certificate2 currentCert;
-
-                using (YubikeyPivTool piv = new YubikeyPivTool())
-                    currentCert = piv.GetCertificate9a();
-
-                var serial = _neoManager.GetSerialNumber();
-
-                EnrolledYubikey currentEnrolled = _dataStore.Search(serial).SingleOrDefault(s => s.Certificate != null && s.Certificate.Serial == currentCert.SerialNumber);
-
-                if (currentEnrolled == null)
-                {
-                    MessageBox.Show("Unable to find the current Smartcard in the store. It cannot be revoked.", "Error finding Smartcard details", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    return;
-                }
+                X509Certificate2 currentCert = new X509Certificate2(_yubikey.Certificate.RawCertificate);
 
                 DialogResult dlgResult = MessageBox.Show("This will terminate the Yubikey, wiping the PIN, PUK, Management Key and Certificates. " +
                                                          "This will also revoke the certificiate. Proceeed?" + Environment.NewLine + Environment.NewLine +
@@ -115,71 +103,42 @@ namespace EnrollmentStation
                 if (dlgResult != DialogResult.Yes)
                     return;
 
-                // Multiple certs
-                IEnumerable<EnrolledYubikey> toRevoke = new[] { currentEnrolled };
-                List<EnrolledYubikey> previous = _dataStore.Search(serial).ToList();
+                DlgPleaseInsertYubikey yubiWaiter = new DlgPleaseInsertYubikey(_yubikey);
+                DialogResult result = yubiWaiter.ShowDialog();
 
-                {
-                    int otherCertsPreviouslyEnrolledCount = previous.Count(x => x.Certificate.Serial != currentCert.SerialNumber);
-                    if (otherCertsPreviouslyEnrolledCount > 0)
-                    {
-                        dlgResult = MessageBox.Show("There has previously been enrolled " + otherCertsPreviouslyEnrolledCount + " certificates for this " +
-                                                    "device, which have not since been revoked. Revoke these also?", "Revoke excess certificates",
-                                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-
-                        bool revokeAll = dlgResult == DialogResult.Yes;
-
-                        if (revokeAll)
-                            toRevoke = toRevoke.Concat(previous);
-
-                        if (dlgResult == DialogResult.Cancel)
-                            return;
-                    }
-                }
+                if (result != DialogResult.OK)
+                    return;
 
                 // Begin
-                bool couldRevokeCurrentCert = false;
-                foreach (EnrolledYubikey yubikey in toRevoke)
+                try
                 {
-                    try
-                    {
-                        CertificateUtilities.RevokeCertificate(yubikey.CA, yubikey.Certificate.Serial);
+                    CertificateUtilities.RevokeCertificate(_yubikey.CA, _yubikey.Certificate.Serial);
 
-                        // Revoked
-                        _dataStore.Remove(yubikey);
+                    // Revoked
+                    _dataStore.Remove(_yubikey);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "Unable to revoke certificate " + _yubikey.Certificate.Serial + " of " + _yubikey.CA +
+                        " enrolled on " + _yubikey.EnrolledAt + ". There was an error." + Environment.NewLine +
+                        Environment.NewLine + ex.Message, "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                        if (yubikey == currentEnrolled)
-                            couldRevokeCurrentCert = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(
-                            "Unable to revoke certificate " + yubikey.Certificate.Serial + " of " + yubikey.CA +
-                            " enrolled on " + yubikey.EnrolledAt + ". There was an error." + Environment.NewLine +
-                            Environment.NewLine + ex.Message, "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
+                    return;
                 }
 
-                if (couldRevokeCurrentCert)
+                // Wipe the Yubikey
+                using (YubikeyPivTool piv = new YubikeyPivTool())
                 {
-                    // Wipe the Yubikey
-                    using (YubikeyPivTool piv = new YubikeyPivTool())
-                    {
-                        piv.BlockPin();
-                        piv.BlockPuk();
+                    piv.BlockPin();
+                    piv.BlockPuk();
 
-                        bool reset = piv.ResetDevice();
-                        if (!reset)
-                        {
-                            MessageBox.Show("Unable to reset the yubikey. Try resetting it manually.",
-                                "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
+                    bool reset = piv.ResetDevice();
+                    if (!reset)
+                    {
+                        MessageBox.Show("Unable to reset the yubikey. Try resetting it manually.",
+                            "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                }
-                else
-                {
-                    // Inform the user, do not wipe
-                    MessageBox.Show("Unable to revoke the certificate currently on the Yubikey. The yubikey will not be wiped.", "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 _dataStore.Save(MainForm.FileStore);

@@ -28,13 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.performanceCounter1 = new System.Diagnostics.PerformanceCounter();
             this.btnExecute = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.rbTerminate = new System.Windows.Forms.RadioButton();
             this.rbRevoke = new System.Windows.Forms.RadioButton();
             this.rbReset = new System.Windows.Forms.RadioButton();
-            ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -105,7 +103,6 @@
             this.MinimizeBox = false;
             this.Name = "DlgRevokeCertificate";
             this.Text = "Revoke Lost Smartcards";
-            ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -114,7 +111,6 @@
 
         #endregion
 
-        private System.Diagnostics.PerformanceCounter performanceCounter1;
         private System.Windows.Forms.Button btnExecute;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton rbTerminate;

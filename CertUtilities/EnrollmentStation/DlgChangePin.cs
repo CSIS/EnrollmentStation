@@ -52,7 +52,7 @@ namespace EnrollmentStation
         {
             using (YubikeyPivTool piv = new YubikeyPivTool())
             {
-                bool authed = piv.Authenticate(_yubikey.ManagementKeyBytes);
+                bool authed = piv.Authenticate(_yubikey.ManagementKey);
 
                 if (!authed)
                 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Windows.Forms;
@@ -117,6 +118,24 @@ namespace EnrollmentStation
             {
                 control.Visible = lstItems.SelectedItems.Count == 1;
             }
+
+            if (lstItems.SelectedItems.Count <= 0)
+                return;
+
+            EnrolledYubikey item = lstItems.SelectedItems[0].Tag as EnrolledYubikey;
+
+            if (item == null)
+                return;
+
+            lblYubikeySerial.Text = item.DeviceSerial.ToString();
+            lblYubikeyFirmware.Text = item.YubikeyVersions.NeoFirmware;
+            lblYubikeyPivVersion.Text = item.YubikeyVersions.PivApplet;
+
+            lblCertCA.Text = item.CA;
+            lblCertEnrolledOn.Text = item.EnrolledAt.ToString();
+            lblCertSerial.Text = item.Certificate.Serial;
+            lblCertThumbprint.Text = item.Certificate.Thumbprint;
+            lblCertUser.Text = item.Username;
         }
 
         private void RefreshInsertedKey()
@@ -137,6 +156,8 @@ namespace EnrollmentStation
         private void RefreshUserStore()
         {
             _dataStore = DataStore.Load(FileStore);
+
+            lstItems.Items.Clear();
 
             foreach (EnrolledYubikey yubikey in _dataStore.Yubikeys)
             {
@@ -164,15 +185,6 @@ namespace EnrollmentStation
         private void RefreshSettings()
         {
             _settings = Settings.Load(FileSettings);
-        }
-
-        private void exportCertificateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void viewCertificateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void btnViewCert_Click(object sender, EventArgs e)
@@ -282,11 +294,63 @@ namespace EnrollmentStation
         {
             DlgEnroll enroll = new DlgEnroll(_settings, _dataStore);
             enroll.ShowDialog();
+
+            RefreshUserStore();
         }
 
         private void revokeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (lstItems.SelectedItems.Count <= 0)
+                return;
 
+            EnrolledYubikey item = lstItems.SelectedItems[0].Tag as EnrolledYubikey;
+            if (item == null)
+                return;
+
+            DlgRevokeCertificate dialog = new DlgRevokeCertificate(_dataStore, item);
+
+            dialog.ShowDialog();
+
+            RefreshUserStore();
+        }
+
+        private void exportCertificateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lstItems.SelectedItems.Count <= 0)
+                return;
+
+            EnrolledYubikey item = lstItems.SelectedItems[0].Tag as EnrolledYubikey;
+            if (item == null)
+                return;
+
+            X509Certificate2 cert = new X509Certificate2(item.Certificate.RawCertificate);
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = item.DeviceSerial + "-" + cert.SerialNumber + ".crt";
+
+            DialogResult dlgResult = saveFileDialog.ShowDialog();
+
+            if (dlgResult != DialogResult.OK)
+                return;
+
+            using (Stream fs = saveFileDialog.OpenFile())
+            {
+                byte[] data = cert.GetRawCertData();
+                fs.Write(data, 0, data.Length);
+            }
+        }
+
+        private void viewCertificateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lstItems.SelectedItems.Count <= 0)
+                return;
+
+            EnrolledYubikey item = lstItems.SelectedItems[0].Tag as EnrolledYubikey;
+            if (item == null)
+                return;
+
+            X509Certificate2 cert = new X509Certificate2(item.Certificate.RawCertificate);
+            X509Certificate2UI.DisplayCertificate(cert);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -298,6 +362,11 @@ namespace EnrollmentStation
         {
             DlgSettings dialog = new DlgSettings(_settings);
             dialog.ShowDialog();
+        }
+
+        private void lstItems_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshSelectedKeyInfo();
         }
     }
 }

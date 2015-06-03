@@ -315,7 +315,7 @@ namespace EnrollmentStation
 
             newEnrollment.CA = ca;
             newEnrollment.Username = user;
-            newEnrollment.ManagementKey = mgmKeyString;
+            newEnrollment.ManagementKey = mgmKey;
             newEnrollment.PukKey = puk;
             newEnrollment.Chuid = BitConverter.ToString(chuid).Replace("-", "");
 
@@ -327,6 +327,9 @@ namespace EnrollmentStation
             _dataStore.Add(newEnrollment);
 
             prgEnroll.Value = 14;
+
+            // 15 - Save store
+            _dataStore.Save(MainForm.FileStore);
 
             DialogResult = DialogResult.OK;
         }

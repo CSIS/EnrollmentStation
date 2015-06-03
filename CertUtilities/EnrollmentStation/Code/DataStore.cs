@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace EnrollmentStation.Code
 {
@@ -11,9 +9,9 @@ namespace EnrollmentStation.Code
     {
         public List<EnrolledYubikey> Yubikeys { get; private set; }
 
-        private DataStore(List<EnrolledYubikey> keys)
+        private DataStore()
         {
-            Yubikeys = keys ?? new List<EnrolledYubikey>();
+            Yubikeys = new List<EnrolledYubikey>();
         }
 
         public void Add(EnrolledYubikey key)
@@ -44,28 +42,14 @@ namespace EnrollmentStation.Code
         public static DataStore Load(string file)
         {
             if (!File.Exists(file))
-                return new DataStore(null);
+                return new DataStore();
 
-            XmlSerializer ser = new XmlSerializer(typeof(List<EnrolledYubikey>));
-
-            List<EnrolledYubikey> keys;
-
-            XDocument doc = XDocument.Load(file);
-            using (XmlReader reader = doc.CreateReader())
-                keys = (List<EnrolledYubikey>)ser.Deserialize(reader);
-
-            return new DataStore(keys);
+            return JsonConvert.DeserializeObject<DataStore>(File.ReadAllText(file));
         }
 
         public void Save(string file)
         {
             string bakFile = file + ".bak";
-
-            XmlSerializer ser = new XmlSerializer(typeof(List<EnrolledYubikey>));
-
-            XDocument doc = new XDocument();
-            using (XmlWriter writer = doc.CreateWriter())
-                ser.Serialize(writer, Yubikeys);
 
             // Keep a backup
             if (File.Exists(bakFile) && File.Exists(file))
@@ -78,7 +62,7 @@ namespace EnrollmentStation.Code
                 File.Move(file, bakFile);
             }
 
-            doc.Save(file);
+            File.WriteAllText(file, JsonConvert.SerializeObject(this));
         }
     }
 }

@@ -23,6 +23,7 @@ namespace EnrollmentStation.Code
         [XmlAttribute]
         public DateTime ExpireDate { get; set; }
 
+        [XmlElement(DataType = "hexBinary")]
         public byte[] RawCertificate { get; set; }
     }
 }

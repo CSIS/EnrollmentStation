@@ -53,8 +53,6 @@ namespace EnrollmentStation
             this.label17 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lblYubikeyPivVersion = new System.Windows.Forms.Label();
-            this.lblYubikeyMode = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lblYubikeySerial = new System.Windows.Forms.Label();
             this.gbSelectedKeyCertificate = new System.Windows.Forms.GroupBox();
@@ -257,8 +255,6 @@ namespace EnrollmentStation
             this.gbSelectedKey.Controls.Add(this.label17);
             this.gbSelectedKey.Controls.Add(this.label4);
             this.gbSelectedKey.Controls.Add(this.lblYubikeyPivVersion);
-            this.gbSelectedKey.Controls.Add(this.lblYubikeyMode);
-            this.gbSelectedKey.Controls.Add(this.label1);
             this.gbSelectedKey.Controls.Add(this.label2);
             this.gbSelectedKey.Controls.Add(this.lblYubikeySerial);
             this.gbSelectedKey.Location = new System.Drawing.Point(3, 3);
@@ -303,24 +299,6 @@ namespace EnrollmentStation
             this.lblYubikeyPivVersion.Size = new System.Drawing.Size(105, 13);
             this.lblYubikeyPivVersion.TabIndex = 22;
             this.lblYubikeyPivVersion.Text = "lblYubikeyPivVersion";
-            // 
-            // lblYubikeyMode
-            // 
-            this.lblYubikeyMode.AutoSize = true;
-            this.lblYubikeyMode.Location = new System.Drawing.Point(113, 44);
-            this.lblYubikeyMode.Name = "lblYubikeyMode";
-            this.lblYubikeyMode.Size = new System.Drawing.Size(82, 13);
-            this.lblYubikeyMode.TabIndex = 21;
-            this.lblYubikeyMode.Text = "lblYubikeyMode";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 44);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(71, 13);
-            this.label1.TabIndex = 20;
-            this.label1.Text = "Current Mode";
             // 
             // label2
             // 
@@ -456,13 +434,16 @@ namespace EnrollmentStation
             this.clmUser,
             this.clmEnrolledAt,
             this.clmCertificateSerial});
+            this.lstItems.ContextMenuStrip = this.contextMenuStrip1;
             this.lstItems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstItems.FullRowSelect = true;
             this.lstItems.Location = new System.Drawing.Point(0, 0);
             this.lstItems.Name = "lstItems";
             this.lstItems.Size = new System.Drawing.Size(660, 679);
             this.lstItems.TabIndex = 1;
             this.lstItems.UseCompatibleStateImageBehavior = false;
             this.lstItems.View = System.Windows.Forms.View.Details;
+            this.lstItems.SelectedIndexChanged += new System.EventHandler(this.lstItems_SelectedIndexChanged);
             // 
             // clmSerial
             // 
@@ -622,7 +603,6 @@ namespace EnrollmentStation
         private Label label5;
         private Label lblCertSerial;
         private Label label6;
-        private ListView lstItems;
         private ColumnHeader clmSerial;
         private ColumnHeader clmUser;
         private ColumnHeader clmEnrolledAt;
@@ -632,8 +612,6 @@ namespace EnrollmentStation
         private Label label17;
         private Label label4;
         private Label lblYubikeyPivVersion;
-        private Label lblYubikeyMode;
-        private Label label1;
         private Label label2;
         private Label lblYubikeySerial;
         private StatusStrip statusStrip1;
@@ -648,5 +626,6 @@ namespace EnrollmentStation
         private Label label14;
         private Label dlblInsertedSerial;
         private Label lblInsertedSerial;
+        private ListView lstItems;
     }
 }
