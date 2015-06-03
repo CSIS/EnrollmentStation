@@ -119,7 +119,7 @@ namespace EnrollmentStation
             this.txtCaTemplate.Name = "txtCaTemplate";
             this.txtCaTemplate.Size = new System.Drawing.Size(317, 20);
             this.txtCaTemplate.TabIndex = 2;
-            this.txtCaTemplate.Text = "SmartCard User";
+            this.txtCaTemplate.Text = "SmartcardLogon";
             // 
             // llBrowseCA
             // 
