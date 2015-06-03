@@ -18,16 +18,20 @@ namespace EnrollmentStation
             InitializeComponent();
         }
 
-        private void DlgChangePin_Load(object sender, EventArgs e)
+        public new DialogResult ShowDialog()
         {
             DlgPleaseInsertYubikey dialog = new DlgPleaseInsertYubikey(_yubikey);
             if (dialog.ShowDialog() != DialogResult.OK)
             {
                 DialogResult = DialogResult.Cancel;
-                Close();
-                return;
+                return DialogResult;
             }
 
+            return base.ShowDialog();
+        }
+
+        private void DlgChangePin_Load(object sender, EventArgs e)
+        {
             using (YubikeyNeoManager neo = new YubikeyNeoManager())
             {
                 neo.RefreshDevice();
