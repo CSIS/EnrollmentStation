@@ -29,11 +29,6 @@ namespace EnrollmentStation
             InitializeComponent();
 
             _neoManager = new YubikeyNeoManager();
-
-            //Start background worker that checks for inserted yubikeys
-            BackgroundWorker insertedYubikeyWorker = new BackgroundWorker();
-            insertedYubikeyWorker.DoWork += InsertedYubikeyWorkerOnDoWork;
-            //insertedYubikeyWorker.RunWorkerAsync();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -42,7 +37,14 @@ namespace EnrollmentStation
             RefreshSettings();
 
             RefreshSelectedKeyInfo();
-            RefreshInsertedKey();
+            RefreshInsertedKey(_neoManager);
+
+            RefreshHsm();
+
+            // Start background worker that checks for inserted yubikeys
+            BackgroundWorker insertedYubikeyWorker = new BackgroundWorker();
+            insertedYubikeyWorker.DoWork += InsertedYubikeyWorkerOnDoWork;
+            insertedYubikeyWorker.RunWorkerAsync();
 
             if (!File.Exists(FileSettings))
             {
@@ -59,52 +61,50 @@ namespace EnrollmentStation
 
         private void InsertedYubikeyWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            while (true)
-            {
-                _devicePresent = _neoManager.RefreshDevice();
-
-                bool enableCCID;
-
-                YubicoNeoMode currentMode = _neoManager.GetMode();
-
-                switch (currentMode)
+            using (YubikeyNeoManager neoManager = new YubikeyNeoManager())
+                while (true)
                 {
-                    case YubicoNeoMode.OtpOnly:
-                    case YubicoNeoMode.U2fOnly:
-                    case YubicoNeoMode.OtpU2f:
-                    case YubicoNeoMode.OtpOnly_WithEject:
-                    case YubicoNeoMode.U2fOnly_WithEject:
-                    case YubicoNeoMode.OtpU2f_WithEject:
-                        enableCCID = true;
-                        break;
-                    case YubicoNeoMode.CcidOnly:
-                    case YubicoNeoMode.OtpCcid:
-                    case YubicoNeoMode.U2fCcid:
-                    case YubicoNeoMode.OtpU2fCcid:
-                    case YubicoNeoMode.CcidOnly_WithEject:
-                    case YubicoNeoMode.OtpCcid_WithEject:
-                    case YubicoNeoMode.U2fCcid_WithEject:
-                    case YubicoNeoMode.OtpU2fCcid_WithEject:
-                        enableCCID = false;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    _devicePresent = neoManager.RefreshDevice();
+
+                    bool enableCCID;
+
+                    YubicoNeoMode currentMode = neoManager.GetMode();
+
+                    switch (currentMode)
+                    {
+                        case YubicoNeoMode.OtpOnly:
+                        case YubicoNeoMode.U2fOnly:
+                        case YubicoNeoMode.OtpU2f:
+                        case YubicoNeoMode.OtpOnly_WithEject:
+                        case YubicoNeoMode.U2fOnly_WithEject:
+                        case YubicoNeoMode.OtpU2f_WithEject:
+                            enableCCID = true;
+                            break;
+                        case YubicoNeoMode.CcidOnly:
+                        case YubicoNeoMode.OtpCcid:
+                        case YubicoNeoMode.U2fCcid:
+                        case YubicoNeoMode.OtpU2fCcid:
+                        case YubicoNeoMode.CcidOnly_WithEject:
+                        case YubicoNeoMode.OtpCcid_WithEject:
+                        case YubicoNeoMode.U2fCcid_WithEject:
+                        case YubicoNeoMode.OtpU2fCcid_WithEject:
+                            enableCCID = false;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    btnEnableCCID.Text = enableCCID ? "Enable CCID" : "Disable CCID";
+
+                    btnEnableCCID.Enabled = _devicePresent;
+                    btnExportCert.Enabled = _devicePresent & !enableCCID;
+                    btnViewCert.Enabled = _devicePresent & !enableCCID;
+
+                    RefreshHsm();
+                    RefreshInsertedKey(neoManager);
+
+                    Thread.Sleep(500);
                 }
-
-                btnEnableCCID.Text = enableCCID ? "Enable CCID" : "Disable CCID";
-
-                btnEnableCCID.Enabled = _devicePresent;
-                btnExportCert.Enabled = _devicePresent & !enableCCID;
-                btnViewCert.Enabled = _devicePresent & !enableCCID;
-
-                _hsmPresent = HsmRng.IsHsmPresent();
-
-                lblHSMPresent.Text = "HSM present: " + (_hsmPresent ? "Yes" : "No");
-
-                RefreshInsertedKey();
-
-                Thread.Sleep(500);
-            }
         }
 
         private void RefreshSelectedKeyInfo()
@@ -138,7 +138,14 @@ namespace EnrollmentStation
             lblCertUser.Text = item.Username;
         }
 
-        private void RefreshInsertedKey()
+        private void RefreshHsm()
+        {
+            _hsmPresent = HsmRng.IsHsmPresent();
+
+            lblHSMPresent.Text = "HSM present: " + (_hsmPresent ? "Yes" : "No");
+        }
+
+        private void RefreshInsertedKey(YubikeyNeoManager neo)
         {
             foreach (Control control in gbInsertedKey.Controls)
             {
@@ -148,9 +155,9 @@ namespace EnrollmentStation
             if (!_devicePresent)
                 return;
 
-            lblInsertedSerial.Text = _neoManager.GetSerialNumber().ToString();
-            lblInsertedFirmware.Text = _neoManager.GetVersion().ToString();
-            lblInsertedMode.Text = _neoManager.GetMode().ToString();
+            lblInsertedSerial.Text = neo.GetSerialNumber().ToString();
+            lblInsertedFirmware.Text = neo.GetVersion().ToString();
+            lblInsertedMode.Text = neo.GetMode().ToString();
         }
 
         private void RefreshUserStore()
@@ -235,7 +242,7 @@ namespace EnrollmentStation
 
         private void btnEnableCCID_Click(object sender, EventArgs e)
         {
-            YubicoNeoMode currentMode = _neoManager.GetMode();
+            YubicoNeoMode currentMode = 0; // _neoManager.GetMode();
             YubicoNeoMode newMode;
 
             switch (currentMode)
