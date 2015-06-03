@@ -6,6 +6,8 @@ namespace EnrollmentStation.Code
     [Serializable]
     public class EnrolledYubikey
     {
+        private string _managementKey;
+
         [XmlAttribute]
         public int DeviceSerial { get; set; }
 
@@ -16,7 +18,19 @@ namespace EnrollmentStation.Code
         public string CA { get; set; }
 
         [XmlAttribute]
-        public string ManagementKey { get; set; }
+        public string ManagementKey
+        {
+            get { return _managementKey; }
+            set
+            {
+                _managementKey = value;
+
+                ManagementKeyBytes = Utilities.StringToByteArray(value);
+            }
+        }
+
+        [XmlIgnore]
+        public byte[] ManagementKeyBytes { get; set; }
 
         [XmlAttribute]
         public string Chuid { get; set; }

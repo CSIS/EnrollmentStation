@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using CERTENROLLLib;
-
 #if WIN8_COMPILE
  using CERTCLILib;
 #else

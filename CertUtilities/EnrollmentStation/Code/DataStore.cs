@@ -9,36 +9,36 @@ namespace EnrollmentStation.Code
 {
     public class DataStore
     {
-        private List<EnrolledYubikey> _yubikeys = new List<EnrolledYubikey>();
+        public List<EnrolledYubikey> Yubikeys { get; private set; }
 
         private DataStore(List<EnrolledYubikey> keys)
         {
-            _yubikeys = keys ?? new List<EnrolledYubikey>();
+            Yubikeys = keys ?? new List<EnrolledYubikey>();
         }
 
         public void Add(EnrolledYubikey key)
         {
-            _yubikeys.Add(key);
+            Yubikeys.Add(key);
         }
 
         public void Remove(EnrolledYubikey key)
         {
-            _yubikeys.Remove(key);
+            Yubikeys.Remove(key);
         }
 
         public void Remove(string certificateSerial)
         {
-            _yubikeys.RemoveAll(s => s.Certificate != null && s.Certificate.Serial == certificateSerial);
+            Yubikeys.RemoveAll(s => s.Certificate != null && s.Certificate.Serial == certificateSerial);
         }
 
         public IEnumerable<EnrolledYubikey> Search()
         {
-            return _yubikeys;
+            return Yubikeys;
         }
 
         public IEnumerable<EnrolledYubikey> Search(int serialNumber)
         {
-            return _yubikeys.Where(s => s.DeviceSerial == serialNumber);
+            return Yubikeys.Where(s => s.DeviceSerial == serialNumber);
         }
 
         public static DataStore Load(string file)
@@ -65,7 +65,7 @@ namespace EnrollmentStation.Code
 
             XDocument doc = new XDocument();
             using (XmlWriter writer = doc.CreateWriter())
-                ser.Serialize(writer, _yubikeys);
+                ser.Serialize(writer, Yubikeys);
 
             // Keep a backup
             if (File.Exists(bakFile) && File.Exists(file))

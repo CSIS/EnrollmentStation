@@ -1,8 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
 
@@ -13,6 +16,8 @@ namespace EnrollmentStation
         private YubikeyNeoManager _neoManager;
         private readonly Settings _settings;
         private readonly DataStore _dataStore;
+        private bool _devicePresent;
+        private bool _hsmPresent;
 
         public DlgEnroll(Settings settings, DataStore dataStore)
         {
@@ -23,31 +28,72 @@ namespace EnrollmentStation
             InitializeComponent();
         }
 
-        protected override void OnLoad(EventArgs e)
+        private void InsertedYubikeyWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            base.OnLoad(e);
+            while (true)
+            {
+                _devicePresent = _neoManager.RefreshDevice();
 
-            lblDomain.Text = _settings.EnrollmentDomain;
-            lblCA.Text = _settings.CA;
+                RefreshInsertedKeyInfo();
 
-            RefreshYubiDetails();
-            RefreshEligibleForEnroll();
+                _hsmPresent = HsmRng.IsHsmPresent();
+                lblYubiHsm.Text = _hsmPresent ? "Yes" : "No";
 
-            lblStatus.Text = "";
+                Thread.Sleep(1000);
+            }
         }
 
-        private void cmdRefresh_Click(object sender, EventArgs e)
+        private void RefreshInsertedKeyInfo()
         {
-            RefreshYubiDetails();
-            RefreshEligibleForEnroll();
+            foreach (Control control in gbInsertedYubikey.Controls)
+            {
+                control.Visible = _devicePresent;
+            }
+
+            if (!_devicePresent)
+                return;
+
+            YubicoNeoMode currentMode = _neoManager.GetMode();
+
+            bool ccidEnabled;
+
+            switch (currentMode)
+            {
+                case YubicoNeoMode.OtpOnly:
+                case YubicoNeoMode.U2fOnly:
+                case YubicoNeoMode.OtpU2f:
+                case YubicoNeoMode.OtpOnly_WithEject:
+                case YubicoNeoMode.U2fOnly_WithEject:
+                case YubicoNeoMode.OtpU2f_WithEject:
+                    ccidEnabled = false;
+                    break;
+                case YubicoNeoMode.CcidOnly:
+                case YubicoNeoMode.OtpCcid:
+                case YubicoNeoMode.U2fCcid:
+                case YubicoNeoMode.OtpU2fCcid:
+                case YubicoNeoMode.CcidOnly_WithEject:
+                case YubicoNeoMode.OtpCcid_WithEject:
+                case YubicoNeoMode.U2fCcid_WithEject:
+                case YubicoNeoMode.OtpU2fCcid_WithEject:
+                    ccidEnabled = true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            if (ccidEnabled)
+                lblInsertedMode.ForeColor = Color.Black;
+            else
+                lblInsertedMode.ForeColor = Color.Red;
+
+            lblInsertedSerial.Text = _neoManager.GetSerialNumber().ToString();
+            lblInsertedMode.Text = currentMode.ToString(); //TODO: Get text in the format OTP+CCID
+            lblInsertedFirmware.Text = _neoManager.GetVersion().ToString();
         }
 
         private void RefreshEligibleForEnroll()
         {
-            bool eligible = true;
-
-            if (string.IsNullOrEmpty(_settings.CA))
-                eligible = false;
+            bool eligible = !string.IsNullOrEmpty(_settings.CSREndpoint);
 
             if (string.IsNullOrEmpty(_settings.EnrollmentAgentCertificate))
                 eligible = false;
@@ -56,9 +102,6 @@ namespace EnrollmentStation
                 eligible = false;
 
             if (string.IsNullOrEmpty(_settings.EnrollmentCaTemplate))
-                eligible = false;
-
-            if (string.IsNullOrEmpty(_settings.EnrollmentDomain))
                 eligible = false;
 
             if (txtPin.Text.Length <= 0 || txtPin.Text.Length > 8)
@@ -70,67 +113,16 @@ namespace EnrollmentStation
             if (string.IsNullOrEmpty(txtUser.Text))
                 eligible = false;
 
-            // TODO: Check if user exists
-
             cmdEnroll.Enabled = eligible;
-        }
-
-        private void RefreshYubiDetails()
-        {
-            cmdEnroll.Enabled = false;
-
-            bool device = _neoManager.RefreshDevice();
-
-            if (device)
-            {
-                cmdEnroll.Enabled = true;
-                lblSerial.Text = _neoManager.GetSerialNumber().ToString();
-            }
-            else
-            {
-                lblSerial.Text = "No device";
-            }
-
-            bool hasHsm = HsmRng.IsHsmPresent();
-
-            if (hasHsm)
-            {
-                lblYubiHsm.Text = "Yes";
-            }
-            else
-            {
-                lblYubiHsm.Text = "No";
-            }
-        }
-
-        private void txtPin_TextChanged(object sender, EventArgs e)
-        {
-            if (txtPin.Text != txtPinAgain.Text)
-            {
-                cmdEnroll.Enabled = false;
-                lblStatus.Text = "PIN's must be equal";
-            }
-            else
-            {
-                lblStatus.Text = string.Empty;
-                RefreshEligibleForEnroll();
-            }
         }
 
         private void cmdEnroll_Click(object sender, EventArgs e)
         {
-            int tmp;
+            if (!_devicePresent)
+                return;
 
             prgEnroll.Maximum = 14;
             prgEnroll.Value = 0;
-
-            bool hadDevice = _neoManager.RefreshDevice();
-
-            if (!hadDevice)
-            {
-                lblStatus.Text = "No device?";
-                return;
-            }
 
             // 1. Prep device info
             int deviceId = _neoManager.GetSerialNumber();
@@ -145,7 +137,7 @@ namespace EnrollmentStation
             // 2 - Generate PUK, prep PIN
             string puk;
 
-            if (HsmRng.IsHsmPresent())
+            if (_hsmPresent)
             {
                 byte[] random = HsmRng.FetchRandom(8);
                 puk = Utilities.MapBytesToString(random);
@@ -167,9 +159,9 @@ namespace EnrollmentStation
 
             // 3 - Prep CA
             string enrollmentAgent = _settings.EnrollmentAgentCertificate;
-            string ca = _settings.CA;
+            string ca = _settings.CSREndpoint;
             string caTemplate = _settings.EnrollmentCaTemplate;
-            string user = _settings.EnrollmentDomain + "\\" + txtUser.Text;
+            string user = txtUser.Text;
 
             prgEnroll.Value = 3;
 
@@ -183,6 +175,7 @@ namespace EnrollmentStation
             RSAParameters publicKey;
             X509Certificate2 cert;
             byte[] chuid;
+
             using (YubikeyPivTool pivTool = new YubikeyPivTool())
             {
                 // 5 - Yubico: Reset device
@@ -192,7 +185,7 @@ namespace EnrollmentStation
 
                 if (!reset)
                 {
-                    MessageBox.Show("Unable to reset the Smartcard", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    MessageBox.Show("Unable to reset the YubiKey", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     return;
                 }
 
@@ -203,7 +196,7 @@ namespace EnrollmentStation
 
                 if (!authenticated)
                 {
-                    MessageBox.Show("Unable to authenticate with the Smartcard", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    MessageBox.Show("Unable to authenticate with the YubiKey", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     return;
                 }
 
@@ -211,7 +204,7 @@ namespace EnrollmentStation
 
                 if (!setMgmKey)
                 {
-                    MessageBox.Show("Unable to set the Management Key", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    MessageBox.Show("Unable to set the management key", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     return;
                 }
 
@@ -229,6 +222,7 @@ namespace EnrollmentStation
                 prgEnroll.Value = 7;
 
                 // 8 - Yubico: PIN
+                int tmp;
                 bool setPin = pivTool.ChangePin(YubikeyPivTool.DefaultPin, pin, out tmp);
 
                 if (!setPin)
@@ -317,6 +311,7 @@ namespace EnrollmentStation
             newEnrollment.Certificate.Issuer = cert.Issuer;
             newEnrollment.Certificate.StartDate = cert.NotBefore;
             newEnrollment.Certificate.ExpireDate = cert.NotAfter;
+            newEnrollment.Certificate.RawCertificate = cert.RawData;
 
             newEnrollment.CA = ca;
             newEnrollment.Username = user;
@@ -334,20 +329,6 @@ namespace EnrollmentStation
             prgEnroll.Value = 14;
 
             DialogResult = DialogResult.OK;
-        }
-
-        private void txtUser_TextChanged(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(txtUser.Text))
-            {
-                cmdEnroll.Enabled = false;
-                lblStatus.Text = "Username is missing";
-            }
-            else
-            {
-                lblStatus.Text = string.Empty;
-                RefreshEligibleForEnroll();
-            }
         }
 
         private bool MakeCsr(string pubKeyAsPem, string pin, out string csr)
@@ -390,9 +371,7 @@ namespace EnrollmentStation
                 //string stdOut = proc.StandardOutput.ReadToEnd();
 
                 if (File.Exists(tmpCsr))
-                {
                     csr = File.ReadAllText(tmpCsr);
-                }
 
                 return proc.ExitCode == 0;
             }
@@ -404,6 +383,27 @@ namespace EnrollmentStation
                 if (File.Exists(tmpCsr))
                     File.Delete(tmpCsr);
             }
+        }
+
+        private void cmdCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        private void DlgEnroll_Load(object sender, EventArgs e)
+        {
+            BackgroundWorker insertedYubikeyWorker = new BackgroundWorker();
+            insertedYubikeyWorker.DoWork += InsertedYubikeyWorkerOnDoWork;
+            insertedYubikeyWorker.RunWorkerAsync();
+        }
+
+        private void llBrowseUser_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            DlgSelectUser dialog = new DlgSelectUser();
+            dialog.ShowDialog();
+
+            txtUser.Text = dialog.SelectedUser;
         }
     }
 }

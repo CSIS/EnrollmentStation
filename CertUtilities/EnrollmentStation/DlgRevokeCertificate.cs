@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
 
@@ -9,163 +11,179 @@ namespace EnrollmentStation
     public partial class DlgRevokeCertificate : Form
     {
         private readonly DataStore _dataStore;
-        private EnrolledYubikey _currentItem;
+        private readonly EnrolledYubikey _yubikey;
+        private YubikeyNeoManager _neoManager;
 
-        public bool RevokedAny { get; private set; }
-
-        public DlgRevokeCertificate(DataStore dataStore)
+        public DlgRevokeCertificate(DataStore dataStore, EnrolledYubikey yubikey)
         {
             InitializeComponent();
 
             _dataStore = dataStore;
-
-            Display(null);
-            UpdateView();
+            _yubikey = yubikey;
         }
 
-        private void UpdateView()
+        protected override void OnLoad(EventArgs e)
         {
-            IEnumerable<EnrolledYubikey> items = _dataStore.Search();
+            base.OnLoad(e);
 
-            // Apply filters
-            if (txtFreetext.Text.Length > 0)
-            {
-                items =
-                    items.Where(s =>
-                            (s.Certificate != null &&
-                                ((s.Certificate.Serial != null && s.Certificate.Serial.Contains(txtFreetext.Text)) ||
-                                (s.Certificate.Thumbprint != null && s.Certificate.Thumbprint.Contains(txtFreetext.Text)) ||
-                                (s.Certificate.Issuer != null && s.Certificate.Issuer.Contains(txtFreetext.Text)) ||
-                                (s.Certificate.Subject != null && s.Certificate.Subject.Contains(txtFreetext.Text)))
-                                ) ||
-                            s.DeviceSerial.ToString().Contains(txtFreetext.Text) ||
-                            s.CA.Contains(txtFreetext.Text) ||
-                            s.ManagementKey.Contains(txtFreetext.Text) ||
-                            s.PukKey.Contains(txtFreetext.Text) ||
-                            s.Username.Contains(txtFreetext.Text));
-            }
-
-            // Update views
-            lstItems.Items.Clear();
-
-            foreach (EnrolledYubikey item in items)
-            {
-                ListViewItem lsItem = new ListViewItem();
-
-                lsItem.Tag = item;
-
-                // Fields
-                // Serial
-                lsItem.Text = item.DeviceSerial.ToString();
-
-                // User
-                lsItem.SubItems.Add(item.Username);
-
-                // Enrolled
-                lsItem.SubItems.Add(item.EnrolledAt.ToLocalTime().ToString());
-
-                // Certificate Serial
-                lsItem.SubItems.Add(item.Certificate != null ? item.Certificate.Serial : "<unknown>");
-
-                lstItems.Items.Add(lsItem);
-            }
+            _neoManager = new YubikeyNeoManager();
         }
 
-        private void Display(EnrolledYubikey item)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            cmdRevoke.Enabled = false;
+            base.OnClosing(e);
 
-            lblDisplaySerial.Text = "";
-            lblDisplayUser.Text = "";
-            lblDisplayEnrolled.Text = "";
-
-            lblDisplayCertSerial.Text = "";
-            lblDisplayCertThumbprint.Text = "";
-            lblDisplayCA.Text = "";
-
-            lblDisplayVersionNeo.Text = "";
-            lblDisplayVersionPiv.Text = "";
-
-            _currentItem = item;
-
-            if (item == null)
-                return;
-
-            cmdRevoke.Enabled = _currentItem.Certificate != null;
-
-            lblDisplaySerial.Text = item.DeviceSerial.ToString();
-            lblDisplayUser.Text = item.Username;
-            lblDisplayEnrolled.Text = item.EnrolledAt.ToLocalTime().ToString();
-
-            if (item.Certificate != null)
-            {
-                lblDisplayCertSerial.Text = item.Certificate.Serial;
-                lblDisplayCertThumbprint.Text = item.Certificate.Thumbprint;
-            }
-
-            lblDisplayCA.Text = item.CA;
-
-            lblDisplayVersionNeo.Text = item.YubikeyVersions.NeoFirmware;
-            lblDisplayVersionPiv.Text = item.YubikeyVersions.PivApplet;
+            _neoManager.Dispose();
         }
 
-        private void txtFreetext_TextChanged(object sender, System.EventArgs e)
+        private void btnExecute_Click(object sender, EventArgs e)
         {
-            UpdateView();
-        }
-
-        private void lstItems_SelectedIndexChanged(object sender, System.EventArgs e)
-        {
-            if (lstItems.SelectedItems.Count < 1)
+            if (rbReset.Checked)
             {
-                Display(null);
-                return;
+                DialogResult dlgResult = MessageBox.Show("This will reset the Yubikey, wiping the PIN, PUK, management key and certificates. This will NOT revoke the certifcates. Proceeed?", "Reset YubiKey", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button2);
+
+                if (dlgResult != DialogResult.Yes)
+                    return;
+
+                bool devicePresent = _neoManager.RefreshDevice();
+
+                if (!devicePresent)
+                    return;
+
+                using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
+                {
+                    // Attempt an invalid PIN X times
+                    pivTool.BlockPin();
+
+                    // Attempt an invalid PUK X times
+                    pivTool.BlockPuk();
+
+                    bool resetDevice = pivTool.ResetDevice();
+                }
             }
 
-            EnrolledYubikey item = lstItems.SelectedItems[0].Tag as EnrolledYubikey;
-
-            Display(item);
-        }
-
-        private void cmdRevoke_Click(object sender, System.EventArgs e)
-        {
-            if (_currentItem == null)
-                // Somebody be hacking
-                return;
-
-            if (_currentItem.Certificate == null)
-                return;
-
-            DialogResult dlgResult = MessageBox.Show("Revoke the certificate enrolled at " + _currentItem.EnrolledAt.ToLocalTime() + " for " + _currentItem.Username + ". This action will revoke " +
-                            "the certificate, but will NOT wipe the yubikey." + Environment.NewLine + Environment.NewLine +
-                            "Certificate: " + _currentItem.Certificate.Serial + Environment.NewLine +
-                            "Subject: " + _currentItem.Certificate.Subject + Environment.NewLine +
-                            "Issuer: " + _currentItem.Certificate.Issuer + Environment.NewLine +
-                            "Valid: " + _currentItem.Certificate.StartDate + " to " + _currentItem.Certificate.ExpireDate,
-                            "Revoke certificate?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-
-            if (dlgResult != DialogResult.Yes)
-                return;
-
-            try
+            if (rbRevoke.Checked)
             {
-                CertificateUtilities.RevokeCertificate(_currentItem.CA, _currentItem.Certificate.Serial);
+                DialogResult dlgResult = MessageBox.Show("Revoke the certificate enrolled at " + _yubikey.EnrolledAt.ToLocalTime() + " for " + _yubikey.Username + ". This action will revoke " +
+                    "the certificate, but will NOT wipe the yubikey." + Environment.NewLine + Environment.NewLine +
+                    "Certificate: " + _yubikey.Certificate.Serial + Environment.NewLine +
+                    "Subject: " + _yubikey.Certificate.Subject + Environment.NewLine +
+                    "Issuer: " + _yubikey.Certificate.Issuer + Environment.NewLine +
+                    "Valid: " + _yubikey.Certificate.StartDate + " to " + _yubikey.Certificate.ExpireDate,
+                    "Revoke certificate?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
-                RevokedAny = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("We were unable to revoke the certificate. Details: " + ex.Message, "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (dlgResult != DialogResult.Yes)
+                    return;
 
-                return;
+                try
+                {
+                    CertificateUtilities.RevokeCertificate(_yubikey.CA, _yubikey.Certificate.Serial);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("We were unable to revoke the certificate. Details: " + ex.Message, "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Remove the item from the datastore
+                _dataStore.Remove(_yubikey);
             }
 
-            // Remove the item from the datastore
-            _dataStore.Remove(_currentItem);
+            if (rbTerminate.Checked)
+            {
+                X509Certificate2 currentCert;
 
-            // Update the view
-            UpdateView();
-            Display(null);
+                using (YubikeyPivTool piv = new YubikeyPivTool())
+                    currentCert = piv.GetCertificate9a();
+
+                var serial = _neoManager.GetSerialNumber();
+
+                EnrolledYubikey currentEnrolled = _dataStore.Search(serial).SingleOrDefault(s => s.Certificate != null && s.Certificate.Serial == currentCert.SerialNumber);
+
+                if (currentEnrolled == null)
+                {
+                    MessageBox.Show("Unable to find the current Smartcard in the store. It cannot be revoked.", "Error finding Smartcard details", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    return;
+                }
+
+                DialogResult dlgResult = MessageBox.Show("This will terminate the Yubikey, wiping the PIN, PUK, Management Key and Certificates. " +
+                                                         "This will also revoke the certificiate. Proceeed?" + Environment.NewLine + Environment.NewLine +
+                                                         "Will revoke: " + currentCert.Subject + Environment.NewLine +
+                                                         "By: " + currentCert.Issuer, "Terminate (WILL revoke)",
+                                                         MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+
+                if (dlgResult != DialogResult.Yes)
+                    return;
+
+                // Multiple certs
+                IEnumerable<EnrolledYubikey> toRevoke = new[] { currentEnrolled };
+                List<EnrolledYubikey> previous = _dataStore.Search(serial).ToList();
+
+                {
+                    int otherCertsPreviouslyEnrolledCount = previous.Count(x => x.Certificate.Serial != currentCert.SerialNumber);
+                    if (otherCertsPreviouslyEnrolledCount > 0)
+                    {
+                        dlgResult = MessageBox.Show("There has previously been enrolled " + otherCertsPreviouslyEnrolledCount + " certificates for this " +
+                                                    "device, which have not since been revoked. Revoke these also?", "Revoke excess certificates",
+                                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+
+                        bool revokeAll = dlgResult == DialogResult.Yes;
+
+                        if (revokeAll)
+                            toRevoke = toRevoke.Concat(previous);
+
+                        if (dlgResult == DialogResult.Cancel)
+                            return;
+                    }
+                }
+
+                // Begin
+                bool couldRevokeCurrentCert = false;
+                foreach (EnrolledYubikey yubikey in toRevoke)
+                {
+                    try
+                    {
+                        CertificateUtilities.RevokeCertificate(yubikey.CA, yubikey.Certificate.Serial);
+
+                        // Revoked
+                        _dataStore.Remove(yubikey);
+
+                        if (yubikey == currentEnrolled)
+                            couldRevokeCurrentCert = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(
+                            "Unable to revoke certificate " + yubikey.Certificate.Serial + " of " + yubikey.CA +
+                            " enrolled on " + yubikey.EnrolledAt + ". There was an error." + Environment.NewLine +
+                            Environment.NewLine + ex.Message, "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+
+                if (couldRevokeCurrentCert)
+                {
+                    // Wipe the Yubikey
+                    using (YubikeyPivTool piv = new YubikeyPivTool())
+                    {
+                        piv.BlockPin();
+                        piv.BlockPuk();
+
+                        bool reset = piv.ResetDevice();
+                        if (!reset)
+                        {
+                            MessageBox.Show("Unable to reset the yubikey. Try resetting it manually.",
+                                "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                }
+                else
+                {
+                    // Inform the user, do not wipe
+                    MessageBox.Show("Unable to revoke the certificate currently on the Yubikey. The yubikey will not be wiped.", "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+                _dataStore.Save(MainForm.FileStore);
+            }
         }
     }
 }

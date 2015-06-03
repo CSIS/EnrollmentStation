@@ -4,7 +4,6 @@
 using System;
 using System.Runtime.InteropServices;
 using CERTADMINLib;
-
 #if WIN8_COMPILE
  using CERTCLILib;
 #else

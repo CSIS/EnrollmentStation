@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
 
@@ -12,181 +11,70 @@ namespace EnrollmentStation
     public partial class MainForm : Form
     {
         private YubikeyNeoManager _neoManager;
+
         private DataStore _dataStore;
         private Settings _settings;
 
-        private const string FileStore = "store.xml";
-        private const string FileSettings = "settings.xml";
+        public const string FileStore = "store.xml";
+        public const string FileSettings = "settings.xml";
+
+        private bool _devicePresent;
+        private bool _hsmPresent;
 
         public MainForm()
         {
+            CheckForIllegalCrossThreadCalls = false; //TODO: remove
+
             InitializeComponent();
-        }
-
-        private void hSMToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DlgHsmSettings dialog = new DlgHsmSettings();
-
-            dialog.ShowDialog();
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            _dataStore = DataStore.Load(FileStore);
-            _settings = Settings.Load(FileSettings);
 
             _neoManager = new YubikeyNeoManager();
 
-            RefreshYubikeyInfo();
+            //Start background worker that checks for inserted yubikeys
+            BackgroundWorker insertedYubikeyWorker = new BackgroundWorker();
+            insertedYubikeyWorker.DoWork += InsertedYubikeyWorkerOnDoWork;
+            insertedYubikeyWorker.RunWorkerAsync();
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
-            base.OnClosing(e);
+            RefreshUserStore();
+            RefreshSettings();
 
-            _neoManager.Dispose();
-        }
+            RefreshSelectedKeyInfo();
+            RefreshInsertedKey();
 
-        private void cmdYubikeyRefresh_Click(object sender, EventArgs e)
-        {
-            // TODO: Do on event, instead of button
-            RefreshYubikeyInfo();
-        }
-
-        private void RefreshYubikeyInfo()
-        {
-            lblYubikeyStatus.Text = "Updating ...";
-
-            cmdEnableCcid.Enabled = false;
-            cmdExportCertificate.Enabled = false;
-            cmdViewCertificate.Enabled = false;
-
-            cmdYubikeyEnroll.Enabled = false;
-            cmdYubikeyTerminate.Enabled = false;
-            cmdYubikeyReset.Enabled = false;
-
-            lblYubikeySerial.Text = string.Empty;
-            lblYubikeyMode.Text = string.Empty;
-            lblYubikeyCertificateSubject.Text = string.Empty;
-            lblYubikeyCertificateIssuer.Text = string.Empty;
-            lblYubikeyEnrollState.Text = "<unknown>";
-            lblYubikeyPivVersion.Text = string.Empty;
-
-            changeResetPINToolStripMenuItem.Enabled = false;
-            importUnknownSmartcardToolStripMenuItem.Enabled = false;
-
-            try
+            if (!File.Exists(FileSettings))
             {
-                bool devicePresent = _neoManager.RefreshDevice();
+                DlgSettings dialog = new DlgSettings(_settings);
+                var res = dialog.ShowDialog();
 
-                if (devicePresent)
+                if (res != DialogResult.OK)
                 {
-                    cmdYubikeyReset.Enabled = true;
-
-                    YubicoNeoMode mode = _neoManager.GetMode();
-                    int serialNumber = _neoManager.GetSerialNumber();
-
-                    lblYubikeySerial.Text = serialNumber.ToString();
-                    lblYubikeyMode.Text = mode.ToString();
-
-                    cmdEnableCcid.Enabled = !YubikeyNeoManager.ModeHasCcid(mode);
-
-                    using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
-                    {
-                        lblYubikeyPivVersion.Text = pivTool.GetVersion();
-
-                        X509Certificate2 cert = pivTool.GetCertificate9a();
-
-                        if (cert != null)
-                        {
-                            lblYubikeyCertificateSubject.Text = cert.Subject;
-                            lblYubikeyCertificateIssuer.Text = cert.Issuer;
-
-                            cmdExportCertificate.Enabled = true;
-                            cmdViewCertificate.Enabled = true;
-                        }
-                        else
-                        {
-                            lblYubikeyCertificateSubject.Text = "Not set";
-                            lblYubikeyCertificateIssuer.Text = string.Empty;
-
-                            cmdYubikeyEnroll.Enabled = true;
-                        }
-                    }
-
-                    List<EnrolledYubikey> enrolleds = _dataStore.Search(serialNumber).ToList();
-
-                    if (enrolleds.Any())
-                    {
-                        lblYubikeyEnrollState.Text = enrolleds.Count + " previous";
-
-                        cmdYubikeyTerminate.Enabled = true;
-                        changeResetPINToolStripMenuItem.Enabled = true;
-                    }
-                    else
-                    {
-                        lblYubikeyEnrollState.Text = "No";
-                        importUnknownSmartcardToolStripMenuItem.Enabled = true;
-                    }
+                    MessageBox.Show("You have to set the settings. Restart the application to set the settings.");
+                    Close();
                 }
-                else
-                {
-                    lblYubikeySerial.Text = "No device";
-                    lblYubikeyMode.Text = string.Empty;
-
-                    lblYubikeyPivVersion.Text = string.Empty;
-
-                    lblYubikeyCertificateSubject.Text = string.Empty;
-                    lblYubikeyCertificateIssuer.Text = string.Empty;
-
-                    lblYubikeyEnrollState.Text = string.Empty;
-                }
-
-                lblYubikeyStatus.Text = string.Empty;
-            }
-            catch (Exception ex)
-            {
-                lblYubikeyStatus.Text = ex.Message;
             }
         }
 
-        private void cmdEnableCcid_Click(object sender, EventArgs e)
+        private void InsertedYubikeyWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            lblYubikeyStatus.Text = "Enabling ...";
-
-            DialogResult confirmResult = MessageBox.Show("Enable CCID?", "Enable", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-
-            if (confirmResult != DialogResult.Yes)
+            while (true)
             {
-                RefreshYubikeyInfo();
-                return;
-            }
+                _devicePresent = _neoManager.RefreshDevice();
 
-            try
-            {
+                bool enableCCID;
+
                 YubicoNeoMode currentMode = _neoManager.GetMode();
-                YubicoNeoMode newMode = currentMode;
+
                 switch (currentMode)
                 {
                     case YubicoNeoMode.OtpOnly:
-                        newMode = YubicoNeoMode.OtpCcid;
-                        break;
                     case YubicoNeoMode.U2fOnly:
-                        newMode = YubicoNeoMode.U2fCcid;
-                        break;
                     case YubicoNeoMode.OtpU2f:
-                        newMode = YubicoNeoMode.OtpU2fCcid;
-                        break;
                     case YubicoNeoMode.OtpOnly_WithEject:
-                        newMode = YubicoNeoMode.OtpCcid_WithEject;
-                        break;
                     case YubicoNeoMode.U2fOnly_WithEject:
-                        newMode = YubicoNeoMode.U2fCcid_WithEject;
-                        break;
                     case YubicoNeoMode.OtpU2f_WithEject:
-                        newMode = YubicoNeoMode.OtpU2fCcid_WithEject;
+                        enableCCID = true;
                         break;
                     case YubicoNeoMode.CcidOnly:
                     case YubicoNeoMode.OtpCcid:
@@ -196,320 +84,220 @@ namespace EnrollmentStation
                     case YubicoNeoMode.OtpCcid_WithEject:
                     case YubicoNeoMode.U2fCcid_WithEject:
                     case YubicoNeoMode.OtpU2fCcid_WithEject:
+                        enableCCID = false;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
-                if (newMode != currentMode)
-                    _neoManager.SetMode(newMode);
+                btnEnableCCID.Text = enableCCID ? "Enable CCID" : "Disable CCID";
 
-                RefreshYubikeyInfo();
-            }
-            catch (Exception ex)
-            {
-                lblYubikeyStatus.Text = ex.Message;
-            }
-        }
+                btnEnableCCID.Enabled = _devicePresent;
+                btnExportCert.Enabled = _devicePresent & !enableCCID;
+                btnViewCert.Enabled = _devicePresent & !enableCCID;
 
-        private void cmdExportCertificate_Click(object sender, EventArgs e)
-        {
-            lblYubikeyStatus.Text = "Saving ..";
+                _hsmPresent = HsmRng.IsHsmPresent();
 
-            try
-            {
-                bool devicePresent = _neoManager.RefreshDevice();
+                lblHSMPresent.Text = "HSM present: " + (_hsmPresent ? "Yes" : "No");
 
-                if (!devicePresent)
-                {
-                    lblYubikeyStatus.Text = "No device";
-                    return;
-                }
+                RefreshInsertedKey();
 
-                string id = _neoManager.GetSerialNumber().ToString();
-                X509Certificate2 cert;
-                using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
-                    cert = pivTool.GetCertificate9a();
-
-                if (cert == null)
-                {
-                    lblYubikeyStatus.Text = "No certificate";
-                    return;
-                }
-
-                SaveFileDialog dlg = new SaveFileDialog();
-                dlg.FileName = id + ".crt";
-
-                DialogResult dlgResult = dlg.ShowDialog();
-
-                if (dlgResult != DialogResult.OK)
-                {
-                    lblYubikeyStatus.Text = string.Empty;
-                    return;
-                }
-
-                using (Stream fs = dlg.OpenFile())
-                {
-                    byte[] data = cert.GetRawCertData();
-                    fs.Write(data, 0, data.Length);
-                }
-
-                lblYubikeyStatus.Text = string.Empty;
-            }
-            catch (Exception ex)
-            {
-                lblYubikeyStatus.Text = ex.Message;
+                Thread.Sleep(500);
             }
         }
 
-        private void cmdYubikeyViewCertificate_Click(object sender, EventArgs e)
+        private void RefreshSelectedKeyInfo()
         {
-            lblYubikeyStatus.Text = "Viewing ..";
-
-            try
+            foreach (Control control in gbSelectedKey.Controls)
             {
-                bool devicePresent = _neoManager.RefreshDevice();
+                control.Visible = lstItems.SelectedItems.Count == 1;
+            }
 
-                if (!devicePresent)
-                {
-                    lblYubikeyStatus.Text = "No device";
-                    return;
-                }
+            foreach (Control control in gbSelectedKeyCertificate.Controls)
+            {
+                control.Visible = lstItems.SelectedItems.Count == 1;
+            }
+        }
 
-                X509Certificate2 cert;
-                using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
-                    cert = pivTool.GetCertificate9a();
+        private void RefreshInsertedKey()
+        {
+            foreach (Control control in gbInsertedKey.Controls)
+            {
+                control.Visible = _devicePresent;
+            }
 
-                if (cert == null)
-                {
-                    lblYubikeyStatus.Text = "No certificate";
-                    return;
-                }
+            if (!_devicePresent)
+                return;
 
+            lblInsertedSerial.Text = _neoManager.GetSerialNumber().ToString();
+            lblInsertedFirmware.Text = _neoManager.GetVersion().ToString();
+            lblInsertedMode.Text = _neoManager.GetMode().ToString();
+        }
+
+        private void RefreshUserStore()
+        {
+            _dataStore = DataStore.Load(FileStore);
+
+            foreach (EnrolledYubikey yubikey in _dataStore.Yubikeys)
+            {
+                ListViewItem lsItem = new ListViewItem();
+
+                lsItem.Tag = yubikey;
+
+                // Fields
+                // Serial
+                lsItem.Text = yubikey.DeviceSerial.ToString();
+
+                // User
+                lsItem.SubItems.Add(yubikey.Username);
+
+                // Enrolled
+                lsItem.SubItems.Add(yubikey.EnrolledAt.ToLocalTime().ToString());
+
+                // Certificate Serial
+                lsItem.SubItems.Add(yubikey.Certificate != null ? yubikey.Certificate.Serial : "<unknown>");
+
+                lstItems.Items.Add(lsItem);
+            }
+        }
+
+        private void RefreshSettings()
+        {
+            _settings = Settings.Load(FileSettings);
+        }
+
+        private void exportCertificateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void viewCertificateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnViewCert_Click(object sender, EventArgs e)
+        {
+            if (!_devicePresent)
+                return;
+
+            X509Certificate2 cert;
+
+            using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
+                cert = pivTool.GetCertificate9a();
+
+            if (cert == null)
+                MessageBox.Show("No certificate on device.", "No Certificate", MessageBoxButtons.OK);
+            else
                 X509Certificate2UI.DisplayCertificate(cert);
-            }
-            catch (Exception ex)
-            {
-                lblYubikeyStatus.Text = ex.Message;
-            }
         }
 
-        private void cmdYubikeyTerminate_Click(object sender, EventArgs e)
+        private void btnExportCert_Click(object sender, EventArgs e)
         {
-            X509Certificate2 currentCert;
-            int serial;
-            using (YubikeyPivTool piv = new YubikeyPivTool())
-                currentCert = piv.GetCertificate9a();
+            if (!_devicePresent)
+                return;
 
-            serial = _neoManager.GetSerialNumber();
+            X509Certificate2 cert;
+            using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
+                cert = pivTool.GetCertificate9a();
 
-            EnrolledYubikey currentEnrolled = _dataStore.Search(serial).SingleOrDefault(s => s.Certificate != null && s.Certificate.Serial == currentCert.SerialNumber);
-
-            if (currentEnrolled == null)
+            if (cert == null)
             {
-                MessageBox.Show("Unable to find the current Smartcard in the store. It cannot be revoked.", "Error finding Smartcard details", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-
+                MessageBox.Show("No certificate on device.", "No Certificate", MessageBoxButtons.OK);
                 return;
             }
 
-            DialogResult dlgResult = MessageBox.Show("This will terminate the Yubikey, wiping the PIN, PUK, Management Key and Certificates. " +
-                                                     "This will also revoke the certificiate. Proceeed?" + Environment.NewLine + Environment.NewLine +
-                                                     "Will revoke: " + currentCert.Subject + Environment.NewLine +
-                                                     "By: " + currentCert.Issuer, "Terminate (WILL revoke)",
-                                                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = _neoManager.GetSerialNumber() + "-" + cert.SerialNumber + ".crt"; //TODO: GetSerialNumber() can possibly fail
 
-            if (dlgResult != DialogResult.Yes)
+            DialogResult dlgResult = saveFileDialog.ShowDialog();
+
+            if (dlgResult != DialogResult.OK)
                 return;
 
-            // Multiple certs
-            IEnumerable<EnrolledYubikey> toRevoke = new[] { currentEnrolled };
-            List<EnrolledYubikey> previous = _dataStore.Search(serial).ToList();
-
+            using (Stream fs = saveFileDialog.OpenFile())
             {
-                int otherCertsPreviouslyEnrolledCount = previous.Count(x => x.Certificate.Serial != currentCert.SerialNumber);
-                if (otherCertsPreviouslyEnrolledCount > 0)
-                {
-                    dlgResult = MessageBox.Show("There has previously been enrolled " + otherCertsPreviouslyEnrolledCount + " certificates for this " +
-                                                "device, which have not since been revoked. Revoke these also?", "Revoke excess certificates",
-                                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-
-                    bool revokeAll = dlgResult == DialogResult.Yes;
-                    if (revokeAll)
-                        toRevoke = toRevoke.Concat(previous);
-
-                    if (dlgResult == DialogResult.Cancel)
-                        return;
-                }
-            }
-
-            // Begin
-            bool couldRevokeCurrentCert = false;
-            foreach (EnrolledYubikey yubikey in toRevoke)
-            {
-                try
-                {
-                    CertificateUtilities.RevokeCertificate(yubikey.CA, yubikey.Certificate.Serial);
-
-                    // Revoked
-                    _dataStore.Remove(yubikey);
-
-                    if (yubikey == currentEnrolled)
-                        couldRevokeCurrentCert = true;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(
-                        "Unable to revoke certificate " + yubikey.Certificate.Serial + " of " + yubikey.CA +
-                        " enrolled on " + yubikey.EnrolledAt + ". There was an error." + Environment.NewLine +
-                        Environment.NewLine + ex.Message, "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
-
-            if (couldRevokeCurrentCert)
-            {
-                // Wipe the Yubikey
-                using (YubikeyPivTool piv = new YubikeyPivTool())
-                {
-                    piv.BlockPin();
-                    piv.BlockPuk();
-
-                    bool reset = piv.ResetDevice();
-                    if (!reset)
-                    {
-                        MessageBox.Show("Unable to reset the yubikey. Try resetting it manually.",
-                            "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
-            }
-            else
-            {
-                // Inform the user, do not wipe
-                MessageBox.Show("Unable to revoke the certificate currently on the Yubikey. The yubikey will not be wiped.",
-                    "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
-            _dataStore.Save(FileStore);
-            RefreshYubikeyInfo();
-        }
-
-        private void revokeLostSmartcardToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DlgRevokeCertificate revokeCertificate = new DlgRevokeCertificate(_dataStore);
-
-            revokeCertificate.ShowDialog();
-
-            if (revokeCertificate.RevokedAny)
-            {
-                _dataStore.Save(FileStore);
+                byte[] data = cert.GetRawCertData();
+                fs.Write(data, 0, data.Length);
             }
         }
 
-        private void cmdYubikeyEnroll_Click(object sender, EventArgs e)
+        private void btnEnableCCID_Click(object sender, EventArgs e)
         {
-            DlgEnroll enrollDialog = new DlgEnroll(_settings, _dataStore);
+            YubicoNeoMode currentMode = _neoManager.GetMode();
+            YubicoNeoMode newMode;
 
-            enrollDialog.ShowDialog();
-
-            _dataStore.Save(FileStore);
-
-            RefreshYubikeyInfo();
-        }
-
-        private void cmdYubikeyReset_Click(object sender, EventArgs e)
-        {
-            DialogResult dlgResult = MessageBox.Show("This will reset the Yubikey, wiping the PIN, PUK, Management Key and Certificates. This will NOT revoke any certifcates. Proceeed?", "Reset (No revoking)", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button2);
-
-            if (dlgResult != DialogResult.Yes)
-                return;
-
-            lblYubikeyStatus.Text = "Resetting ..";
-
-            try
+            switch (currentMode)
             {
-                bool devicePresent = _neoManager.RefreshDevice();
-
-                if (!devicePresent)
-                {
-                    lblYubikeyStatus.Text = "No device";
-                    return;
-                }
-
-                using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
-                {
-                    // Attempt an invalid PIN X times
-                    lblYubikeyStatus.Text = "Resetting PIN ..";
-
-                    pivTool.BlockPin();
-
-                    // Attempt an invalid PUK X times
-                    lblYubikeyStatus.Text = "Resetting PUK ..";
-
-                    pivTool.BlockPuk();
-
-                    lblYubikeyStatus.Text = "Resetting device ..";
-
-                    bool resetDevice = pivTool.ResetDevice();
-
-                    if (resetDevice)
-                    {
-                        lblYubikeyStatus.Text = "Reset sucessfully..";
-
-                        RefreshYubikeyInfo();
-                    }
-                    else
-                    {
-                        lblYubikeyStatus.Text = "Something went wrong..";
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                lblYubikeyStatus.Text = ex.Message;
-            }
-        }
-
-        private void configureToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DlgSettings settingsDialog = new DlgSettings(_settings);
-
-            DialogResult result = settingsDialog.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                // Save
-                _settings.Save(FileSettings);
-            }
-            else
-            {
-                // Reload previous
-                _settings = Settings.Load(FileSettings);
-            }
-        }
-
-        private void changeResetPINToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DlgChangePin changePin = new DlgChangePin(_dataStore);
-
-            changePin.ShowDialog();
-        }
-
-        private void cmdExit_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void importUnknownSmartcardToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DlgImport frm = new DlgImport(_dataStore, _settings);
-
-            DialogResult result = frm.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                _dataStore.Save(FileStore);
+                case YubicoNeoMode.OtpOnly:
+                    newMode = YubicoNeoMode.OtpCcid;
+                    break;
+                case YubicoNeoMode.U2fOnly:
+                    newMode = YubicoNeoMode.U2fCcid;
+                    break;
+                case YubicoNeoMode.OtpU2f:
+                    newMode = YubicoNeoMode.OtpU2fCcid;
+                    break;
+                case YubicoNeoMode.OtpOnly_WithEject:
+                    newMode = YubicoNeoMode.OtpCcid_WithEject;
+                    break;
+                case YubicoNeoMode.U2fOnly_WithEject:
+                    newMode = YubicoNeoMode.U2fCcid_WithEject;
+                    break;
+                case YubicoNeoMode.OtpU2f_WithEject:
+                    newMode = YubicoNeoMode.OtpU2fCcid_WithEject;
+                    break;
+                case YubicoNeoMode.CcidOnly:
+                    newMode = YubicoNeoMode.OtpOnly;
+                    break;
+                case YubicoNeoMode.OtpCcid:
+                    newMode = YubicoNeoMode.OtpOnly;
+                    break;
+                case YubicoNeoMode.U2fCcid:
+                    newMode = YubicoNeoMode.U2fOnly;
+                    break;
+                case YubicoNeoMode.OtpU2fCcid:
+                    newMode = YubicoNeoMode.OtpU2f;
+                    break;
+                case YubicoNeoMode.CcidOnly_WithEject:
+                    newMode = YubicoNeoMode.OtpOnly_WithEject;
+                    break;
+                case YubicoNeoMode.OtpCcid_WithEject:
+                    newMode = YubicoNeoMode.OtpOnly_WithEject;
+                    break;
+                case YubicoNeoMode.U2fCcid_WithEject:
+                    newMode = YubicoNeoMode.U2fOnly_WithEject;
+                    break;
+                case YubicoNeoMode.OtpU2fCcid_WithEject:
+                    newMode = YubicoNeoMode.OtpU2f_WithEject;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
-            RefreshYubikeyInfo();
+            if (newMode != currentMode)
+                _neoManager.SetMode(newMode);
+        }
+
+        private void btnEnrollKey_Click(object sender, EventArgs e)
+        {
+            DlgEnroll enroll = new DlgEnroll(_settings, _dataStore);
+            enroll.ShowDialog();
+        }
+
+        private void revokeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _neoManager.Dispose();
+        }
+
+        private void tsbSettings_Click(object sender, EventArgs e)
+        {
+            DlgSettings dialog = new DlgSettings(_settings);
+            dialog.ShowDialog();
         }
     }
 }

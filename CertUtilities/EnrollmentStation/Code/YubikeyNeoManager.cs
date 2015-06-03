@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace EnrollmentStation.Code
@@ -131,6 +129,9 @@ namespace EnrollmentStation.Code
                 return true;
 
             if (res == YubicoNeoReturnCode.YKNEOMGR_NO_DEVICE)
+                return false;
+
+            if (res == YubicoNeoReturnCode.YKNEOMGR_BACKEND_ERROR)
                 return false;
 
             throw new Exception("Unable to find device: " + res);

@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
 namespace EnrollmentStation.Code
@@ -46,7 +47,7 @@ namespace EnrollmentStation.Code
 
         public static string ExportPublicKeyToPEMFormat(RSAParameters parms)
         {
-            RsaKeyParameters publicParams = Org.BouncyCastle.Security.DotNetUtilities.GetRsaPublicKey(parms);
+            RsaKeyParameters publicParams = DotNetUtilities.GetRsaPublicKey(parms);
             SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicParams);
 
             return Convert.ToBase64String(keyInfo.GetEncoded());

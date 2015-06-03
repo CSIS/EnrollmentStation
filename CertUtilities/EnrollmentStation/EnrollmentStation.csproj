@@ -46,6 +46,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Management" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
@@ -75,26 +77,20 @@
     <Compile Include="DlgChangePin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DlgChangePin.Designer.cs">
+    <Compile Include="DlgChangePin.designer.cs">
       <DependentUpon>DlgChangePin.cs</DependentUpon>
     </Compile>
     <Compile Include="DlgEnroll.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DlgEnroll.Designer.cs">
+    <Compile Include="DlgEnroll.designer.cs">
       <DependentUpon>DlgEnroll.cs</DependentUpon>
     </Compile>
-    <Compile Include="DlgHsmSettings.cs">
+    <Compile Include="DlgPleaseInsertYubikey.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DlgHsmSettings.Designer.cs">
-      <DependentUpon>DlgHsmSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DlgImport.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DlgImport.Designer.cs">
-      <DependentUpon>DlgImport.cs</DependentUpon>
+    <Compile Include="DlgPleaseInsertYubikey.Designer.cs">
+      <DependentUpon>DlgPleaseInsertYubikey.cs</DependentUpon>
     </Compile>
     <Compile Include="DlgRevokeCertificate.cs">
       <SubType>Form</SubType>
@@ -102,11 +98,23 @@
     <Compile Include="DlgRevokeCertificate.Designer.cs">
       <DependentUpon>DlgRevokeCertificate.cs</DependentUpon>
     </Compile>
+    <Compile Include="DlgSelectUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DlgSelectUser.Designer.cs">
+      <DependentUpon>DlgSelectUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="DlgSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DlgSettings.Designer.cs">
+    <Compile Include="DlgSettings.designer.cs">
       <DependentUpon>DlgSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DlgSpinner.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DlgSpinner.Designer.cs">
+      <DependentUpon>DlgSpinner.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -122,17 +130,20 @@
     <EmbeddedResource Include="DlgEnroll.resx">
       <DependentUpon>DlgEnroll.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DlgHsmSettings.resx">
-      <DependentUpon>DlgHsmSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DlgImport.resx">
-      <DependentUpon>DlgImport.cs</DependentUpon>
+    <EmbeddedResource Include="DlgPleaseInsertYubikey.resx">
+      <DependentUpon>DlgPleaseInsertYubikey.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DlgRevokeCertificate.resx">
       <DependentUpon>DlgRevokeCertificate.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DlgSelectUser.resx">
+      <DependentUpon>DlgSelectUser.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DlgSettings.resx">
       <DependentUpon>DlgSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DlgSpinner.resx">
+      <DependentUpon>DlgSpinner.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

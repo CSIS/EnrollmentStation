@@ -22,5 +22,7 @@ namespace EnrollmentStation.Code
 
         [XmlAttribute]
         public DateTime ExpireDate { get; set; }
+
+        public byte[] RawCertificate { get; set; }
     }
 }

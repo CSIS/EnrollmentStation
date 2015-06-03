@@ -11,87 +11,83 @@ namespace EnrollmentStation
     public partial class DlgSettings : Form
     {
         private const int CC_UIPICKCONFIG = 0x1;
+        private static Regex managementKeyRegex = new Regex("^[A-F0-9]{48}$", RegexOptions.Compiled);
 
         private readonly Settings _settings;
 
         public DlgSettings(Settings settings)
         {
-            InitializeComponent();
-
             _settings = settings;
+
+            InitializeComponent();
+        }
+
+        private void DlgSettings_Load(object sender, EventArgs e)
+        {
             UpdateView();
         }
 
         private void UpdateView()
         {
-            if (string.IsNullOrEmpty(_settings.CA))
-                lblCA.Text = "Not chosen";
-            else
-                lblCA.Text = _settings.CA;
-
-            if (string.IsNullOrEmpty(_settings.EnrollmentAgentCertificate))
-                lblAgentCertificate.Text = "Not chosen";
-            else
-                lblAgentCertificate.Text = _settings.EnrollmentAgentCertificate;
-
-            txtDomain.Text = _settings.EnrollmentDomain;
+            lblHSMAvaliable.Text = HsmRng.IsHsmPresent() ? "Yes" : "No";
             txtManagementKey.Text = _settings.EnrollmentManagementKey;
+            txtCSREndpoint.Text = _settings.CSREndpoint;
             txtCaTemplate.Text = _settings.EnrollmentCaTemplate;
+            txtAgentCert.Text = _settings.EnrollmentAgentCertificate;
         }
 
-        private void lblCa_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void btnSave_Click(object sender, EventArgs e)
         {
-            CCertConfig objCertConfig = new CCertConfig();
-
-            try
-            {
-                string config = objCertConfig.GetConfig(CC_UIPICKCONFIG);
-
-                if (!string.IsNullOrEmpty(config))
-                {
-                    _settings.CA = config;
-                    UpdateView();
-                }
-            }
-            catch (Exception)
-            {
-
-            }
-        }
-
-        private void txtDomain_TextChanged(object sender, System.EventArgs e)
-        {
-            _settings.EnrollmentDomain = txtDomain.Text;
-        }
-
-        private void cmdSave_Click(object sender, System.EventArgs e)
-        {
-            Regex rgx = new Regex("^[A-F0-9]{48}$");
-
             txtManagementKey.Text = txtManagementKey.Text.ToUpper();
-            if (!rgx.IsMatch(txtManagementKey.Text))
+
+            if (!managementKeyRegex.IsMatch(txtManagementKey.Text))
             {
-                MessageBox.Show("Management key must be 48 hex-characters long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Management key must be 48 hex-characters", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
+
+            _settings.CSREndpoint = txtCSREndpoint.Text;
+            _settings.EnrollmentAgentCertificate = txtAgentCert.Text;
+            _settings.EnrollmentManagementKey = txtManagementKey.Text;
+            _settings.EnrollmentCaTemplate = txtCaTemplate.Text;
+
+            _settings.Save(MainForm.FileSettings);
 
             DialogResult = DialogResult.OK;
         }
 
-        private void txtManagementKey_TextChanged(object sender, System.EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
-            _settings.EnrollmentManagementKey = txtManagementKey.Text;
+            DialogResult = DialogResult.Cancel;
         }
 
-        private void lblAgentCertificate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void llBrowseCA_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                CCertConfig objCertConfig = new CCertConfig();
+
+
+                string config = objCertConfig.GetConfig(CC_UIPICKCONFIG);
+
+                if (!string.IsNullOrEmpty(config))
+                    txtCSREndpoint.Text = config;
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void llBrowseAgentCert_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             X509Store store = new X509Store(StoreName.My);
 
-            store.Open(OpenFlags.ReadOnly);
-
-            X509Certificate2Collection eligible = new X509Certificate2Collection();
             try
             {
+                store.Open(OpenFlags.ReadOnly);
+
+                X509Certificate2Collection eligible = new X509Certificate2Collection();
+
                 foreach (X509Certificate2 certificate in store.Certificates)
                 {
                     if (!certificate.HasPrivateKey)
@@ -119,23 +115,34 @@ namespace EnrollmentStation
                     if (canBeUsed)
                         eligible.Add(certificate);
                 }
+
+                X509Certificate2Collection selected = X509Certificate2UI.SelectFromCollection(eligible, "Chose a certificate", "Pick an enrollment agent certificate to use.", X509SelectionFlag.SingleSelection);
+
+                foreach (X509Certificate2 certificate in selected)
+                {
+                    txtAgentCert.Text = certificate.Thumbprint;
+                    break;
+                }
             }
-            finally 
+            finally
             {
                 store.Close();
             }
-
-            X509Certificate2Collection selected = X509Certificate2UI.SelectFromCollection(eligible, "Chose a certificate", "Pick an enrollment agent certificate to use.", X509SelectionFlag.SingleSelection);
-
-            foreach (X509Certificate2 certificate in selected)
-                _settings.EnrollmentAgentCertificate = certificate.Thumbprint;
-
-            UpdateView();
         }
 
-        private void txtCaTemplate_TextChanged(object sender, EventArgs e)
+        private void llGenerateMgtKey_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            _settings.EnrollmentCaTemplate = txtCaTemplate.Text;
+            byte[] newKey = new byte[24];
+
+            if (HsmRng.IsHsmPresent())
+                newKey = HsmRng.FetchRandom(24);
+            else
+            {
+                using (RNGCryptoServiceProvider cryptoService = new RNGCryptoServiceProvider())
+                    cryptoService.GetBytes(newKey);
+            }
+
+            txtManagementKey.Text = BitConverter.ToString(newKey).Replace("-", string.Empty);
         }
     }
 }
