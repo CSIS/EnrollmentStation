@@ -95,23 +95,23 @@ namespace EnrollmentStation
         {
             bool eligible = !string.IsNullOrEmpty(_settings.CSREndpoint);
 
-            if (string.IsNullOrEmpty(_settings.EnrollmentAgentCertificate))
-                eligible = false;
+            //if (string.IsNullOrEmpty(_settings.EnrollmentAgentCertificate))
+            //    eligible = false;
 
-            if (string.IsNullOrEmpty(_settings.EnrollmentManagementKey))
-                eligible = false;
+            //if (string.IsNullOrEmpty(_settings.EnrollmentManagementKey))
+            //    eligible = false;
 
-            if (string.IsNullOrEmpty(_settings.EnrollmentCaTemplate))
-                eligible = false;
+            //if (string.IsNullOrEmpty(_settings.EnrollmentCaTemplate))
+            //    eligible = false;
 
-            if (txtPin.Text.Length <= 0 || txtPin.Text.Length > 8)
-                eligible = false;
+            //if (txtPin.Text.Length <= 0 || txtPin.Text.Length > 8)
+            //    eligible = false;
 
-            if (txtPin.Text != txtPinAgain.Text)
-                eligible = false;
+            //if (txtPin.Text != txtPinAgain.Text)
+            //    eligible = false;
 
-            if (string.IsNullOrEmpty(txtUser.Text))
-                eligible = false;
+            //if (string.IsNullOrEmpty(txtUser.Text))
+            //    eligible = false;
 
             cmdEnroll.Enabled = eligible;
         }
@@ -167,8 +167,7 @@ namespace EnrollmentStation
 
             // 4 - Prep Management Key
             // TODO: Consider a new key every time?
-            string mgmKeyString = _settings.EnrollmentManagementKey;
-            byte[] mgmKey = Utilities.StringToByteArray(mgmKeyString);
+            byte[] mgmKey = _settings.EnrollmentManagementKey;
 
             prgEnroll.Value = 4;
 

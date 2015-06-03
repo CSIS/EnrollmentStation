@@ -16,8 +16,8 @@ namespace EnrollmentStation
         private DataStore _dataStore;
         private Settings _settings;
 
-        public const string FileStore = "store.xml";
-        public const string FileSettings = "settings.xml";
+        public const string FileStore = "store.json";
+        public const string FileSettings = "settings.json";
 
         private bool _devicePresent;
         private bool _hsmPresent;

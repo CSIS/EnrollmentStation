@@ -1,7 +1,5 @@
 using System.IO;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace EnrollmentStation.Code
 {
@@ -15,7 +13,7 @@ namespace EnrollmentStation.Code
 
         public string EnrollmentAgentCertificate { get; set; }
 
-        public string EnrollmentManagementKey { get; set; }
+        public byte[] EnrollmentManagementKey { get; set; }
 
         public string EnrollmentCaTemplate { get; set; }
 
@@ -24,22 +22,12 @@ namespace EnrollmentStation.Code
             if (!File.Exists(file))
                 return new Settings();
 
-            XmlSerializer ser = new XmlSerializer(typeof(Settings));
-            XDocument doc = XDocument.Load(file);
-
-            using (XmlReader reader = doc.CreateReader())
-                return (Settings)ser.Deserialize(reader);
+            return JsonConvert.DeserializeObject<Settings>(File.ReadAllText(file)) ?? new Settings();
         }
 
         public void Save(string file)
         {
-            XmlSerializer ser = new XmlSerializer(typeof(Settings));
-            XDocument doc = new XDocument();
-
-            using (XmlWriter writer = doc.CreateWriter())
-                ser.Serialize(writer, this);
-
-            doc.Save(file);
+            File.WriteAllText(file, JsonConvert.SerializeObject(this));
         }
     }
 }

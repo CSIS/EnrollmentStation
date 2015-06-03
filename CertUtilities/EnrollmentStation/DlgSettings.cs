@@ -30,7 +30,7 @@ namespace EnrollmentStation
         private void UpdateView()
         {
             lblHSMAvaliable.Text = HsmRng.IsHsmPresent() ? "Yes" : "No";
-            txtManagementKey.Text = _settings.EnrollmentManagementKey;
+            txtManagementKey.Text = BitConverter.ToString(_settings.EnrollmentManagementKey).Replace("-", "");
             txtCSREndpoint.Text = _settings.CSREndpoint;
             txtCaTemplate.Text = _settings.EnrollmentCaTemplate;
             txtAgentCert.Text = _settings.EnrollmentAgentCertificate;
@@ -48,7 +48,7 @@ namespace EnrollmentStation
 
             _settings.CSREndpoint = txtCSREndpoint.Text;
             _settings.EnrollmentAgentCertificate = txtAgentCert.Text;
-            _settings.EnrollmentManagementKey = txtManagementKey.Text;
+            _settings.EnrollmentManagementKey = Utilities.StringToByteArray(txtManagementKey.Text);
             _settings.EnrollmentCaTemplate = txtCaTemplate.Text;
 
             _settings.Save(MainForm.FileSettings);
