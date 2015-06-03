@@ -13,9 +13,15 @@ namespace EnrollmentStation
         private BackgroundWorker _worker = new BackgroundWorker();
         private YubikeyNeoManager _neo;
 
+        private bool _hasBeenFound = false;
+
         public DlgPleaseInsertYubikey(EnrolledYubikey key)
         {
             _key = key;
+            _neo = new YubikeyNeoManager();
+
+            CheckForYubikey();
+
             InitializeComponent();
 
             lblSerial.Text = _key.DeviceSerial.ToString();
@@ -23,9 +29,22 @@ namespace EnrollmentStation
 
             _worker.DoWork += WorkerOnDoWork;
             _worker.RunWorkerCompleted += WorkerOnRunWorkerCompleted;
-            _worker.RunWorkerAsync();
+        }
 
-            _neo = new YubikeyNeoManager();
+        public new DialogResult ShowDialog()
+        {
+            if (_hasBeenFound)
+            {
+                DialogResult = DialogResult.OK;
+                return DialogResult;
+            }
+
+            return base.ShowDialog();
+        }
+
+        private void DlgPleaseInsertYubikey_Load(object sender, EventArgs e)
+        {
+            _worker.RunWorkerAsync();
         }
 
         private void WorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
@@ -34,22 +53,27 @@ namespace EnrollmentStation
             Close();
         }
 
+        private void CheckForYubikey()
+        {
+            bool hadDevice = _neo.RefreshDevice();
+            if (!hadDevice)
+                return;
+
+            int serial = _neo.GetSerialNumber();
+            if (serial != _key.DeviceSerial) 
+                return;
+
+            // Success
+            _hasBeenFound = true;
+        }
+
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            while (true)
+            while (!_hasBeenFound)
             {
-                bool hadDevice = _neo.RefreshDevice();
-
-                if (hadDevice)
-                {
-                    int serial = _neo.GetSerialNumber();
-                    if (serial == _key.DeviceSerial)
-                    {
-                        return;
-                    }
-                }
-
                 Thread.Sleep(1000);
+
+                CheckForYubikey();
             }
         }
     }

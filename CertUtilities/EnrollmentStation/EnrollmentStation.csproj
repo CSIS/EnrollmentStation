@@ -77,11 +77,11 @@
     <Compile Include="Code\YubikeyNeoManager.cs" />
     <Compile Include="Code\YubikeyPivTool.cs" />
     <Compile Include="Code\YubikeyVersions.cs" />
-    <Compile Include="DlgChangePin.cs">
+    <Compile Include="DlgResetPin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DlgChangePin.designer.cs">
-      <DependentUpon>DlgChangePin.cs</DependentUpon>
+    <Compile Include="DlgResetPin.designer.cs">
+      <DependentUpon>DlgResetPin.cs</DependentUpon>
     </Compile>
     <Compile Include="DlgEnroll.cs">
       <SubType>Form</SubType>
@@ -127,8 +127,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="DlgChangePin.resx">
-      <DependentUpon>DlgChangePin.cs</DependentUpon>
+    <EmbeddedResource Include="DlgResetPin.resx">
+      <DependentUpon>DlgResetPin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DlgEnroll.resx">
       <DependentUpon>DlgEnroll.cs</DependentUpon>

@@ -33,7 +33,7 @@ namespace EnrollmentStation
             //Start background worker that checks for inserted yubikeys
             BackgroundWorker insertedYubikeyWorker = new BackgroundWorker();
             insertedYubikeyWorker.DoWork += InsertedYubikeyWorkerOnDoWork;
-            insertedYubikeyWorker.RunWorkerAsync();
+            //insertedYubikeyWorker.RunWorkerAsync();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -367,6 +367,19 @@ namespace EnrollmentStation
         private void lstItems_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshSelectedKeyInfo();
+        }
+
+        private void resetPINToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lstItems.SelectedItems.Count <= 0)
+                return;
+
+            EnrolledYubikey item = lstItems.SelectedItems[0].Tag as EnrolledYubikey;
+            if (item == null)
+                return;
+
+            DlgResetPin changePin = new DlgResetPin(item);
+            changePin.ShowDialog();
         }
     }
 }

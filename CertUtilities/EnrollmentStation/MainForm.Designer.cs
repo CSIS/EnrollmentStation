@@ -75,6 +75,7 @@ namespace EnrollmentStation
             this.revokeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetPINToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnEnrollKey = new System.Windows.Forms.ToolStripButton();
             this.tsbSettings = new System.Windows.Forms.ToolStripButton();
@@ -469,9 +470,10 @@ namespace EnrollmentStation
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.revokeToolStripMenuItem,
             this.viewCertificateToolStripMenuItem,
-            this.exportCertificateToolStripMenuItem});
+            this.exportCertificateToolStripMenuItem,
+            this.resetPINToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(165, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(165, 92);
             // 
             // revokeToolStripMenuItem
             // 
@@ -493,6 +495,13 @@ namespace EnrollmentStation
             this.exportCertificateToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.exportCertificateToolStripMenuItem.Text = "Export Certificate";
             this.exportCertificateToolStripMenuItem.Click += new System.EventHandler(this.exportCertificateToolStripMenuItem_Click);
+            // 
+            // resetPINToolStripMenuItem
+            // 
+            this.resetPINToolStripMenuItem.Name = "resetPINToolStripMenuItem";
+            this.resetPINToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.resetPINToolStripMenuItem.Text = "Reset PIN";
+            this.resetPINToolStripMenuItem.Click += new System.EventHandler(this.resetPINToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 
@@ -627,5 +636,6 @@ namespace EnrollmentStation
         private Label dlblInsertedSerial;
         private Label lblInsertedSerial;
         private ListView lstItems;
+        private ToolStripMenuItem resetPINToolStripMenuItem;
     }
 }

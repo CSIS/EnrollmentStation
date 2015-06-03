@@ -1,6 +1,6 @@
 ﻿namespace EnrollmentStation
 {
-    partial class DlgChangePin
+    partial class DlgResetPin
     {
         /// <summary>
         /// Required designer variable.
@@ -29,26 +29,20 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblPinTriesLeft = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblSerialNumber = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtPinOld = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtPinNewAgain = new System.Windows.Forms.TextBox();
             this.txtPinNew = new System.Windows.Forms.TextBox();
             this.cmdChange = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.lblPinTriesLeft);
-            this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.lblSerialNumber);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
@@ -57,24 +51,6 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Yubikey";
-            // 
-            // lblPinTriesLeft
-            // 
-            this.lblPinTriesLeft.AutoSize = true;
-            this.lblPinTriesLeft.Location = new System.Drawing.Point(113, 40);
-            this.lblPinTriesLeft.Name = "lblPinTriesLeft";
-            this.lblPinTriesLeft.Size = new System.Drawing.Size(73, 13);
-            this.lblPinTriesLeft.TabIndex = 7;
-            this.lblPinTriesLeft.Text = "lblPinTriesLeft";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 40);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(64, 13);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "PIN tries left";
             // 
             // label1
             // 
@@ -97,8 +73,6 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.txtPinOld);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.txtPinNewAgain);
             this.groupBox2.Controls.Add(this.txtPinNew);
@@ -109,24 +83,14 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "PINs";
             // 
-            // label4
+            // label2
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 22);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(44, 13);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Old PIN";
-            // 
-            // txtPinOld
-            // 
-            this.txtPinOld.Location = new System.Drawing.Point(116, 19);
-            this.txtPinOld.MaxLength = 8;
-            this.txtPinOld.Name = "txtPinOld";
-            this.txtPinOld.PasswordChar = '*';
-            this.txtPinOld.Size = new System.Drawing.Size(100, 20);
-            this.txtPinOld.TabIndex = 5;
-            this.txtPinOld.TextChanged += new System.EventHandler(this.textField_Changed);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 75);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(86, 13);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Repeat new PIN";
             // 
             // label3
             // 
@@ -167,15 +131,6 @@
             this.cmdChange.UseVisualStyleBackColor = true;
             this.cmdChange.Click += new System.EventHandler(this.cmdChange_Click);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 75);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(86, 13);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "Repeat new PIN";
-            // 
             // DlgChangePin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -208,11 +163,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtPinNewAgain;
         private System.Windows.Forms.TextBox txtPinNew;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtPinOld;
         private System.Windows.Forms.Button cmdChange;
-        private System.Windows.Forms.Label lblPinTriesLeft;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label2;
     }
 }

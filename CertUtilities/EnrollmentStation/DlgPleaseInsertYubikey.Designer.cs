@@ -94,6 +94,7 @@
             this.MinimizeBox = false;
             this.Name = "DlgPleaseInsertYubikey";
             this.Text = "DlgPleaseInsertYubikey";
+            this.Load += new System.EventHandler(this.DlgPleaseInsertYubikey_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
