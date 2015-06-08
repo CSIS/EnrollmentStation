@@ -463,6 +463,7 @@ namespace EnrollmentStation
             this.lstItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstItems.FullRowSelect = true;
             this.lstItems.Location = new System.Drawing.Point(0, 0);
+            this.lstItems.MultiSelect = false;
             this.lstItems.Name = "lstItems";
             this.lstItems.Size = new System.Drawing.Size(660, 679);
             this.lstItems.TabIndex = 1;
