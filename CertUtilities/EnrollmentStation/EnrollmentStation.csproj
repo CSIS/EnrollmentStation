@@ -121,6 +121,11 @@
     <Compile Include="DlgSpinner.Designer.cs">
       <DependentUpon>DlgSpinner.cs</DependentUpon>
     </Compile>
+    <Compile Include="Icons.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Icons.resx</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,6 +154,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DlgSpinner.resx">
       <DependentUpon>DlgSpinner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Icons.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Icons.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -205,6 +214,8 @@
     <Content Include="Binaries\RevokeCert\RevokeCert.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\1433795873_applications-system.png" />
+    <None Include="Resources\1433795846_gnome-app-install.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

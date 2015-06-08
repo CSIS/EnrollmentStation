@@ -32,7 +32,6 @@ namespace EnrollmentStation
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -498,7 +497,7 @@ namespace EnrollmentStation
             this.exportCertificateToolStripMenuItem,
             this.changePINToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(165, 114);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(165, 92);
             // 
             // cancelToolStripMenuItem
             // 
@@ -566,7 +565,7 @@ namespace EnrollmentStation
             // btnEnrollKey
             // 
             this.btnEnrollKey.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnEnrollKey.Image = ((System.Drawing.Image)(resources.GetObject("btnEnrollKey.Image")));
+            this.btnEnrollKey.Image = global::EnrollmentStation.Icons.icon_add;
             this.btnEnrollKey.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnEnrollKey.Name = "btnEnrollKey";
             this.btnEnrollKey.Size = new System.Drawing.Size(23, 22);
@@ -576,7 +575,7 @@ namespace EnrollmentStation
             // tsbSettings
             // 
             this.tsbSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbSettings.Image = ((System.Drawing.Image)(resources.GetObject("tsbSettings.Image")));
+            this.tsbSettings.Image = global::EnrollmentStation.Icons.icon_settings;
             this.tsbSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSettings.Name = "tsbSettings";
             this.tsbSettings.Size = new System.Drawing.Size(23, 22);
@@ -610,7 +609,7 @@ namespace EnrollmentStation
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "MainForm";
+            this.Text = "CSIS Enrollment Station";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);
