@@ -58,7 +58,7 @@ namespace EnrollmentStation
 
         private void YubikeyStateChange()
         {
-            using (YubikeyDetector.ExclusiveLock exclusiveNeo = YubikeyDetector.Instance.GetExclusiveLock())
+            using (YubikeyDetector.Instance.GetExclusiveLock())
             using (YubikeyNeoManager neoManager = new YubikeyNeoManager())
             {
                 _devicePresent = neoManager.RefreshDevice();
@@ -391,7 +391,7 @@ namespace EnrollmentStation
             if (result != DialogResult.OK)
                 return;
 
-            using (YubikeyDetector.ExclusiveLock exclusive = YubikeyDetector.Instance.GetExclusiveLock())
+            using (YubikeyDetector.Instance.GetExclusiveLock())
             using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
             {
                 // Attempt an invalid PIN X times
@@ -487,7 +487,7 @@ namespace EnrollmentStation
             }
 
             // Wipe the Yubikey
-            using (YubikeyDetector.ExclusiveLock exclusive = YubikeyDetector.Instance.GetExclusiveLock())
+            using (YubikeyDetector.Instance.GetExclusiveLock())
             using (YubikeyPivTool piv = new YubikeyPivTool())
             {
                 piv.BlockPin();

@@ -101,7 +101,7 @@ namespace EnrollmentStation
         private void EnrollWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
             // 0. Get lock on yubikey
-            using (YubikeyDetector.ExclusiveLock neoLock = YubikeyDetector.Instance.GetExclusiveLock())
+            using (YubikeyDetector.Instance.GetExclusiveLock())
             {
                 // 1. Prep device info
                 int deviceId = _neoManager.GetSerialNumber();
@@ -402,7 +402,7 @@ namespace EnrollmentStation
             if (!_devicePresent)
                 return;
 
-            using (YubikeyDetector.ExclusiveLock exclusive = YubikeyDetector.Instance.GetExclusiveLock())
+            using (YubikeyDetector.Instance.GetExclusiveLock())
             using (YubikeyPivTool piv = new YubikeyPivTool())
             {
                 if (piv.GetCertificate9a() != null)
