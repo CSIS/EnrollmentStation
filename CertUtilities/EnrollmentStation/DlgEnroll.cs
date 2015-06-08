@@ -44,6 +44,7 @@ namespace EnrollmentStation
 
             // Call once for initial setup
             YubikeyStateChange();
+            RefreshEligibleForEnroll();
         }
 
         private void YubikeyStateChange()
@@ -377,25 +378,16 @@ namespace EnrollmentStation
 
         private void RefreshEligibleForEnroll()
         {
-            bool eligible = !string.IsNullOrEmpty(_settings.CSREndpoint);
+            bool eligible = true;
 
-            //if (string.IsNullOrEmpty(_settings.EnrollmentAgentCertificate))
-            //    eligible = false;
+            if (txtPin.Text.Length <= 0 || txtPin.Text.Length > 8)
+                eligible = false;
 
-            //if (string.IsNullOrEmpty(_settings.EnrollmentManagementKey))
-            //    eligible = false;
+            if (txtPin.Text != txtPinAgain.Text)
+                eligible = false;
 
-            //if (string.IsNullOrEmpty(_settings.EnrollmentCaTemplate))
-            //    eligible = false;
-
-            //if (txtPin.Text.Length <= 0 || txtPin.Text.Length > 8)
-            //    eligible = false;
-
-            //if (txtPin.Text != txtPinAgain.Text)
-            //    eligible = false;
-
-            //if (string.IsNullOrEmpty(txtUser.Text))
-            //    eligible = false;
+            if (string.IsNullOrEmpty(txtUser.Text))
+                eligible = false;
 
             cmdEnroll.Enabled = eligible;
         }
@@ -404,6 +396,19 @@ namespace EnrollmentStation
         {
             if (!_devicePresent)
                 return;
+
+            using (YubikeyDetector.ExclusiveLock exclusive = YubikeyDetector.Instance.GetExclusiveLock())
+            using (YubikeyPivTool piv = new YubikeyPivTool())
+            {
+                if (piv.GetCertificate9a() != null)
+                {
+                    // Already enrolled
+                    DialogResult resp = MessageBox.Show("The inserted Yubikey has already been enrolled. Are you sure you wish to overwrite it?", "Already enrolled", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+
+                    if (resp != DialogResult.Yes)
+                        return;
+                }
+            }
 
             cmdEnroll.Enabled = false;
             cmdCancel.Enabled = false;
@@ -483,6 +488,11 @@ namespace EnrollmentStation
             dialog.ShowDialog();
 
             txtUser.Text = dialog.SelectedUser;
+        }
+
+        private void textBoxes_TextChanged(object sender, EventArgs e)
+        {
+            RefreshEligibleForEnroll();
         }
     }
 }

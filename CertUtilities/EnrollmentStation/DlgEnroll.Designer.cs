@@ -76,7 +76,6 @@ namespace EnrollmentStation
             this.llBrowseUser.Name = "llBrowseUser";
             this.llBrowseUser.Size = new System.Drawing.Size(42, 13);
             this.llBrowseUser.TabIndex = 2;
-            this.llBrowseUser.TabStop = true;
             this.llBrowseUser.Text = "Browse";
             this.llBrowseUser.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llBrowseUser_LinkClicked);
             // 
@@ -86,6 +85,7 @@ namespace EnrollmentStation
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(158, 20);
             this.txtUser.TabIndex = 1;
+            this.txtUser.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
             // 
             // label2
             // 
@@ -207,6 +207,7 @@ namespace EnrollmentStation
             this.txtPinAgain.Size = new System.Drawing.Size(81, 20);
             this.txtPinAgain.TabIndex = 3;
             this.txtPinAgain.UseSystemPasswordChar = true;
+            this.txtPinAgain.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
             // 
             // txtPin
             // 
@@ -217,6 +218,7 @@ namespace EnrollmentStation
             this.txtPin.Size = new System.Drawing.Size(81, 20);
             this.txtPin.TabIndex = 2;
             this.txtPin.UseSystemPasswordChar = true;
+            this.txtPin.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
             // 
             // label7
             // 
