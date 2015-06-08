@@ -13,7 +13,7 @@ namespace EnrollmentStation
         private BackgroundWorker _worker = new BackgroundWorker();
         private YubikeyNeoManager _neo;
 
-        private bool _hasBeenFound = false;
+        private bool _hasBeenFound;
 
         public DlgPleaseInsertYubikey(EnrolledYubikey key)
         {
