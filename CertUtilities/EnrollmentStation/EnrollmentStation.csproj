@@ -96,12 +96,6 @@
     <Compile Include="DlgPleaseInsertYubikey.Designer.cs">
       <DependentUpon>DlgPleaseInsertYubikey.cs</DependentUpon>
     </Compile>
-    <Compile Include="DlgRevokeCertificate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DlgRevokeCertificate.Designer.cs">
-      <DependentUpon>DlgRevokeCertificate.cs</DependentUpon>
-    </Compile>
     <Compile Include="DlgSelectUser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -136,9 +130,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DlgPleaseInsertYubikey.resx">
       <DependentUpon>DlgPleaseInsertYubikey.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DlgRevokeCertificate.resx">
-      <DependentUpon>DlgRevokeCertificate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DlgSelectUser.resx">
       <DependentUpon>DlgSelectUser.cs</DependentUpon>
