@@ -4,11 +4,11 @@ using EnrollmentStation.Code;
 
 namespace EnrollmentStation
 {
-    public partial class DlgChangePin : Form
+    public partial class DlgResetPin : Form
     {
         private EnrolledYubikey _yubikey;
 
-        public DlgChangePin(EnrolledYubikey key)
+        public DlgResetPin(EnrolledYubikey key)
         {
             _yubikey = key;
 

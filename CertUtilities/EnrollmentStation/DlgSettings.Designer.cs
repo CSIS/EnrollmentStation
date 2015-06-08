@@ -65,7 +65,7 @@ namespace EnrollmentStation
             this.groupBox1.Location = new System.Drawing.Point(3, 77);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(503, 94);
-            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "CA Settings";
             // 
@@ -75,7 +75,7 @@ namespace EnrollmentStation
             this.txtAgentCert.Name = "txtAgentCert";
             this.txtAgentCert.ReadOnly = true;
             this.txtAgentCert.Size = new System.Drawing.Size(317, 20);
-            this.txtAgentCert.TabIndex = 7;
+            this.txtAgentCert.TabIndex = 4;
             // 
             // llBrowseAgentCert
             // 
@@ -83,7 +83,7 @@ namespace EnrollmentStation
             this.llBrowseAgentCert.Location = new System.Drawing.Point(442, 43);
             this.llBrowseAgentCert.Name = "llBrowseAgentCert";
             this.llBrowseAgentCert.Size = new System.Drawing.Size(42, 13);
-            this.llBrowseAgentCert.TabIndex = 6;
+            this.llBrowseAgentCert.TabIndex = 5;
             this.llBrowseAgentCert.TabStop = true;
             this.llBrowseAgentCert.Text = "Browse";
             this.llBrowseAgentCert.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llBrowseAgentCert_LinkClicked);
@@ -94,7 +94,7 @@ namespace EnrollmentStation
             this.label3.Location = new System.Drawing.Point(16, 43);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(84, 13);
-            this.label3.TabIndex = 5;
+            this.label3.TabIndex = 3;
             this.label3.Text = "Agent certificate";
             // 
             // txtCSREndpoint
@@ -102,23 +102,23 @@ namespace EnrollmentStation
             this.txtCSREndpoint.Location = new System.Drawing.Point(119, 14);
             this.txtCSREndpoint.Name = "txtCSREndpoint";
             this.txtCSREndpoint.Size = new System.Drawing.Size(317, 20);
-            this.txtCSREndpoint.TabIndex = 4;
+            this.txtCSREndpoint.TabIndex = 1;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(16, 68);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(51, 13);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "Template";
+            this.label5.Size = new System.Drawing.Size(69, 13);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "Cert template";
             // 
             // txtCaTemplate
             // 
             this.txtCaTemplate.Location = new System.Drawing.Point(119, 64);
             this.txtCaTemplate.Name = "txtCaTemplate";
             this.txtCaTemplate.Size = new System.Drawing.Size(317, 20);
-            this.txtCaTemplate.TabIndex = 2;
+            this.txtCaTemplate.TabIndex = 7;
             this.txtCaTemplate.Text = "SmartcardLogon";
             // 
             // llBrowseCA
@@ -127,7 +127,7 @@ namespace EnrollmentStation
             this.llBrowseCA.Location = new System.Drawing.Point(442, 18);
             this.llBrowseCA.Name = "llBrowseCA";
             this.llBrowseCA.Size = new System.Drawing.Size(42, 13);
-            this.llBrowseCA.TabIndex = 1;
+            this.llBrowseCA.TabIndex = 2;
             this.llBrowseCA.TabStop = true;
             this.llBrowseCA.Text = "Browse";
             this.llBrowseCA.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llBrowseCA_LinkClicked);
@@ -146,7 +146,7 @@ namespace EnrollmentStation
             this.btnSave.Location = new System.Drawing.Point(340, 177);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 1;
+            this.btnSave.TabIndex = 2;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -157,7 +157,7 @@ namespace EnrollmentStation
             this.btnCancel.Location = new System.Drawing.Point(421, 177);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 2;
+            this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -172,7 +172,7 @@ namespace EnrollmentStation
             this.groupBox3.Location = new System.Drawing.Point(2, 2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(504, 69);
-            this.groupBox3.TabIndex = 10;
+            this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "YubiKey";
             // 
@@ -182,7 +182,7 @@ namespace EnrollmentStation
             this.lblHSMAvaliable.Location = new System.Drawing.Point(120, 19);
             this.lblHSMAvaliable.Name = "lblHSMAvaliable";
             this.lblHSMAvaliable.Size = new System.Drawing.Size(84, 13);
-            this.lblHSMAvaliable.TabIndex = 11;
+            this.lblHSMAvaliable.TabIndex = 1;
             this.lblHSMAvaliable.Text = "lblHSMAvaliable";
             // 
             // label2
@@ -191,7 +191,7 @@ namespace EnrollmentStation
             this.label2.Location = new System.Drawing.Point(16, 19);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(97, 13);
-            this.label2.TabIndex = 10;
+            this.label2.TabIndex = 0;
             this.label2.Text = "YubiHSM avaliable";
             // 
             // llGenerateMgtKey
@@ -200,7 +200,7 @@ namespace EnrollmentStation
             this.llGenerateMgtKey.Location = new System.Drawing.Point(443, 43);
             this.llGenerateMgtKey.Name = "llGenerateMgtKey";
             this.llGenerateMgtKey.Size = new System.Drawing.Size(51, 13);
-            this.llGenerateMgtKey.TabIndex = 8;
+            this.llGenerateMgtKey.TabIndex = 4;
             this.llGenerateMgtKey.TabStop = true;
             this.llGenerateMgtKey.Text = "Generate";
             this.llGenerateMgtKey.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llGenerateMgtKey_LinkClicked);
@@ -211,7 +211,7 @@ namespace EnrollmentStation
             this.txtManagementKey.MaxLength = 48;
             this.txtManagementKey.Name = "txtManagementKey";
             this.txtManagementKey.Size = new System.Drawing.Size(317, 20);
-            this.txtManagementKey.TabIndex = 9;
+            this.txtManagementKey.TabIndex = 3;
             // 
             // label4
             // 
@@ -219,7 +219,7 @@ namespace EnrollmentStation
             this.label4.Location = new System.Drawing.Point(16, 43);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(89, 13);
-            this.label4.TabIndex = 8;
+            this.label4.TabIndex = 2;
             this.label4.Text = "Management key";
             // 
             // DlgSettings

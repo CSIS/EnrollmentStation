@@ -33,7 +33,7 @@ namespace EnrollmentStation
                         item.Tag = de;
                         item.Text = firstName + " " + lastName + " (" + samAccountName + ")";
 
-                        listView1.Items.Add(item);
+                        listBox1.Items.Add(item);
                     }
                 }
             }
@@ -57,10 +57,10 @@ namespace EnrollmentStation
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count <= 0)
+            if (listBox1.SelectedItems.Count <= 0)
                 return;
 
-            DirectoryEntry de = (DirectoryEntry)listView1.SelectedItems[0].Tag;
+            DirectoryEntry de = (DirectoryEntry)listBox1.SelectedItems[0];
             SelectedUser = de.Properties["samAccountName"].Value.ToString();
         }
     }

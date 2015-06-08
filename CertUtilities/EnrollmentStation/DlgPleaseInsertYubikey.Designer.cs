@@ -105,7 +105,7 @@
             this.MinimizeBox = false;
             this.Name = "DlgPleaseInsertYubikey";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Please insert ...";
+            this.Text = "Insert Yubikey";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DlgPleaseInsertYubikey_FormClosing);
             this.Load += new System.EventHandler(this.DlgPleaseInsertYubikey_Load);
             this.ResumeLayout(false);

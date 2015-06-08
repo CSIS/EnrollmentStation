@@ -85,11 +85,11 @@
     <Compile Include="DlgChangeMode.Designer.cs">
       <DependentUpon>DlgChangeMode.cs</DependentUpon>
     </Compile>
-    <Compile Include="DlgChangePin.cs">
+    <Compile Include="DlgResetPin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DlgChangePin.designer.cs">
-      <DependentUpon>DlgChangePin.cs</DependentUpon>
+    <Compile Include="DlgResetPin.designer.cs">
+      <DependentUpon>DlgResetPin.cs</DependentUpon>
     </Compile>
     <Compile Include="DlgEnroll.cs">
       <SubType>Form</SubType>
@@ -115,17 +115,6 @@
     <Compile Include="DlgSettings.designer.cs">
       <DependentUpon>DlgSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="DlgSpinner.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DlgSpinner.Designer.cs">
-      <DependentUpon>DlgSpinner.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Icons.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Icons.resx</DependentUpon>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,11 +123,16 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="DlgChangeMode.resx">
       <DependentUpon>DlgChangeMode.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DlgChangePin.resx">
-      <DependentUpon>DlgChangePin.cs</DependentUpon>
+    <EmbeddedResource Include="DlgResetPin.resx">
+      <DependentUpon>DlgResetPin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DlgEnroll.resx">
       <DependentUpon>DlgEnroll.cs</DependentUpon>
@@ -152,38 +146,17 @@
     <EmbeddedResource Include="DlgSettings.resx">
       <DependentUpon>DlgSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DlgSpinner.resx">
-      <DependentUpon>DlgSpinner.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Icons.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Icons.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <None Include="Binaries\RevokeCert\RevokeCert.exe.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -214,8 +187,9 @@
     <Content Include="Binaries\RevokeCert\RevokeCert.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\1433795873_applications-system.png" />
-    <None Include="Resources\1433795846_gnome-app-install.png" />
+    <None Include="Resources\gnome-app-install-star.png" />
+    <None Include="Resources\1433811248_gnome-app-install.png" />
+    <None Include="Resources\1433811232_applications-system.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -18,7 +18,7 @@ namespace EnrollmentStation
         private bool _devicePresent;
         private bool _hsmPresent;
 
-        private string _enrollWorkerMessage = null;
+        private string _enrollWorkerMessage;
         private BackgroundWorker _enrollWorker;
 
         public DlgEnroll(Settings settings, DataStore dataStore)
@@ -89,7 +89,6 @@ namespace EnrollmentStation
             }
 
             cmdEnroll.Enabled = true;
-            cmdCancel.Enabled = true;
 
             foreach (Control control in groupBox1.Controls)
                 control.Enabled = true;
@@ -337,7 +336,8 @@ namespace EnrollmentStation
         {
             foreach (Control control in gbInsertedYubikey.Controls)
             {
-                control.Visible = _devicePresent;
+                if (control.Name.StartsWith("lbl"))
+                    control.Visible = _devicePresent;
             }
 
             if (!_devicePresent)
@@ -390,7 +390,6 @@ namespace EnrollmentStation
             }
 
             cmdEnroll.Enabled = false;
-            cmdCancel.Enabled = false;
 
             foreach (Control control in groupBox1.Controls)
                 control.Enabled = false;
@@ -453,12 +452,6 @@ namespace EnrollmentStation
                 if (File.Exists(tmpCsr))
                     File.Delete(tmpCsr);
             }
-        }
-
-        private void cmdCancel_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            Close();
         }
 
         private void llBrowseUser_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

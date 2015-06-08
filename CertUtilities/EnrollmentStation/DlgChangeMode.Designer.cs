@@ -43,7 +43,7 @@
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.Location = new System.Drawing.Point(12, 9);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(551, 63);
+            this.lblStatus.Size = new System.Drawing.Size(295, 63);
             this.lblStatus.TabIndex = 0;
             this.lblStatus.Text = "lblStatus";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -55,9 +55,9 @@
             this.grpChangeMode.Controls.Add(this.chkU2f);
             this.grpChangeMode.Controls.Add(this.chkCCID);
             this.grpChangeMode.Controls.Add(this.chkOTP);
-            this.grpChangeMode.Location = new System.Drawing.Point(16, 75);
+            this.grpChangeMode.Location = new System.Drawing.Point(12, 75);
             this.grpChangeMode.Name = "grpChangeMode";
-            this.grpChangeMode.Size = new System.Drawing.Size(547, 100);
+            this.grpChangeMode.Size = new System.Drawing.Size(291, 100);
             this.grpChangeMode.TabIndex = 1;
             this.grpChangeMode.TabStop = false;
             this.grpChangeMode.Text = "Change Mode";
@@ -68,17 +68,17 @@
             this.chkEject.Location = new System.Drawing.Point(6, 55);
             this.chkEject.Name = "chkEject";
             this.chkEject.Size = new System.Drawing.Size(80, 17);
-            this.chkEject.TabIndex = 4;
+            this.chkEject.TabIndex = 3;
             this.chkEject.Text = "Eject Mode";
             this.chkEject.UseVisualStyleBackColor = true;
             this.chkEject.CheckedChanged += new System.EventHandler(this.checkBox_Changed);
             // 
             // cmdChange
             // 
-            this.cmdChange.Location = new System.Drawing.Point(466, 71);
+            this.cmdChange.Location = new System.Drawing.Point(195, 71);
             this.cmdChange.Name = "cmdChange";
             this.cmdChange.Size = new System.Drawing.Size(75, 23);
-            this.cmdChange.TabIndex = 3;
+            this.cmdChange.TabIndex = 4;
             this.cmdChange.Text = "Change";
             this.cmdChange.UseVisualStyleBackColor = true;
             this.cmdChange.Click += new System.EventHandler(this.cmdChange_Click);
@@ -86,7 +86,7 @@
             // chkU2f
             // 
             this.chkU2f.AutoSize = true;
-            this.chkU2f.Location = new System.Drawing.Point(461, 19);
+            this.chkU2f.Location = new System.Drawing.Point(224, 19);
             this.chkU2f.Name = "chkU2f";
             this.chkU2f.Size = new System.Drawing.Size(46, 17);
             this.chkU2f.TabIndex = 2;
@@ -97,7 +97,7 @@
             // chkCCID
             // 
             this.chkCCID.AutoSize = true;
-            this.chkCCID.Location = new System.Drawing.Point(228, 19);
+            this.chkCCID.Location = new System.Drawing.Point(120, 19);
             this.chkCCID.Name = "chkCCID";
             this.chkCCID.Size = new System.Drawing.Size(51, 17);
             this.chkCCID.TabIndex = 1;
@@ -120,7 +120,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(575, 189);
+            this.ClientSize = new System.Drawing.Size(315, 185);
             this.Controls.Add(this.grpChangeMode);
             this.Controls.Add(this.lblStatus);
             this.MaximizeBox = false;

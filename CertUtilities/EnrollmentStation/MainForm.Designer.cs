@@ -32,11 +32,21 @@ namespace EnrollmentStation
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.panel1 = new System.Windows.Forms.Panel();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cancelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.revokeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.terminateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changePINToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.lblHSMPresent = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.tsbEnroll = new System.Windows.Forms.ToolStripButton();
+            this.tsbSettings = new System.Windows.Forms.ToolStripButton();
+            this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.gbInsertedKey = new System.Windows.Forms.GroupBox();
             this.lblInsertedHasBeenEnrolled = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -72,423 +82,12 @@ namespace EnrollmentStation
             this.clmUser = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmEnrolledAt = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmCertificateSerial = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cancelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.revokeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.terminateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.changePINToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.btnEnrollKey = new System.Windows.Forms.ToolStripButton();
-            this.tsbSettings = new System.Windows.Forms.ToolStripButton();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.lblHSMPresent = new System.Windows.Forms.ToolStripStatusLabel();
-            this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.gbInsertedKey.SuspendLayout();
             this.gbSelectedKey.SuspendLayout();
             this.gbSelectedKeyCertificate.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.helpToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(996, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Location = new System.Drawing.Point(0, 52);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.panel1);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.lstItems);
-            this.splitContainer1.Size = new System.Drawing.Size(996, 679);
-            this.splitContainer1.SplitterDistance = 332;
-            this.splitContainer1.TabIndex = 3;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.gbInsertedKey);
-            this.panel1.Controls.Add(this.btnEnableCCID);
-            this.panel1.Controls.Add(this.btnViewCert);
-            this.panel1.Controls.Add(this.btnExportCert);
-            this.panel1.Controls.Add(this.gbSelectedKey);
-            this.panel1.Controls.Add(this.gbSelectedKeyCertificate);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(332, 679);
-            this.panel1.TabIndex = 0;
-            // 
-            // gbInsertedKey
-            // 
-            this.gbInsertedKey.Controls.Add(this.lblInsertedHasBeenEnrolled);
-            this.gbInsertedKey.Controls.Add(this.label1);
-            this.gbInsertedKey.Controls.Add(this.lblInsertedFirmware);
-            this.gbInsertedKey.Controls.Add(this.label8);
-            this.gbInsertedKey.Controls.Add(this.lblInsertedMode);
-            this.gbInsertedKey.Controls.Add(this.label14);
-            this.gbInsertedKey.Controls.Add(this.dlblInsertedSerial);
-            this.gbInsertedKey.Controls.Add(this.lblInsertedSerial);
-            this.gbInsertedKey.Location = new System.Drawing.Point(4, 282);
-            this.gbInsertedKey.Name = "gbInsertedKey";
-            this.gbInsertedKey.Size = new System.Drawing.Size(325, 355);
-            this.gbInsertedKey.TabIndex = 30;
-            this.gbInsertedKey.TabStop = false;
-            this.gbInsertedKey.Text = "Inserted Yubikey";
-            // 
-            // lblInsertedHasBeenEnrolled
-            // 
-            this.lblInsertedHasBeenEnrolled.AutoSize = true;
-            this.lblInsertedHasBeenEnrolled.Location = new System.Drawing.Point(113, 106);
-            this.lblInsertedHasBeenEnrolled.Name = "lblInsertedHasBeenEnrolled";
-            this.lblInsertedHasBeenEnrolled.Size = new System.Drawing.Size(137, 13);
-            this.lblInsertedHasBeenEnrolled.TabIndex = 35;
-            this.lblInsertedHasBeenEnrolled.Text = "lblInsertedHasBeenEnrolled";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 106);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(45, 13);
-            this.label1.TabIndex = 34;
-            this.label1.Text = "Enrolled";
-            // 
-            // lblInsertedFirmware
-            // 
-            this.lblInsertedFirmware.AutoSize = true;
-            this.lblInsertedFirmware.Location = new System.Drawing.Point(113, 73);
-            this.lblInsertedFirmware.Name = "lblInsertedFirmware";
-            this.lblInsertedFirmware.Size = new System.Drawing.Size(97, 13);
-            this.lblInsertedFirmware.TabIndex = 33;
-            this.lblInsertedFirmware.Text = "lblInsertedFirmware";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(7, 73);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(49, 13);
-            this.label8.TabIndex = 32;
-            this.label8.Text = "Firmware";
-            // 
-            // lblInsertedMode
-            // 
-            this.lblInsertedMode.AutoSize = true;
-            this.lblInsertedMode.Location = new System.Drawing.Point(113, 50);
-            this.lblInsertedMode.Name = "lblInsertedMode";
-            this.lblInsertedMode.Size = new System.Drawing.Size(82, 13);
-            this.lblInsertedMode.TabIndex = 29;
-            this.lblInsertedMode.Text = "lblInsertedMode";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(7, 50);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(71, 13);
-            this.label14.TabIndex = 28;
-            this.label14.Text = "Current Mode";
-            // 
-            // dlblInsertedSerial
-            // 
-            this.dlblInsertedSerial.AutoSize = true;
-            this.dlblInsertedSerial.Location = new System.Drawing.Point(7, 26);
-            this.dlblInsertedSerial.Name = "dlblInsertedSerial";
-            this.dlblInsertedSerial.Size = new System.Drawing.Size(73, 13);
-            this.dlblInsertedSerial.TabIndex = 27;
-            this.dlblInsertedSerial.Text = "Serial Number";
-            // 
-            // lblInsertedSerial
-            // 
-            this.lblInsertedSerial.AutoSize = true;
-            this.lblInsertedSerial.Location = new System.Drawing.Point(113, 26);
-            this.lblInsertedSerial.Name = "lblInsertedSerial";
-            this.lblInsertedSerial.Size = new System.Drawing.Size(81, 13);
-            this.lblInsertedSerial.TabIndex = 26;
-            this.lblInsertedSerial.Text = "lblInsertedSerial";
-            // 
-            // btnEnableCCID
-            // 
-            this.btnEnableCCID.Enabled = false;
-            this.btnEnableCCID.Location = new System.Drawing.Point(12, 643);
-            this.btnEnableCCID.Name = "btnEnableCCID";
-            this.btnEnableCCID.Size = new System.Drawing.Size(88, 23);
-            this.btnEnableCCID.TabIndex = 29;
-            this.btnEnableCCID.Text = "Enable CCID";
-            this.btnEnableCCID.UseVisualStyleBackColor = true;
-            this.btnEnableCCID.Click += new System.EventHandler(this.btnEnableCCID_Click);
-            // 
-            // btnViewCert
-            // 
-            this.btnViewCert.Enabled = false;
-            this.btnViewCert.Location = new System.Drawing.Point(106, 643);
-            this.btnViewCert.Name = "btnViewCert";
-            this.btnViewCert.Size = new System.Drawing.Size(104, 23);
-            this.btnViewCert.TabIndex = 28;
-            this.btnViewCert.Text = "View Certificate";
-            this.btnViewCert.UseVisualStyleBackColor = true;
-            this.btnViewCert.Click += new System.EventHandler(this.btnViewCert_Click);
-            // 
-            // btnExportCert
-            // 
-            this.btnExportCert.Enabled = false;
-            this.btnExportCert.Location = new System.Drawing.Point(216, 643);
-            this.btnExportCert.Name = "btnExportCert";
-            this.btnExportCert.Size = new System.Drawing.Size(104, 23);
-            this.btnExportCert.TabIndex = 27;
-            this.btnExportCert.Text = "Export Certificate";
-            this.btnExportCert.UseVisualStyleBackColor = true;
-            this.btnExportCert.Click += new System.EventHandler(this.btnExportCert_Click);
-            // 
-            // gbSelectedKey
-            // 
-            this.gbSelectedKey.Controls.Add(this.lblYubikeyFirmware);
-            this.gbSelectedKey.Controls.Add(this.label17);
-            this.gbSelectedKey.Controls.Add(this.label4);
-            this.gbSelectedKey.Controls.Add(this.lblYubikeyPivVersion);
-            this.gbSelectedKey.Controls.Add(this.label2);
-            this.gbSelectedKey.Controls.Add(this.lblYubikeySerial);
-            this.gbSelectedKey.Location = new System.Drawing.Point(3, 3);
-            this.gbSelectedKey.Name = "gbSelectedKey";
-            this.gbSelectedKey.Size = new System.Drawing.Size(326, 122);
-            this.gbSelectedKey.TabIndex = 22;
-            this.gbSelectedKey.TabStop = false;
-            this.gbSelectedKey.Text = "YubiKey";
-            // 
-            // lblYubikeyFirmware
-            // 
-            this.lblYubikeyFirmware.AutoSize = true;
-            this.lblYubikeyFirmware.Location = new System.Drawing.Point(113, 92);
-            this.lblYubikeyFirmware.Name = "lblYubikeyFirmware";
-            this.lblYubikeyFirmware.Size = new System.Drawing.Size(97, 13);
-            this.lblYubikeyFirmware.TabIndex = 25;
-            this.lblYubikeyFirmware.Text = "lblYubikeyFirmware";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(7, 92);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(49, 13);
-            this.label17.TabIndex = 24;
-            this.label17.Text = "Firmware";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 68);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(62, 13);
-            this.label4.TabIndex = 23;
-            this.label4.Text = "PIV Version";
-            // 
-            // lblYubikeyPivVersion
-            // 
-            this.lblYubikeyPivVersion.AutoSize = true;
-            this.lblYubikeyPivVersion.Location = new System.Drawing.Point(113, 68);
-            this.lblYubikeyPivVersion.Name = "lblYubikeyPivVersion";
-            this.lblYubikeyPivVersion.Size = new System.Drawing.Size(105, 13);
-            this.lblYubikeyPivVersion.TabIndex = 22;
-            this.lblYubikeyPivVersion.Text = "lblYubikeyPivVersion";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 20);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(73, 13);
-            this.label2.TabIndex = 19;
-            this.label2.Text = "Serial Number";
-            // 
-            // lblYubikeySerial
-            // 
-            this.lblYubikeySerial.AutoSize = true;
-            this.lblYubikeySerial.Location = new System.Drawing.Point(113, 20);
-            this.lblYubikeySerial.Name = "lblYubikeySerial";
-            this.lblYubikeySerial.Size = new System.Drawing.Size(81, 13);
-            this.lblYubikeySerial.TabIndex = 18;
-            this.lblYubikeySerial.Text = "lblYubikeySerial";
-            // 
-            // gbSelectedKeyCertificate
-            // 
-            this.gbSelectedKeyCertificate.Controls.Add(this.lblCertThumbprint);
-            this.gbSelectedKeyCertificate.Controls.Add(this.label11);
-            this.gbSelectedKeyCertificate.Controls.Add(this.lblCertCA);
-            this.gbSelectedKeyCertificate.Controls.Add(this.label13);
-            this.gbSelectedKeyCertificate.Controls.Add(this.lblCertUser);
-            this.gbSelectedKeyCertificate.Controls.Add(this.label7);
-            this.gbSelectedKeyCertificate.Controls.Add(this.lblCertEnrolledOn);
-            this.gbSelectedKeyCertificate.Controls.Add(this.label5);
-            this.gbSelectedKeyCertificate.Controls.Add(this.lblCertSerial);
-            this.gbSelectedKeyCertificate.Controls.Add(this.label6);
-            this.gbSelectedKeyCertificate.Location = new System.Drawing.Point(3, 131);
-            this.gbSelectedKeyCertificate.Name = "gbSelectedKeyCertificate";
-            this.gbSelectedKeyCertificate.Size = new System.Drawing.Size(326, 145);
-            this.gbSelectedKeyCertificate.TabIndex = 21;
-            this.gbSelectedKeyCertificate.TabStop = false;
-            this.gbSelectedKeyCertificate.Text = "Certificate";
-            // 
-            // lblCertThumbprint
-            // 
-            this.lblCertThumbprint.AutoSize = true;
-            this.lblCertThumbprint.Location = new System.Drawing.Point(113, 115);
-            this.lblCertThumbprint.Name = "lblCertThumbprint";
-            this.lblCertThumbprint.Size = new System.Drawing.Size(89, 13);
-            this.lblCertThumbprint.TabIndex = 10;
-            this.lblCertThumbprint.Text = "lblCertThumbprint";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(7, 115);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(60, 13);
-            this.label11.TabIndex = 9;
-            this.label11.Text = "Thumbprint";
-            // 
-            // lblCertCA
-            // 
-            this.lblCertCA.AutoSize = true;
-            this.lblCertCA.Location = new System.Drawing.Point(113, 92);
-            this.lblCertCA.Name = "lblCertCA";
-            this.lblCertCA.Size = new System.Drawing.Size(50, 13);
-            this.lblCertCA.TabIndex = 8;
-            this.lblCertCA.Text = "lblCertCA";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(7, 92);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(21, 13);
-            this.label13.TabIndex = 7;
-            this.label13.Text = "CA";
-            // 
-            // lblCertUser
-            // 
-            this.lblCertUser.AutoSize = true;
-            this.lblCertUser.Location = new System.Drawing.Point(113, 16);
-            this.lblCertUser.Name = "lblCertUser";
-            this.lblCertUser.Size = new System.Drawing.Size(58, 13);
-            this.lblCertUser.TabIndex = 6;
-            this.lblCertUser.Text = "lblCertUser";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(7, 16);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(29, 13);
-            this.label7.TabIndex = 5;
-            this.label7.Text = "User";
-            // 
-            // lblCertEnrolledOn
-            // 
-            this.lblCertEnrolledOn.AutoSize = true;
-            this.lblCertEnrolledOn.Location = new System.Drawing.Point(113, 68);
-            this.lblCertEnrolledOn.Name = "lblCertEnrolledOn";
-            this.lblCertEnrolledOn.Size = new System.Drawing.Size(88, 13);
-            this.lblCertEnrolledOn.TabIndex = 4;
-            this.lblCertEnrolledOn.Text = "lblCertEnrolledOn";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 68);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(60, 13);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "Enrolled on";
-            // 
-            // lblCertSerial
-            // 
-            this.lblCertSerial.AutoSize = true;
-            this.lblCertSerial.Location = new System.Drawing.Point(113, 42);
-            this.lblCertSerial.Name = "lblCertSerial";
-            this.lblCertSerial.Size = new System.Drawing.Size(62, 13);
-            this.lblCertSerial.TabIndex = 2;
-            this.lblCertSerial.Text = "lblCertSerial";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 42);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(33, 13);
-            this.label6.TabIndex = 1;
-            this.label6.Text = "Serial";
-            // 
-            // lstItems
-            // 
-            this.lstItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.clmSerial,
-            this.clmUser,
-            this.clmEnrolledAt,
-            this.clmCertificateSerial});
-            this.lstItems.ContextMenuStrip = this.contextMenuStrip1;
-            this.lstItems.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstItems.FullRowSelect = true;
-            this.lstItems.Location = new System.Drawing.Point(0, 0);
-            this.lstItems.MultiSelect = false;
-            this.lstItems.Name = "lstItems";
-            this.lstItems.Size = new System.Drawing.Size(660, 679);
-            this.lstItems.TabIndex = 1;
-            this.lstItems.UseCompatibleStateImageBehavior = false;
-            this.lstItems.View = System.Windows.Forms.View.Details;
-            this.lstItems.SelectedIndexChanged += new System.EventHandler(this.lstItems_SelectedIndexChanged);
-            // 
-            // clmSerial
-            // 
-            this.clmSerial.Text = "Serial";
-            // 
-            // clmUser
-            // 
-            this.clmUser.Text = "User";
-            this.clmUser.Width = 106;
-            // 
-            // clmEnrolledAt
-            // 
-            this.clmEnrolledAt.Text = "Enrolled (local time)";
-            this.clmEnrolledAt.Width = 118;
-            // 
-            // clmCertificateSerial
-            // 
-            this.clmCertificateSerial.Text = "Certificate";
-            this.clmCertificateSerial.Width = 153;
             // 
             // contextMenuStrip1
             // 
@@ -508,7 +107,7 @@ namespace EnrollmentStation
             this.terminateToolStripMenuItem1});
             this.cancelToolStripMenuItem.Name = "cancelToolStripMenuItem";
             this.cancelToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.cancelToolStripMenuItem.Text = "Cancel";
+            this.cancelToolStripMenuItem.Text = "Retire";
             // 
             // resetToolStripMenuItem
             // 
@@ -549,48 +148,15 @@ namespace EnrollmentStation
             // 
             this.changePINToolStripMenuItem.Name = "changePINToolStripMenuItem";
             this.changePINToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.changePINToolStripMenuItem.Text = "Change PIN";
+            this.changePINToolStripMenuItem.Text = "Reset PIN";
             this.changePINToolStripMenuItem.Click += new System.EventHandler(this.resetPINToolStripMenuItem_Click);
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnEnrollKey,
-            this.tsbSettings});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(996, 25);
-            this.toolStrip1.TabIndex = 5;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // btnEnrollKey
-            // 
-            this.btnEnrollKey.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnEnrollKey.Image = global::EnrollmentStation.Icons.icon_add;
-            this.btnEnrollKey.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnEnrollKey.Name = "btnEnrollKey";
-            this.btnEnrollKey.Size = new System.Drawing.Size(23, 22);
-            this.btnEnrollKey.Text = "Enroll Yubikey";
-            this.btnEnrollKey.Click += new System.EventHandler(this.btnEnrollKey_Click);
-            // 
-            // tsbSettings
-            // 
-            this.tsbSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbSettings.Image = global::EnrollmentStation.Icons.icon_settings;
-            this.tsbSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSettings.Name = "tsbSettings";
-            this.tsbSettings.Size = new System.Drawing.Size(23, 22);
-            this.tsbSettings.Text = "Show settings";
-            this.tsbSettings.Click += new System.EventHandler(this.tsbSettings_Click);
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblHSMPresent});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 734);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 452);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(996, 22);
-            this.statusStrip1.TabIndex = 6;
+            this.statusStrip1.Size = new System.Drawing.Size(880, 22);
+            this.statusStrip1.TabIndex = 8;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // lblHSMPresent
@@ -599,38 +165,419 @@ namespace EnrollmentStation
             this.lblHSMPresent.Size = new System.Drawing.Size(85, 17);
             this.lblHSMPresent.Text = "lblHSMPresent";
             // 
+            // toolStrip1
+            // 
+            this.toolStrip1.AutoSize = false;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbEnroll,
+            this.tsbSettings,
+            this.tsbAbout});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(880, 32);
+            this.toolStrip1.TabIndex = 0;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // tsbEnroll
+            // 
+            this.tsbEnroll.AutoSize = false;
+            this.tsbEnroll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbEnroll.Image = ((System.Drawing.Image)(resources.GetObject("tsbEnroll.Image")));
+            this.tsbEnroll.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbEnroll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbEnroll.Name = "tsbEnroll";
+            this.tsbEnroll.Size = new System.Drawing.Size(50, 30);
+            this.tsbEnroll.Text = "Enroll YubiKey";
+            this.tsbEnroll.Click += new System.EventHandler(this.tsbEnrollKey_Click);
+            // 
+            // tsbSettings
+            // 
+            this.tsbSettings.AutoSize = false;
+            this.tsbSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbSettings.Image = ((System.Drawing.Image)(resources.GetObject("tsbSettings.Image")));
+            this.tsbSettings.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSettings.Name = "tsbSettings";
+            this.tsbSettings.Size = new System.Drawing.Size(50, 30);
+            this.tsbSettings.Text = "Settings";
+            this.tsbSettings.Click += new System.EventHandler(this.tsbSettings_Click);
+            // 
+            // tsbAbout
+            // 
+            this.tsbAbout.AutoSize = false;
+            this.tsbAbout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbAbout.Image = global::EnrollmentStation.Properties.Resources.gnome_app_install_star;
+            this.tsbAbout.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAbout.Name = "tsbAbout";
+            this.tsbAbout.Size = new System.Drawing.Size(50, 30);
+            this.tsbAbout.Text = "About";
+            this.tsbAbout.Click += new System.EventHandler(this.tsbAbout_Click);
+            // 
+            // gbInsertedKey
+            // 
+            this.gbInsertedKey.Controls.Add(this.lblInsertedHasBeenEnrolled);
+            this.gbInsertedKey.Controls.Add(this.label1);
+            this.gbInsertedKey.Controls.Add(this.lblInsertedFirmware);
+            this.gbInsertedKey.Controls.Add(this.label8);
+            this.gbInsertedKey.Controls.Add(this.lblInsertedMode);
+            this.gbInsertedKey.Controls.Add(this.label14);
+            this.gbInsertedKey.Controls.Add(this.dlblInsertedSerial);
+            this.gbInsertedKey.Controls.Add(this.lblInsertedSerial);
+            this.gbInsertedKey.Location = new System.Drawing.Point(4, 280);
+            this.gbInsertedKey.Name = "gbInsertedKey";
+            this.gbInsertedKey.Size = new System.Drawing.Size(326, 136);
+            this.gbInsertedKey.TabIndex = 3;
+            this.gbInsertedKey.TabStop = false;
+            this.gbInsertedKey.Text = "Inserted Yubikey";
+            // 
+            // lblInsertedHasBeenEnrolled
+            // 
+            this.lblInsertedHasBeenEnrolled.AutoSize = true;
+            this.lblInsertedHasBeenEnrolled.Location = new System.Drawing.Point(113, 104);
+            this.lblInsertedHasBeenEnrolled.Name = "lblInsertedHasBeenEnrolled";
+            this.lblInsertedHasBeenEnrolled.Size = new System.Drawing.Size(137, 13);
+            this.lblInsertedHasBeenEnrolled.TabIndex = 7;
+            this.lblInsertedHasBeenEnrolled.Text = "lblInsertedHasBeenEnrolled";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(8, 104);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(45, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Enrolled";
+            // 
+            // lblInsertedFirmware
+            // 
+            this.lblInsertedFirmware.AutoSize = true;
+            this.lblInsertedFirmware.Location = new System.Drawing.Point(113, 78);
+            this.lblInsertedFirmware.Name = "lblInsertedFirmware";
+            this.lblInsertedFirmware.Size = new System.Drawing.Size(97, 13);
+            this.lblInsertedFirmware.TabIndex = 5;
+            this.lblInsertedFirmware.Text = "lblInsertedFirmware";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(8, 78);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(49, 13);
+            this.label8.TabIndex = 4;
+            this.label8.Text = "Firmware";
+            // 
+            // lblInsertedMode
+            // 
+            this.lblInsertedMode.AutoSize = true;
+            this.lblInsertedMode.Location = new System.Drawing.Point(113, 52);
+            this.lblInsertedMode.Name = "lblInsertedMode";
+            this.lblInsertedMode.Size = new System.Drawing.Size(82, 13);
+            this.lblInsertedMode.TabIndex = 3;
+            this.lblInsertedMode.Text = "lblInsertedMode";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(8, 52);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(71, 13);
+            this.label14.TabIndex = 2;
+            this.label14.Text = "Current Mode";
+            // 
+            // dlblInsertedSerial
+            // 
+            this.dlblInsertedSerial.AutoSize = true;
+            this.dlblInsertedSerial.Location = new System.Drawing.Point(8, 26);
+            this.dlblInsertedSerial.Name = "dlblInsertedSerial";
+            this.dlblInsertedSerial.Size = new System.Drawing.Size(73, 13);
+            this.dlblInsertedSerial.TabIndex = 0;
+            this.dlblInsertedSerial.Text = "Serial Number";
+            // 
+            // lblInsertedSerial
+            // 
+            this.lblInsertedSerial.AutoSize = true;
+            this.lblInsertedSerial.Location = new System.Drawing.Point(113, 26);
+            this.lblInsertedSerial.Name = "lblInsertedSerial";
+            this.lblInsertedSerial.Size = new System.Drawing.Size(81, 13);
+            this.lblInsertedSerial.TabIndex = 1;
+            this.lblInsertedSerial.Text = "lblInsertedSerial";
+            // 
+            // btnEnableCCID
+            // 
+            this.btnEnableCCID.Enabled = false;
+            this.btnEnableCCID.Location = new System.Drawing.Point(12, 422);
+            this.btnEnableCCID.Name = "btnEnableCCID";
+            this.btnEnableCCID.Size = new System.Drawing.Size(88, 23);
+            this.btnEnableCCID.TabIndex = 4;
+            this.btnEnableCCID.Text = "Enable CCID";
+            this.btnEnableCCID.UseVisualStyleBackColor = true;
+            this.btnEnableCCID.Click += new System.EventHandler(this.btnEnableCCID_Click);
+            // 
+            // btnViewCert
+            // 
+            this.btnViewCert.Enabled = false;
+            this.btnViewCert.Location = new System.Drawing.Point(106, 422);
+            this.btnViewCert.Name = "btnViewCert";
+            this.btnViewCert.Size = new System.Drawing.Size(104, 23);
+            this.btnViewCert.TabIndex = 5;
+            this.btnViewCert.Text = "View Certificate";
+            this.btnViewCert.UseVisualStyleBackColor = true;
+            this.btnViewCert.Click += new System.EventHandler(this.btnViewCert_Click);
+            // 
+            // btnExportCert
+            // 
+            this.btnExportCert.Enabled = false;
+            this.btnExportCert.Location = new System.Drawing.Point(216, 422);
+            this.btnExportCert.Name = "btnExportCert";
+            this.btnExportCert.Size = new System.Drawing.Size(104, 23);
+            this.btnExportCert.TabIndex = 6;
+            this.btnExportCert.Text = "Export Certificate";
+            this.btnExportCert.UseVisualStyleBackColor = true;
+            this.btnExportCert.Click += new System.EventHandler(this.btnExportCert_Click);
+            // 
+            // gbSelectedKey
+            // 
+            this.gbSelectedKey.Controls.Add(this.lblYubikeyFirmware);
+            this.gbSelectedKey.Controls.Add(this.label17);
+            this.gbSelectedKey.Controls.Add(this.label4);
+            this.gbSelectedKey.Controls.Add(this.lblYubikeyPivVersion);
+            this.gbSelectedKey.Controls.Add(this.label2);
+            this.gbSelectedKey.Controls.Add(this.lblYubikeySerial);
+            this.gbSelectedKey.Location = new System.Drawing.Point(4, 35);
+            this.gbSelectedKey.Name = "gbSelectedKey";
+            this.gbSelectedKey.Size = new System.Drawing.Size(326, 96);
+            this.gbSelectedKey.TabIndex = 1;
+            this.gbSelectedKey.TabStop = false;
+            this.gbSelectedKey.Text = "YubiKey";
+            // 
+            // lblYubikeyFirmware
+            // 
+            this.lblYubikeyFirmware.AutoSize = true;
+            this.lblYubikeyFirmware.Location = new System.Drawing.Point(113, 70);
+            this.lblYubikeyFirmware.Name = "lblYubikeyFirmware";
+            this.lblYubikeyFirmware.Size = new System.Drawing.Size(97, 13);
+            this.lblYubikeyFirmware.TabIndex = 5;
+            this.lblYubikeyFirmware.Text = "lblYubikeyFirmware";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(8, 70);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(49, 13);
+            this.label17.TabIndex = 4;
+            this.label17.Text = "Firmware";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(8, 45);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(62, 13);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "PIV Version";
+            // 
+            // lblYubikeyPivVersion
+            // 
+            this.lblYubikeyPivVersion.AutoSize = true;
+            this.lblYubikeyPivVersion.Location = new System.Drawing.Point(113, 45);
+            this.lblYubikeyPivVersion.Name = "lblYubikeyPivVersion";
+            this.lblYubikeyPivVersion.Size = new System.Drawing.Size(105, 13);
+            this.lblYubikeyPivVersion.TabIndex = 3;
+            this.lblYubikeyPivVersion.Text = "lblYubikeyPivVersion";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(73, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Serial Number";
+            // 
+            // lblYubikeySerial
+            // 
+            this.lblYubikeySerial.AutoSize = true;
+            this.lblYubikeySerial.Location = new System.Drawing.Point(113, 20);
+            this.lblYubikeySerial.Name = "lblYubikeySerial";
+            this.lblYubikeySerial.Size = new System.Drawing.Size(81, 13);
+            this.lblYubikeySerial.TabIndex = 1;
+            this.lblYubikeySerial.Text = "lblYubikeySerial";
+            // 
+            // gbSelectedKeyCertificate
+            // 
+            this.gbSelectedKeyCertificate.Controls.Add(this.lblCertThumbprint);
+            this.gbSelectedKeyCertificate.Controls.Add(this.label11);
+            this.gbSelectedKeyCertificate.Controls.Add(this.lblCertCA);
+            this.gbSelectedKeyCertificate.Controls.Add(this.label13);
+            this.gbSelectedKeyCertificate.Controls.Add(this.lblCertUser);
+            this.gbSelectedKeyCertificate.Controls.Add(this.label7);
+            this.gbSelectedKeyCertificate.Controls.Add(this.lblCertEnrolledOn);
+            this.gbSelectedKeyCertificate.Controls.Add(this.label5);
+            this.gbSelectedKeyCertificate.Controls.Add(this.lblCertSerial);
+            this.gbSelectedKeyCertificate.Controls.Add(this.label6);
+            this.gbSelectedKeyCertificate.Location = new System.Drawing.Point(4, 137);
+            this.gbSelectedKeyCertificate.Name = "gbSelectedKeyCertificate";
+            this.gbSelectedKeyCertificate.Size = new System.Drawing.Size(326, 137);
+            this.gbSelectedKeyCertificate.TabIndex = 2;
+            this.gbSelectedKeyCertificate.TabStop = false;
+            this.gbSelectedKeyCertificate.Text = "Certificate";
+            // 
+            // lblCertThumbprint
+            // 
+            this.lblCertThumbprint.AutoSize = true;
+            this.lblCertThumbprint.Location = new System.Drawing.Point(113, 112);
+            this.lblCertThumbprint.Name = "lblCertThumbprint";
+            this.lblCertThumbprint.Size = new System.Drawing.Size(89, 13);
+            this.lblCertThumbprint.TabIndex = 9;
+            this.lblCertThumbprint.Text = "lblCertThumbprint";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(8, 112);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(60, 13);
+            this.label11.TabIndex = 8;
+            this.label11.Text = "Thumbprint";
+            // 
+            // lblCertCA
+            // 
+            this.lblCertCA.AutoSize = true;
+            this.lblCertCA.Location = new System.Drawing.Point(113, 88);
+            this.lblCertCA.Name = "lblCertCA";
+            this.lblCertCA.Size = new System.Drawing.Size(50, 13);
+            this.lblCertCA.TabIndex = 7;
+            this.lblCertCA.Text = "lblCertCA";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(8, 88);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(21, 13);
+            this.label13.TabIndex = 6;
+            this.label13.Text = "CA";
+            // 
+            // lblCertUser
+            // 
+            this.lblCertUser.AutoSize = true;
+            this.lblCertUser.Location = new System.Drawing.Point(113, 16);
+            this.lblCertUser.Name = "lblCertUser";
+            this.lblCertUser.Size = new System.Drawing.Size(58, 13);
+            this.lblCertUser.TabIndex = 1;
+            this.lblCertUser.Text = "lblCertUser";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(8, 16);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(29, 13);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "User";
+            // 
+            // lblCertEnrolledOn
+            // 
+            this.lblCertEnrolledOn.AutoSize = true;
+            this.lblCertEnrolledOn.Location = new System.Drawing.Point(113, 64);
+            this.lblCertEnrolledOn.Name = "lblCertEnrolledOn";
+            this.lblCertEnrolledOn.Size = new System.Drawing.Size(88, 13);
+            this.lblCertEnrolledOn.TabIndex = 5;
+            this.lblCertEnrolledOn.Text = "lblCertEnrolledOn";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 64);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(60, 13);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "Enrolled on";
+            // 
+            // lblCertSerial
+            // 
+            this.lblCertSerial.AutoSize = true;
+            this.lblCertSerial.Location = new System.Drawing.Point(113, 40);
+            this.lblCertSerial.Name = "lblCertSerial";
+            this.lblCertSerial.Size = new System.Drawing.Size(62, 13);
+            this.lblCertSerial.TabIndex = 3;
+            this.lblCertSerial.Text = "lblCertSerial";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(8, 40);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(33, 13);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "Serial";
+            // 
+            // lstItems
+            // 
+            this.lstItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.clmSerial,
+            this.clmUser,
+            this.clmEnrolledAt,
+            this.clmCertificateSerial});
+            this.lstItems.ContextMenuStrip = this.contextMenuStrip1;
+            this.lstItems.FullRowSelect = true;
+            this.lstItems.Location = new System.Drawing.Point(336, 41);
+            this.lstItems.MultiSelect = false;
+            this.lstItems.Name = "lstItems";
+            this.lstItems.Size = new System.Drawing.Size(537, 404);
+            this.lstItems.TabIndex = 7;
+            this.lstItems.UseCompatibleStateImageBehavior = false;
+            this.lstItems.View = System.Windows.Forms.View.Details;
+            this.lstItems.SelectedIndexChanged += new System.EventHandler(this.lstItems_SelectedIndexChanged);
+            // 
+            // clmSerial
+            // 
+            this.clmSerial.Text = "Serial";
+            // 
+            // clmUser
+            // 
+            this.clmUser.Text = "User";
+            this.clmUser.Width = 104;
+            // 
+            // clmEnrolledAt
+            // 
+            this.clmEnrolledAt.Text = "Enrolled (local time)";
+            this.clmEnrolledAt.Width = 118;
+            // 
+            // clmCertificateSerial
+            // 
+            this.clmCertificateSerial.Text = "Certificate";
+            this.clmCertificateSerial.Width = 153;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(996, 756);
-            this.Controls.Add(this.statusStrip1);
+            this.ClientSize = new System.Drawing.Size(880, 474);
+            this.Controls.Add(this.gbInsertedKey);
+            this.Controls.Add(this.btnEnableCCID);
+            this.Controls.Add(this.btnViewCert);
+            this.Controls.Add(this.btnExportCert);
+            this.Controls.Add(this.gbSelectedKey);
+            this.Controls.Add(this.gbSelectedKeyCertificate);
+            this.Controls.Add(this.lstItems);
             this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.Controls.Add(this.statusStrip1);
             this.Name = "MainForm";
             this.Text = "CSIS Enrollment Station";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.gbInsertedKey.ResumeLayout(false);
             this.gbInsertedKey.PerformLayout();
             this.gbSelectedKey.ResumeLayout(false);
             this.gbSelectedKey.PerformLayout();
             this.gbSelectedKeyCertificate.ResumeLayout(false);
             this.gbSelectedKeyCertificate.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -638,17 +585,39 @@ namespace EnrollmentStation
 
         #endregion
 
-        private MenuStrip menuStrip1;
-        private ToolStripMenuItem fileToolStripMenuItem;
-        private ToolStripMenuItem helpToolStripMenuItem;
-        private SplitContainer splitContainer1;
         private ContextMenuStrip contextMenuStrip1;
-        private ToolStrip toolStrip1;
-        private ToolStripButton btnEnrollKey;
-        private ToolStripButton tsbSettings;
-        private Panel panel1;
         private ToolStripMenuItem viewCertificateToolStripMenuItem;
         private ToolStripMenuItem exportCertificateToolStripMenuItem;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel lblHSMPresent;
+        private ToolStripMenuItem changePINToolStripMenuItem;
+        private ToolStripMenuItem cancelToolStripMenuItem;
+        private ToolStripMenuItem resetToolStripMenuItem;
+        private ToolStripMenuItem revokeToolStripMenuItem;
+        private ToolStripMenuItem terminateToolStripMenuItem1;
+        private ToolStrip toolStrip1;
+        private ToolStripButton tsbEnroll;
+        private ToolStripButton tsbSettings;
+        private ToolStripButton tsbAbout;
+        private GroupBox gbInsertedKey;
+        private Label lblInsertedHasBeenEnrolled;
+        private Label label1;
+        private Label lblInsertedFirmware;
+        private Label label8;
+        private Label lblInsertedMode;
+        private Label label14;
+        private Label dlblInsertedSerial;
+        private Label lblInsertedSerial;
+        private Button btnEnableCCID;
+        private Button btnViewCert;
+        private Button btnExportCert;
+        private GroupBox gbSelectedKey;
+        private Label lblYubikeyFirmware;
+        private Label label17;
+        private Label label4;
+        private Label lblYubikeyPivVersion;
+        private Label label2;
+        private Label lblYubikeySerial;
         private GroupBox gbSelectedKeyCertificate;
         private Label lblCertThumbprint;
         private Label label11;
@@ -660,36 +629,10 @@ namespace EnrollmentStation
         private Label label5;
         private Label lblCertSerial;
         private Label label6;
+        private ListView lstItems;
         private ColumnHeader clmSerial;
         private ColumnHeader clmUser;
         private ColumnHeader clmEnrolledAt;
         private ColumnHeader clmCertificateSerial;
-        private GroupBox gbSelectedKey;
-        private Label lblYubikeyFirmware;
-        private Label label17;
-        private Label label4;
-        private Label lblYubikeyPivVersion;
-        private Label label2;
-        private Label lblYubikeySerial;
-        private StatusStrip statusStrip1;
-        private ToolStripStatusLabel lblHSMPresent;
-        private Button btnViewCert;
-        private Button btnExportCert;
-        private Button btnEnableCCID;
-        private GroupBox gbInsertedKey;
-        private Label lblInsertedFirmware;
-        private Label label8;
-        private Label lblInsertedMode;
-        private Label label14;
-        private Label dlblInsertedSerial;
-        private Label lblInsertedSerial;
-        private ListView lstItems;
-        private ToolStripMenuItem changePINToolStripMenuItem;
-        private Label lblInsertedHasBeenEnrolled;
-        private Label label1;
-        private ToolStripMenuItem cancelToolStripMenuItem;
-        private ToolStripMenuItem resetToolStripMenuItem;
-        private ToolStripMenuItem revokeToolStripMenuItem;
-        private ToolStripMenuItem terminateToolStripMenuItem1;
     }
 }

@@ -81,12 +81,14 @@ namespace EnrollmentStation
         {
             foreach (Control control in gbSelectedKey.Controls)
             {
-                control.Visible = lstItems.SelectedItems.Count == 1;
+                if (control.Name.StartsWith("lbl"))
+                    control.Visible = lstItems.SelectedItems.Count == 1;
             }
 
             foreach (Control control in gbSelectedKeyCertificate.Controls)
             {
-                control.Visible = lstItems.SelectedItems.Count == 1;
+                if (control.Name.StartsWith("lbl"))
+                    control.Visible = lstItems.SelectedItems.Count == 1;
             }
 
             if (lstItems.SelectedItems.Count <= 0)
@@ -119,7 +121,8 @@ namespace EnrollmentStation
         {
             foreach (Control control in gbInsertedKey.Controls)
             {
-                control.Visible = _devicePresent;
+                if (control.Name.StartsWith("lbl"))
+                    control.Visible = _devicePresent;
             }
 
             if (!_devicePresent)
@@ -220,7 +223,7 @@ namespace EnrollmentStation
 
         }
 
-        private void btnEnrollKey_Click(object sender, EventArgs e)
+        private void tsbEnrollKey_Click(object sender, EventArgs e)
         {
             DlgEnroll enroll = new DlgEnroll(_settings, _dataStore);
             enroll.ShowDialog();
@@ -292,7 +295,7 @@ namespace EnrollmentStation
             if (item == null)
                 return;
 
-            DlgChangePin changePin = new DlgChangePin(item);
+            DlgResetPin changePin = new DlgResetPin(item);
             changePin.ShowDialog();
         }
 
@@ -425,8 +428,19 @@ namespace EnrollmentStation
                 }
             }
 
-            _dataStore.Save(MainForm.FileStore);
+            _dataStore.Save(FileStore);
 
+        }
+
+        private void tsbAbout_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("This application is CSIS' entry to the YubiKing competition." + Environment.NewLine + Environment.NewLine +
+                            "Some companies use 'enrollment stations' to enroll users to smart cards." +
+                            "YubiKey NEO now have smart card functionality, but do not yet have full write support in Windows." +
+                            " This application is the missing piece, that makes it possible to enroll users to smart cards" +
+                            " when coupled with Windows Active Directory Certificate Services." + Environment.NewLine + Environment.NewLine +
+                            "Written by Michael Bisbjerg and Ian Qvist", "YubiKey Enrollment Station"
+                            , MessageBoxButtons.OK);
         }
     }
 }

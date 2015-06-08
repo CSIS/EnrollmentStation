@@ -1,4 +1,5 @@
 ﻿using System;
+using System.DirectoryServices.ActiveDirectory;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
@@ -25,15 +26,35 @@ namespace EnrollmentStation
         private void DlgSettings_Load(object sender, EventArgs e)
         {
             UpdateView();
+
+            try
+            {
+                Domain domain = Domain.GetComputerDomain();
+
+                if (!string.IsNullOrWhiteSpace(domain.Name))
+                    llBrowseCA.Visible = true;
+            }
+            catch (ActiveDirectoryObjectNotFoundException)
+            {
+                llBrowseCA.Visible = false;
+            }
         }
 
         private void UpdateView()
         {
             lblHSMAvaliable.Text = HsmRng.IsHsmPresent() ? "Yes" : "No";
-            txtManagementKey.Text = BitConverter.ToString(_settings.EnrollmentManagementKey).Replace("-", "");
-            txtCSREndpoint.Text = _settings.CSREndpoint;
-            txtCaTemplate.Text = _settings.EnrollmentCaTemplate;
-            txtAgentCert.Text = _settings.EnrollmentAgentCertificate;
+
+            if (_settings.EnrollmentManagementKey != null && _settings.EnrollmentManagementKey.Length > 0)
+                txtManagementKey.Text = BitConverter.ToString(_settings.EnrollmentManagementKey).Replace("-", "");
+
+            if (!string.IsNullOrWhiteSpace(_settings.CSREndpoint))
+                txtCSREndpoint.Text = _settings.CSREndpoint;
+
+            if (!string.IsNullOrWhiteSpace(_settings.EnrollmentCaTemplate))
+                txtCaTemplate.Text = _settings.EnrollmentCaTemplate;
+
+            if (!string.IsNullOrWhiteSpace(_settings.EnrollmentAgentCertificate))
+                txtAgentCert.Text = _settings.EnrollmentAgentCertificate;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
