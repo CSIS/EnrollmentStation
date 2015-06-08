@@ -158,6 +158,12 @@ namespace EnrollmentStation
             lblInsertedSerial.Text = neo.GetSerialNumber().ToString();
             lblInsertedFirmware.Text = neo.GetVersion().ToString();
             lblInsertedMode.Text = neo.GetMode().ToString();
+
+            using (YubikeyPivTool piv = new YubikeyPivTool())
+            {
+                lblInsertedHasBeenEnrolled.Text = (!piv.Authenticate(YubikeyPivTool.DefaultManagementKey)).ToString();
+                lblInsertedPinTries.Text = piv.GetPinTriesLeft().ToString();
+            }
         }
 
         private void RefreshUserStore()

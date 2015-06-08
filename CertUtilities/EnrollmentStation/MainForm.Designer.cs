@@ -81,6 +81,10 @@ namespace EnrollmentStation
             this.tsbSettings = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblHSMPresent = new System.Windows.Forms.ToolStripStatusLabel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblInsertedHasBeenEnrolled = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lblInsertedPinTries = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -150,6 +154,10 @@ namespace EnrollmentStation
             // 
             // gbInsertedKey
             // 
+            this.gbInsertedKey.Controls.Add(this.lblInsertedPinTries);
+            this.gbInsertedKey.Controls.Add(this.label3);
+            this.gbInsertedKey.Controls.Add(this.lblInsertedHasBeenEnrolled);
+            this.gbInsertedKey.Controls.Add(this.label1);
             this.gbInsertedKey.Controls.Add(this.lblInsertedFirmware);
             this.gbInsertedKey.Controls.Add(this.label8);
             this.gbInsertedKey.Controls.Add(this.lblInsertedMode);
@@ -550,6 +558,42 @@ namespace EnrollmentStation
             this.lblHSMPresent.Size = new System.Drawing.Size(85, 17);
             this.lblHSMPresent.Text = "lblHSMPresent";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(8, 106);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(45, 13);
+            this.label1.TabIndex = 34;
+            this.label1.Text = "Enrolled";
+            // 
+            // lblInsertedHasBeenEnrolled
+            // 
+            this.lblInsertedHasBeenEnrolled.AutoSize = true;
+            this.lblInsertedHasBeenEnrolled.Location = new System.Drawing.Point(113, 106);
+            this.lblInsertedHasBeenEnrolled.Name = "lblInsertedHasBeenEnrolled";
+            this.lblInsertedHasBeenEnrolled.Size = new System.Drawing.Size(137, 13);
+            this.lblInsertedHasBeenEnrolled.TabIndex = 35;
+            this.lblInsertedHasBeenEnrolled.Text = "lblInsertedHasBeenEnrolled";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(8, 135);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(61, 13);
+            this.label3.TabIndex = 36;
+            this.label3.Text = "Pin tries left";
+            // 
+            // lblInsertedPinTries
+            // 
+            this.lblInsertedPinTries.AutoSize = true;
+            this.lblInsertedPinTries.Location = new System.Drawing.Point(112, 135);
+            this.lblInsertedPinTries.Name = "lblInsertedPinTries";
+            this.lblInsertedPinTries.Size = new System.Drawing.Size(93, 13);
+            this.lblInsertedPinTries.TabIndex = 37;
+            this.lblInsertedPinTries.Text = "lblInsertedPinTries";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -637,5 +681,9 @@ namespace EnrollmentStation
         private Label lblInsertedSerial;
         private ListView lstItems;
         private ToolStripMenuItem resetPINToolStripMenuItem;
+        private Label lblInsertedPinTries;
+        private Label label3;
+        private Label lblInsertedHasBeenEnrolled;
+        private Label label1;
     }
 }
