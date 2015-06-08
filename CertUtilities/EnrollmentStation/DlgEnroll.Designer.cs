@@ -76,6 +76,7 @@ namespace EnrollmentStation
             this.llBrowseUser.Name = "llBrowseUser";
             this.llBrowseUser.Size = new System.Drawing.Size(42, 13);
             this.llBrowseUser.TabIndex = 2;
+            this.llBrowseUser.TabStop = true;
             this.llBrowseUser.Text = "Browse";
             this.llBrowseUser.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llBrowseUser_LinkClicked);
             // 
@@ -285,6 +286,7 @@ namespace EnrollmentStation
             this.Name = "DlgEnroll";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Enroll new SmartCard";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DlgEnroll_FormClosing);
             this.Load += new System.EventHandler(this.DlgEnroll_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

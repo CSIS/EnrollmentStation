@@ -47,6 +47,11 @@ namespace EnrollmentStation
             RefreshEligibleForEnroll();
         }
 
+        private void DlgEnroll_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            YubikeyDetector.Instance.StateChanged -= YubikeyStateChange;
+        }
+
         private void YubikeyStateChange()
         {
             _devicePresent = _neoManager.RefreshDevice();
