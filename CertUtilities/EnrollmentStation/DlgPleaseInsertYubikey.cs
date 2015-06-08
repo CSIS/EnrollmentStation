@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Threading;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
 
@@ -10,7 +8,6 @@ namespace EnrollmentStation
     {
         private readonly EnrolledYubikey _key;
 
-        private BackgroundWorker _worker = new BackgroundWorker();
         private YubikeyNeoManager _neo;
 
         private bool _hasBeenFound;
@@ -26,9 +23,34 @@ namespace EnrollmentStation
 
             lblSerial.Text = _key.DeviceSerial.ToString();
             lblUsername.Text = _key.Username;
+        }
 
-            _worker.DoWork += WorkerOnDoWork;
-            _worker.RunWorkerCompleted += WorkerOnRunWorkerCompleted;
+        private void DlgPleaseInsertYubikey_Load(object sender, EventArgs e)
+        {
+            YubikeyDetector.Instance.StateChanged += YubikeyStateChanged;
+            YubikeyDetector.Instance.Start();
+        }
+
+        private void DlgPleaseInsertYubikey_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            YubikeyDetector.Instance.StateChanged -= YubikeyStateChanged;
+        }
+
+        private void YubikeyStateChanged()
+        {
+            CheckForYubikey();
+
+            if (InvokeRequired)
+                Invoke((Action)(() =>
+                {
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }));
+            else
+            {
+                DialogResult = DialogResult.OK;
+                Close();
+            }
         }
 
         public new DialogResult ShowDialog()
@@ -40,17 +62,6 @@ namespace EnrollmentStation
             }
 
             return base.ShowDialog();
-        }
-
-        private void DlgPleaseInsertYubikey_Load(object sender, EventArgs e)
-        {
-            _worker.RunWorkerAsync();
-        }
-
-        private void WorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
-        {
-            DialogResult = DialogResult.OK;
-            Close();
         }
 
         private void CheckForYubikey()
@@ -65,16 +76,6 @@ namespace EnrollmentStation
 
             // Success
             _hasBeenFound = true;
-        }
-
-        private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
-        {
-            while (!_hasBeenFound)
-            {
-                Thread.Sleep(1000);
-
-                CheckForYubikey();
-            }
         }
     }
 }
