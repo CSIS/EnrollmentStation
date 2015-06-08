@@ -150,15 +150,12 @@ namespace EnrollmentStation
             if (!_devicePresent)
                 return;
 
-            lblInsertedSerial.Text = neo.GetSerialNumber().ToString();
+            int serialNumber = neo.GetSerialNumber();
+            lblInsertedSerial.Text = serialNumber.ToString();
             lblInsertedFirmware.Text = neo.GetVersion().ToString();
             lblInsertedMode.Text = neo.GetMode().ToString();
 
-            using (YubikeyPivTool piv = new YubikeyPivTool())
-            {
-                lblInsertedHasBeenEnrolled.Text = (!piv.Authenticate(YubikeyPivTool.DefaultManagementKey)).ToString();
-                lblInsertedPinTries.Text = piv.GetPinTriesLeft().ToString();
-            }
+            lblInsertedHasBeenEnrolled.Text = _dataStore.Search(serialNumber).Any().ToString();
         }
 
         private void RefreshUserStore()

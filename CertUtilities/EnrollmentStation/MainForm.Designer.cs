@@ -39,8 +39,6 @@ namespace EnrollmentStation
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel1 = new System.Windows.Forms.Panel();
             this.gbInsertedKey = new System.Windows.Forms.GroupBox();
-            this.lblInsertedPinTries = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.lblInsertedHasBeenEnrolled = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblInsertedFirmware = new System.Windows.Forms.Label();
@@ -157,8 +155,6 @@ namespace EnrollmentStation
             // 
             // gbInsertedKey
             // 
-            this.gbInsertedKey.Controls.Add(this.lblInsertedPinTries);
-            this.gbInsertedKey.Controls.Add(this.label3);
             this.gbInsertedKey.Controls.Add(this.lblInsertedHasBeenEnrolled);
             this.gbInsertedKey.Controls.Add(this.label1);
             this.gbInsertedKey.Controls.Add(this.lblInsertedFirmware);
@@ -173,24 +169,6 @@ namespace EnrollmentStation
             this.gbInsertedKey.TabIndex = 30;
             this.gbInsertedKey.TabStop = false;
             this.gbInsertedKey.Text = "Inserted Yubikey";
-            // 
-            // lblInsertedPinTries
-            // 
-            this.lblInsertedPinTries.AutoSize = true;
-            this.lblInsertedPinTries.Location = new System.Drawing.Point(112, 135);
-            this.lblInsertedPinTries.Name = "lblInsertedPinTries";
-            this.lblInsertedPinTries.Size = new System.Drawing.Size(93, 13);
-            this.lblInsertedPinTries.TabIndex = 37;
-            this.lblInsertedPinTries.Text = "lblInsertedPinTries";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 135);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(61, 13);
-            this.label3.TabIndex = 36;
-            this.label3.Text = "Pin tries left";
             // 
             // lblInsertedHasBeenEnrolled
             // 
@@ -707,8 +685,6 @@ namespace EnrollmentStation
         private Label lblInsertedSerial;
         private ListView lstItems;
         private ToolStripMenuItem resetPINToolStripMenuItem;
-        private Label lblInsertedPinTries;
-        private Label label3;
         private Label lblInsertedHasBeenEnrolled;
         private Label label1;
         private ToolStripMenuItem cancelToolStripMenuItem;
