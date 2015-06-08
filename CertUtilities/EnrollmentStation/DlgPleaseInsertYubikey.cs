@@ -54,18 +54,7 @@ namespace EnrollmentStation
         {
             CheckForYubikey();
 
-            if (InvokeRequired)
-                Invoke((Action)(() =>
-                {
-                    UpdateView();
-
-                    if (_hasBeenFound)
-                    {
-                        DialogResult = DialogResult.OK;
-                        Close();
-                    }
-                }));
-            else
+            this.InvokeIfNeeded(() =>
             {
                 UpdateView();
 
@@ -74,7 +63,7 @@ namespace EnrollmentStation
                     DialogResult = DialogResult.OK;
                     Close();
                 }
-            }
+            });
         }
 
         private void CheckForYubikey()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+using System.Windows.Forms;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
@@ -51,6 +52,14 @@ namespace EnrollmentStation.Code
             SubjectPublicKeyInfo keyInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicParams);
 
             return Convert.ToBase64String(keyInfo.GetEncoded());
+        }
+
+        public static void InvokeIfNeeded(this Control control, Action action)
+        {
+            if (control.InvokeRequired)
+                control.Invoke(action);
+            else
+                action();
         }
     }
 }
