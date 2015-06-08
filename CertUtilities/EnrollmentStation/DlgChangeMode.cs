@@ -1,0 +1,128 @@
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+using EnrollmentStation.Code;
+
+namespace EnrollmentStation
+{
+    public partial class DlgChangeMode : Form
+    {
+        private YubicoNeoMode _currentMode;
+
+        private bool _stateWaitingToRemove = false;
+
+        public DlgChangeMode()
+        {
+            InitializeComponent();
+
+            _currentMode = new YubicoNeoMode(YubicoNeoModeEnum.OtpOnly);
+            SetStatus(Color.Yellow, "Insert a Yubikey");
+        }
+
+        private void SetStatus(string text)
+        {
+            SetStatus(BackColor, text);
+        }
+
+        private void SetStatus(Color color, string text)
+        {
+            lblStatus.Text = text;
+            lblStatus.BackColor = color;
+        }
+
+        private void DlgChangeMode_Load(object sender, System.EventArgs e)
+        {
+            YubikeyDetector.Instance.StateChanged += InstanceOnStateChanged;
+            YubikeyDetector.Instance.Start();
+
+            UpdateCurrentView();
+        }
+
+        private void DlgChangeMode_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            YubikeyDetector.Instance.StateChanged -= InstanceOnStateChanged;
+        }
+
+        private void InstanceOnStateChanged()
+        {
+            if (_stateWaitingToRemove && !YubikeyDetector.Instance.CurrentState)
+            {
+                // The current key has been removed - reset the state
+                _stateWaitingToRemove = false;
+            }
+
+            this.InvokeIfNeeded(UpdateCurrentView);
+        }
+
+        private void UpdateCurrentView()
+        {
+            if (_stateWaitingToRemove)
+                // Don't update the UI - wait for the user to remove the current Yubikey
+                return;
+
+            using (YubikeyDetector.Instance.GetExclusiveLock())
+            using (YubikeyNeoManager neo = new YubikeyNeoManager())
+            {
+                bool device = neo.RefreshDevice();
+
+                foreach (Control control in grpChangeMode.Controls)
+                    control.Enabled = device;
+
+                if (!device)
+                {
+                    SetStatus(Color.Yellow, "Insert a Yubikey");
+                    return;
+                }
+
+                _currentMode = neo.GetMode();
+
+                chkOTP.Checked = _currentMode.HasOtp;
+                chkCCID.Checked = _currentMode.HasCcid;
+                chkU2f.Checked = _currentMode.HasU2f;
+                chkEject.Checked = _currentMode.HasEjectMode;
+
+                SetStatus(Color.GreenYellow, "Currently set to " + _currentMode.Mode);
+            }
+        }
+
+        private void checkBox_Changed(object sender, EventArgs e)
+        {
+            _currentMode.HasOtp = chkOTP.Checked;
+            _currentMode.HasCcid = chkCCID.Checked;
+            _currentMode.HasU2f = chkU2f.Checked;
+            _currentMode.HasEjectMode = chkEject.Checked;
+
+            cmdChange.Enabled = _currentMode.IsValid;
+        }
+
+        private void cmdChange_Click(object sender, EventArgs e)
+        {
+            SetStatus(Color.Orange, "DO NOT REMOVE THE YUBIKEY");
+
+            using (YubikeyDetector.Instance.GetExclusiveLock())
+            using (YubikeyNeoManager neo = new YubikeyNeoManager())
+            {
+                bool device = neo.RefreshDevice();
+                if (!device)
+                {
+                    SetStatus(Color.Yellow, "Insert a Yubikey");
+                    return;
+                }
+
+                try
+                {
+                    neo.SetMode(_currentMode.Mode);
+                    SetStatus(Color.GreenYellow, "The mode was set. Please remove the Yubikey from the system.");
+                }
+                catch (Exception ex)
+                {
+                    SetStatus(Color.Red, "Was unable to set the mode, please remove the Yubikey. Details: " + ex.Message);
+                }
+
+                _stateWaitingToRemove = true;
+                foreach (Control control in grpChangeMode.Controls)
+                    control.Enabled = false;
+            }
+        }
+    }
+}

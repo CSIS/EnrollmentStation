@@ -18,10 +18,10 @@ namespace EnrollmentStation.Code
         private static extern void YkNeoManagerDone(IntPtr dev);
 
         [DllImport("Binaries\\libykneomgr-0.dll", EntryPoint = "ykneomgr_get_mode", CharSet = CharSet.Auto, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoNeoMode YkNeoManagerGetMode(IntPtr dev);
+        private static extern YubicoNeoModeEnum YkNeoManagerGetMode(IntPtr dev);
 
         [DllImport("Binaries\\libykneomgr-0.dll", EntryPoint = "ykneomgr_modeswitch", CharSet = CharSet.Auto, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoNeoReturnCode YkNeoManagerSetMode(IntPtr dev, YubicoNeoMode mode);
+        private static extern YubicoNeoReturnCode YkNeoManagerSetMode(IntPtr dev, YubicoNeoModeEnum mode);
 
         [DllImport("Binaries\\libykneomgr-0.dll", EntryPoint = "ykneomgr_get_serialno", CharSet = CharSet.Auto, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
         private static extern int YkNeoManagerGetSerialNumber(IntPtr dev);
@@ -84,33 +84,15 @@ namespace EnrollmentStation.Code
             return new Version(major, minor, build);
         }
 
-        public static bool ModeHasCcid(YubicoNeoMode mode)
-        {
-            switch (mode)
-            {
-                case YubicoNeoMode.CcidOnly:
-                case YubicoNeoMode.OtpCcid:
-                case YubicoNeoMode.U2fCcid:
-                case YubicoNeoMode.OtpU2fCcid:
-                case YubicoNeoMode.CcidOnly_WithEject:
-                case YubicoNeoMode.OtpCcid_WithEject:
-                case YubicoNeoMode.U2fCcid_WithEject:
-                case YubicoNeoMode.OtpU2fCcid_WithEject:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
         public YubicoNeoMode GetMode()
         {
             if (_currentDevice == IntPtr.Zero)
                 throw new Exception("Not initialized");
 
-            return YkNeoManagerGetMode(_currentDevice);
+            return new YubicoNeoMode(YkNeoManagerGetMode(_currentDevice));
         }
 
-        public void SetMode(YubicoNeoMode mode)
+        public void SetMode(YubicoNeoModeEnum mode)
         {
             if (_currentDevice == IntPtr.Zero)
                 throw new Exception("Not initialized");

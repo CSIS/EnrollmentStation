@@ -1,20 +1,118 @@
+using System;
+
 namespace EnrollmentStation.Code
 {
-    public enum YubicoNeoMode : byte
+    public class YubicoNeoMode
     {
-        OtpOnly = 0,
-        CcidOnly = 1,
-        OtpCcid = 2,
-        U2fOnly = 3,
-        OtpU2f = 4,
-        U2fCcid = 5,
-        OtpU2fCcid = 6,
-        OtpOnly_WithEject = 0 + 0x80,
-        CcidOnly_WithEject = 1 + 0x80,
-        OtpCcid_WithEject = 2 + 0x80,
-        U2fOnly_WithEject = 3 + 0x80,
-        OtpU2f_WithEject = 4 + 0x80,
-        U2fCcid_WithEject = 5 + 0x80,
-        OtpU2fCcid_WithEject = 6 + 0x80
+        public YubicoNeoModeEnum Mode
+        {
+            get
+            {
+                if (HasEjectMode && HasOtp && HasU2f && HasCcid)
+                    return YubicoNeoModeEnum.OtpU2fCcid_WithEject;
+
+                if (HasEjectMode && !HasOtp && HasU2f && HasCcid)
+                    return YubicoNeoModeEnum.U2fCcid_WithEject;
+
+                if (HasEjectMode && HasOtp && HasU2f && !HasCcid)
+                    return YubicoNeoModeEnum.OtpU2f_WithEject;
+
+                if (HasEjectMode && !HasOtp && HasU2f && !HasCcid)
+                    return YubicoNeoModeEnum.U2fOnly_WithEject;
+
+                if (HasEjectMode && HasOtp && !HasU2f && HasCcid)
+                    return YubicoNeoModeEnum.OtpCcid_WithEject;
+
+                if (HasEjectMode && !HasOtp && !HasU2f && HasCcid)
+                    return YubicoNeoModeEnum.CcidOnly_WithEject;
+
+                if (HasEjectMode && HasOtp && !HasU2f && !HasCcid)
+                    return YubicoNeoModeEnum.OtpOnly_WithEject;
+
+                if (!HasEjectMode && HasOtp && HasU2f && HasCcid)
+                    return YubicoNeoModeEnum.OtpU2fCcid;
+
+                if (!HasEjectMode && !HasOtp && HasU2f && HasCcid)
+                    return YubicoNeoModeEnum.U2fCcid;
+
+                if (!HasEjectMode && HasOtp && HasU2f && !HasCcid)
+                    return YubicoNeoModeEnum.OtpU2f;
+
+                if (!HasEjectMode && !HasOtp && HasU2f && !HasCcid)
+                    return YubicoNeoModeEnum.U2fOnly;
+
+                if (!HasEjectMode && HasOtp && !HasU2f && HasCcid)
+                    return YubicoNeoModeEnum.OtpCcid;
+
+                if (!HasEjectMode && !HasOtp && !HasU2f && HasCcid)
+                    return YubicoNeoModeEnum.CcidOnly;
+
+                return YubicoNeoModeEnum.OtpOnly;
+            }
+            set
+            {
+                HasOtp = HasCcid = HasU2f = HasEjectMode = false;
+
+                switch (value)
+                {
+                    case YubicoNeoModeEnum.OtpOnly:
+                        HasOtp = true;
+                        break;
+                    case YubicoNeoModeEnum.CcidOnly:
+                        HasCcid = true;
+                        break;
+                    case YubicoNeoModeEnum.OtpCcid:
+                        HasOtp = HasCcid = true;
+                        break;
+                    case YubicoNeoModeEnum.U2fOnly:
+                        HasU2f = true;
+                        break;
+                    case YubicoNeoModeEnum.OtpU2f:
+                        HasOtp = HasU2f = true;
+                        break;
+                    case YubicoNeoModeEnum.U2fCcid:
+                        HasU2f = HasCcid = true;
+                        break;
+                    case YubicoNeoModeEnum.OtpU2fCcid:
+                        HasOtp = HasU2f = HasCcid = true;
+                        break;
+                    case YubicoNeoModeEnum.OtpOnly_WithEject:
+                        HasOtp = HasEjectMode = true;
+                        break;
+                    case YubicoNeoModeEnum.CcidOnly_WithEject:
+                        HasCcid = HasEjectMode = true;
+                        break;
+                    case YubicoNeoModeEnum.OtpCcid_WithEject:
+                        HasOtp = HasCcid = HasEjectMode = true;
+                        break;
+                    case YubicoNeoModeEnum.U2fOnly_WithEject:
+                        HasU2f = HasEjectMode = true;
+                        break;
+                    case YubicoNeoModeEnum.OtpU2f_WithEject:
+                        HasOtp = HasU2f = HasEjectMode = true;
+                        break;
+                    case YubicoNeoModeEnum.U2fCcid_WithEject:
+                        HasU2f = HasCcid = HasEjectMode = true;
+                        break;
+                    case YubicoNeoModeEnum.OtpU2fCcid_WithEject:
+                        HasOtp = HasU2f = HasCcid = HasEjectMode = true;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException("value");
+                }
+            }
+        }
+
+        public bool HasOtp { get; set; }
+        public bool HasCcid { get; set; }
+        public bool HasU2f { get; set; }
+        public bool HasEjectMode { get; set; }
+
+        public bool IsValid { get { return HasOtp || HasCcid || HasU2f; } }
+
+        public YubicoNeoMode(YubicoNeoModeEnum mode)
+        {
+            Mode = mode;
+        }
     }
 }

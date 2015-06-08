@@ -345,33 +345,7 @@ namespace EnrollmentStation
 
             YubicoNeoMode currentMode = _neoManager.GetMode();
 
-            bool ccidEnabled;
-
-            switch (currentMode)
-            {
-                case YubicoNeoMode.OtpOnly:
-                case YubicoNeoMode.U2fOnly:
-                case YubicoNeoMode.OtpU2f:
-                case YubicoNeoMode.OtpOnly_WithEject:
-                case YubicoNeoMode.U2fOnly_WithEject:
-                case YubicoNeoMode.OtpU2f_WithEject:
-                    ccidEnabled = false;
-                    break;
-                case YubicoNeoMode.CcidOnly:
-                case YubicoNeoMode.OtpCcid:
-                case YubicoNeoMode.U2fCcid:
-                case YubicoNeoMode.OtpU2fCcid:
-                case YubicoNeoMode.CcidOnly_WithEject:
-                case YubicoNeoMode.OtpCcid_WithEject:
-                case YubicoNeoMode.U2fCcid_WithEject:
-                case YubicoNeoMode.OtpU2fCcid_WithEject:
-                    ccidEnabled = true;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            if (ccidEnabled)
+            if (currentMode.HasCcid)
                 lblInsertedMode.ForeColor = Color.Black;
             else
                 lblInsertedMode.ForeColor = Color.Red;

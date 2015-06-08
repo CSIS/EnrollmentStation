@@ -72,12 +72,19 @@
     <Compile Include="Code\Settings.cs" />
     <Compile Include="Code\Utilities.cs" />
     <Compile Include="Code\YubicoNeoMode.cs" />
+    <Compile Include="Code\YubicoNeoModeEnum.cs" />
     <Compile Include="Code\YubicoNeoReturnCode.cs" />
     <Compile Include="Code\YubicoPivReturnCode.cs" />
     <Compile Include="Code\YubikeyDetector.cs" />
     <Compile Include="Code\YubikeyNeoManager.cs" />
     <Compile Include="Code\YubikeyPivTool.cs" />
     <Compile Include="Code\YubikeyVersions.cs" />
+    <Compile Include="DlgChangeMode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DlgChangeMode.Designer.cs">
+      <DependentUpon>DlgChangeMode.cs</DependentUpon>
+    </Compile>
     <Compile Include="DlgChangePin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,6 +129,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="DlgChangeMode.resx">
+      <DependentUpon>DlgChangeMode.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DlgChangePin.resx">
       <DependentUpon>DlgChangePin.cs</DependentUpon>
     </EmbeddedResource>
