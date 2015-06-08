@@ -118,7 +118,7 @@ namespace EnrollmentStation.Code
             YubicoNeoReturnCode code = YkNeoManagerSetMode(_currentDevice, mode);
 
             if (code != YubicoNeoReturnCode.YKNEOMGR_OK)
-                throw new Exception("Unable to init: " + code);
+                throw new Exception("Unable to set mode: " + code);
         }
 
         public bool RefreshDevice()
