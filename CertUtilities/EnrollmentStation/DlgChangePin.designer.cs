@@ -1,6 +1,6 @@
 ﻿namespace EnrollmentStation
 {
-    partial class DlgResetPin
+    partial class DlgChangePin
     {
         /// <summary>
         /// Required designer variable.

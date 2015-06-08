@@ -367,7 +367,7 @@ namespace EnrollmentStation
             if (item == null)
                 return;
 
-            DlgResetPin changePin = new DlgResetPin(item);
+            DlgChangePin changePin = new DlgChangePin(item);
             changePin.ShowDialog();
         }
 
