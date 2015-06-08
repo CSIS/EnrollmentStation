@@ -2,7 +2,6 @@ namespace EnrollmentStation.Code
 {
     public enum YubicoNeoMode : byte
     {
-       
         OtpOnly = 0,
         CcidOnly = 1,
         OtpCcid = 2,
