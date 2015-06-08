@@ -10,6 +10,7 @@ namespace EnrollmentStation
 
         private YubikeyNeoManager _neo;
 
+        private bool _hadDevice;
         private bool _hasBeenFound;
 
         public DlgPleaseInsertYubikey(EnrolledYubikey key)
@@ -25,10 +26,23 @@ namespace EnrollmentStation
             lblUsername.Text = _key.Username;
         }
 
+        public new DialogResult ShowDialog()
+        {
+            if (_hasBeenFound)
+            {
+                DialogResult = DialogResult.OK;
+                return DialogResult;
+            }
+
+            return base.ShowDialog();
+        }
+
         private void DlgPleaseInsertYubikey_Load(object sender, EventArgs e)
         {
             YubikeyDetector.Instance.StateChanged += YubikeyStateChanged;
             YubikeyDetector.Instance.Start();
+
+            UpdateView();
         }
 
         private void DlgPleaseInsertYubikey_FormClosing(object sender, FormClosingEventArgs e)
@@ -43,39 +57,50 @@ namespace EnrollmentStation
             if (InvokeRequired)
                 Invoke((Action)(() =>
                 {
-                    DialogResult = DialogResult.OK;
-                    Close();
+                    UpdateView();
+
+                    if (_hasBeenFound)
+                    {
+                        DialogResult = DialogResult.OK;
+                        Close();
+                    }
                 }));
             else
             {
-                DialogResult = DialogResult.OK;
-                Close();
-            }
-        }
+                UpdateView();
 
-        public new DialogResult ShowDialog()
-        {
-            if (_hasBeenFound)
-            {
-                DialogResult = DialogResult.OK;
-                return DialogResult;
+                if (_hasBeenFound)
+                {
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
             }
-
-            return base.ShowDialog();
         }
 
         private void CheckForYubikey()
         {
-            bool hadDevice = _neo.RefreshDevice();
-            if (!hadDevice)
+            _hadDevice = _neo.RefreshDevice();
+            if (!_hadDevice)
                 return;
 
-            int serial = _neo.GetSerialNumber();
-            if (serial != _key.DeviceSerial) 
-                return;
+            _hasBeenFound = _neo.GetSerialNumber() == _key.DeviceSerial;
+        }
 
-            // Success
-            _hasBeenFound = true;
+        private void UpdateView()
+        {
+            if (!_hadDevice)
+            {
+                lblStatus.Text = "No device .. Please insert a device.";
+                return;
+            }
+
+            if (!_hasBeenFound)
+            {
+                lblStatus.Text = "Incorrect device inserted ...";
+                return;
+            }
+
+            lblStatus.Text = string.Empty;
         }
     }
 }

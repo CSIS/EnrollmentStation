@@ -33,6 +33,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.lblSerial = new System.Windows.Forms.Label();
             this.lblUsername = new System.Windows.Forms.Label();
+            this.lblStatus = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -80,11 +81,21 @@
             this.lblUsername.TabIndex = 4;
             this.lblUsername.Text = "lblUsername";
             // 
+            // lblStatus
+            // 
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(12, 103);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(47, 13);
+            this.lblStatus.TabIndex = 5;
+            this.lblStatus.Text = "lblStatus";
+            // 
             // DlgPleaseInsertYubikey
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(202, 125);
+            this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.lblUsername);
             this.Controls.Add(this.lblSerial);
             this.Controls.Add(this.label3);
@@ -94,7 +105,7 @@
             this.MinimizeBox = false;
             this.Name = "DlgPleaseInsertYubikey";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "DlgPleaseInsertYubikey";
+            this.Text = "Please insert ...";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DlgPleaseInsertYubikey_FormClosing);
             this.Load += new System.EventHandler(this.DlgPleaseInsertYubikey_Load);
             this.ResumeLayout(false);
@@ -109,5 +120,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblSerial;
         private System.Windows.Forms.Label lblUsername;
+        private System.Windows.Forms.Label lblStatus;
     }
 }
