@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
 
@@ -41,10 +39,9 @@ namespace EnrollmentStation
 
             RefreshHsm();
 
-            // Start background worker that checks for inserted yubikeys
-            BackgroundWorker insertedYubikeyWorker = new BackgroundWorker();
-            insertedYubikeyWorker.DoWork += InsertedYubikeyWorkerOnDoWork;
-            insertedYubikeyWorker.RunWorkerAsync();
+            // Start worker that checks for inserted yubikeys
+            YubikeyDetector.Instance.StateChanged += YubikeyStateChange;
+            YubikeyDetector.Instance.Start();
 
             if (!File.Exists(FileSettings))
             {
@@ -59,52 +56,50 @@ namespace EnrollmentStation
             }
         }
 
-        private void InsertedYubikeyWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
+        private void YubikeyStateChange()
         {
+            using (YubikeyDetector.ExclusiveLock exclusiveNeo = YubikeyDetector.Instance.GetExclusiveLock())
             using (YubikeyNeoManager neoManager = new YubikeyNeoManager())
-                while (true)
+            {
+                _devicePresent = neoManager.RefreshDevice();
+
+                bool enableCCID;
+
+                YubicoNeoMode currentMode = neoManager.GetMode();
+
+                switch (currentMode)
                 {
-                    _devicePresent = neoManager.RefreshDevice();
-
-                    bool enableCCID;
-
-                    YubicoNeoMode currentMode = neoManager.GetMode();
-
-                    switch (currentMode)
-                    {
-                        case YubicoNeoMode.OtpOnly:
-                        case YubicoNeoMode.U2fOnly:
-                        case YubicoNeoMode.OtpU2f:
-                        case YubicoNeoMode.OtpOnly_WithEject:
-                        case YubicoNeoMode.U2fOnly_WithEject:
-                        case YubicoNeoMode.OtpU2f_WithEject:
-                            enableCCID = true;
-                            break;
-                        case YubicoNeoMode.CcidOnly:
-                        case YubicoNeoMode.OtpCcid:
-                        case YubicoNeoMode.U2fCcid:
-                        case YubicoNeoMode.OtpU2fCcid:
-                        case YubicoNeoMode.CcidOnly_WithEject:
-                        case YubicoNeoMode.OtpCcid_WithEject:
-                        case YubicoNeoMode.U2fCcid_WithEject:
-                        case YubicoNeoMode.OtpU2fCcid_WithEject:
-                            enableCCID = false;
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-
-                    btnEnableCCID.Text = enableCCID ? "Enable CCID" : "Disable CCID";
-
-                    btnEnableCCID.Enabled = _devicePresent;
-                    btnExportCert.Enabled = _devicePresent & !enableCCID;
-                    btnViewCert.Enabled = _devicePresent & !enableCCID;
-
-                    RefreshHsm();
-                    RefreshInsertedKey(neoManager);
-
-                    Thread.Sleep(500);
+                    case YubicoNeoMode.OtpOnly:
+                    case YubicoNeoMode.U2fOnly:
+                    case YubicoNeoMode.OtpU2f:
+                    case YubicoNeoMode.OtpOnly_WithEject:
+                    case YubicoNeoMode.U2fOnly_WithEject:
+                    case YubicoNeoMode.OtpU2f_WithEject:
+                        enableCCID = true;
+                        break;
+                    case YubicoNeoMode.CcidOnly:
+                    case YubicoNeoMode.OtpCcid:
+                    case YubicoNeoMode.U2fCcid:
+                    case YubicoNeoMode.OtpU2fCcid:
+                    case YubicoNeoMode.CcidOnly_WithEject:
+                    case YubicoNeoMode.OtpCcid_WithEject:
+                    case YubicoNeoMode.U2fCcid_WithEject:
+                    case YubicoNeoMode.OtpU2fCcid_WithEject:
+                        enableCCID = false;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
+
+                btnEnableCCID.Text = enableCCID ? "Enable CCID" : "Disable CCID";
+
+                btnEnableCCID.Enabled = _devicePresent;
+                btnExportCert.Enabled = _devicePresent & !enableCCID;
+                btnViewCert.Enabled = _devicePresent & !enableCCID;
+
+                RefreshHsm();
+                RefreshInsertedKey(neoManager);
+            }
         }
 
         private void RefreshSelectedKeyInfo()

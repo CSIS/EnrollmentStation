@@ -74,6 +74,7 @@
     <Compile Include="Code\YubicoNeoMode.cs" />
     <Compile Include="Code\YubicoNeoReturnCode.cs" />
     <Compile Include="Code\YubicoPivReturnCode.cs" />
+    <Compile Include="Code\YubikeyDetector.cs" />
     <Compile Include="Code\YubikeyNeoManager.cs" />
     <Compile Include="Code\YubikeyPivTool.cs" />
     <Compile Include="Code\YubikeyVersions.cs" />

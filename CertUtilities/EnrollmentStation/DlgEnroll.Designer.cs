@@ -32,6 +32,7 @@ namespace EnrollmentStation
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.llBrowseUser = new System.Windows.Forms.LinkLabel();
             this.txtUser = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.gbInsertedYubikey = new System.Windows.Forms.GroupBox();
@@ -51,7 +52,6 @@ namespace EnrollmentStation
             this.cmdCancel = new System.Windows.Forms.Button();
             this.cmdEnroll = new System.Windows.Forms.Button();
             this.prgEnroll = new System.Windows.Forms.ProgressBar();
-            this.llBrowseUser = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             this.gbInsertedYubikey.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -68,6 +68,17 @@ namespace EnrollmentStation
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "User Details";
+            // 
+            // llBrowseUser
+            // 
+            this.llBrowseUser.AutoSize = true;
+            this.llBrowseUser.Location = new System.Drawing.Point(278, 18);
+            this.llBrowseUser.Name = "llBrowseUser";
+            this.llBrowseUser.Size = new System.Drawing.Size(42, 13);
+            this.llBrowseUser.TabIndex = 2;
+            this.llBrowseUser.TabStop = true;
+            this.llBrowseUser.Text = "Browse";
+            this.llBrowseUser.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llBrowseUser_LinkClicked);
             // 
             // txtUser
             // 
@@ -249,20 +260,10 @@ namespace EnrollmentStation
             // prgEnroll
             // 
             this.prgEnroll.Location = new System.Drawing.Point(9, 252);
+            this.prgEnroll.Maximum = 15;
             this.prgEnroll.Name = "prgEnroll";
             this.prgEnroll.Size = new System.Drawing.Size(170, 23);
             this.prgEnroll.TabIndex = 7;
-            // 
-            // llBrowseUser
-            // 
-            this.llBrowseUser.AutoSize = true;
-            this.llBrowseUser.Location = new System.Drawing.Point(278, 18);
-            this.llBrowseUser.Name = "llBrowseUser";
-            this.llBrowseUser.Size = new System.Drawing.Size(42, 13);
-            this.llBrowseUser.TabIndex = 2;
-            this.llBrowseUser.TabStop = true;
-            this.llBrowseUser.Text = "Browse";
-            this.llBrowseUser.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llBrowseUser_LinkClicked);
             // 
             // DlgEnroll
             // 
