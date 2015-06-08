@@ -74,18 +74,18 @@ namespace EnrollmentStation
             this.clmEnrolledAt = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmCertificateSerial = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cancelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.revokeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.terminateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.viewCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetPINToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changePINToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnEnrollKey = new System.Windows.Forms.ToolStripButton();
             this.tsbSettings = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblHSMPresent = new System.Windows.Forms.ToolStripStatusLabel();
-            this.cancelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.revokeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.terminateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -496,9 +496,40 @@ namespace EnrollmentStation
             this.cancelToolStripMenuItem,
             this.viewCertificateToolStripMenuItem,
             this.exportCertificateToolStripMenuItem,
-            this.resetPINToolStripMenuItem});
+            this.changePINToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(165, 114);
+            // 
+            // cancelToolStripMenuItem
+            // 
+            this.cancelToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.resetToolStripMenuItem,
+            this.revokeToolStripMenuItem,
+            this.terminateToolStripMenuItem1});
+            this.cancelToolStripMenuItem.Name = "cancelToolStripMenuItem";
+            this.cancelToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.cancelToolStripMenuItem.Text = "Cancel";
+            // 
+            // resetToolStripMenuItem
+            // 
+            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.resetToolStripMenuItem.Text = "Reset";
+            this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
+            // 
+            // revokeToolStripMenuItem
+            // 
+            this.revokeToolStripMenuItem.Name = "revokeToolStripMenuItem";
+            this.revokeToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.revokeToolStripMenuItem.Text = "Revoke";
+            this.revokeToolStripMenuItem.Click += new System.EventHandler(this.revokeToolStripMenuItem_Click_1);
+            // 
+            // terminateToolStripMenuItem1
+            // 
+            this.terminateToolStripMenuItem1.Name = "terminateToolStripMenuItem1";
+            this.terminateToolStripMenuItem1.Size = new System.Drawing.Size(128, 22);
+            this.terminateToolStripMenuItem1.Text = "Terminate";
+            this.terminateToolStripMenuItem1.Click += new System.EventHandler(this.terminateToolStripMenuItem1_Click);
             // 
             // viewCertificateToolStripMenuItem
             // 
@@ -514,12 +545,12 @@ namespace EnrollmentStation
             this.exportCertificateToolStripMenuItem.Text = "Export Certificate";
             this.exportCertificateToolStripMenuItem.Click += new System.EventHandler(this.exportCertificateToolStripMenuItem_Click);
             // 
-            // resetPINToolStripMenuItem
+            // changePINToolStripMenuItem
             // 
-            this.resetPINToolStripMenuItem.Name = "resetPINToolStripMenuItem";
-            this.resetPINToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.resetPINToolStripMenuItem.Text = "Reset PIN";
-            this.resetPINToolStripMenuItem.Click += new System.EventHandler(this.resetPINToolStripMenuItem_Click);
+            this.changePINToolStripMenuItem.Name = "changePINToolStripMenuItem";
+            this.changePINToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.changePINToolStripMenuItem.Text = "Change PIN";
+            this.changePINToolStripMenuItem.Click += new System.EventHandler(this.resetPINToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 
@@ -567,37 +598,6 @@ namespace EnrollmentStation
             this.lblHSMPresent.Name = "lblHSMPresent";
             this.lblHSMPresent.Size = new System.Drawing.Size(85, 17);
             this.lblHSMPresent.Text = "lblHSMPresent";
-            // 
-            // cancelToolStripMenuItem
-            // 
-            this.cancelToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.resetToolStripMenuItem,
-            this.revokeToolStripMenuItem,
-            this.terminateToolStripMenuItem1});
-            this.cancelToolStripMenuItem.Name = "cancelToolStripMenuItem";
-            this.cancelToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.cancelToolStripMenuItem.Text = "Cancel";
-            // 
-            // resetToolStripMenuItem
-            // 
-            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.resetToolStripMenuItem.Text = "Reset";
-            this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
-            // 
-            // revokeToolStripMenuItem
-            // 
-            this.revokeToolStripMenuItem.Name = "revokeToolStripMenuItem";
-            this.revokeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.revokeToolStripMenuItem.Text = "Revoke";
-            this.revokeToolStripMenuItem.Click += new System.EventHandler(this.revokeToolStripMenuItem_Click_1);
-            // 
-            // terminateToolStripMenuItem1
-            // 
-            this.terminateToolStripMenuItem1.Name = "terminateToolStripMenuItem1";
-            this.terminateToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.terminateToolStripMenuItem1.Text = "Terminate";
-            this.terminateToolStripMenuItem1.Click += new System.EventHandler(this.terminateToolStripMenuItem1_Click);
             // 
             // MainForm
             // 
@@ -684,7 +684,7 @@ namespace EnrollmentStation
         private Label dlblInsertedSerial;
         private Label lblInsertedSerial;
         private ListView lstItems;
-        private ToolStripMenuItem resetPINToolStripMenuItem;
+        private ToolStripMenuItem changePINToolStripMenuItem;
         private Label lblInsertedHasBeenEnrolled;
         private Label label1;
         private ToolStripMenuItem cancelToolStripMenuItem;

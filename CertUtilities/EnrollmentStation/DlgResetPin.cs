@@ -30,6 +30,19 @@ namespace EnrollmentStation
             return base.ShowDialog();
         }
 
+        private void RefreshEligibilityForReset()
+        {
+            bool eligible = true;
+
+            if (txtPinNew.Text.Length <= 0 || txtPinNew.Text.Length > 8)
+                eligible = false;
+
+            if (txtPinNew.Text != txtPinNewAgain.Text)
+                eligible = false;
+
+            cmdChange.Enabled = eligible;
+        }
+
         private void DlgChangePin_Load(object sender, EventArgs e)
         {
             using (YubikeyNeoManager neo = new YubikeyNeoManager())
@@ -67,7 +80,7 @@ namespace EnrollmentStation
 
         private void textField_Changed(object sender, EventArgs e)
         {
-            //TODO: Check pin
+            RefreshEligibilityForReset();
         }
     }
 }
