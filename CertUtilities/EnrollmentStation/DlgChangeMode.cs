@@ -10,6 +10,7 @@ namespace EnrollmentStation
         private YubicoNeoMode _currentMode;
 
         private bool _stateWaitingToRemove = false;
+        private bool _deferCheckboxEvents = false;
 
         public DlgChangeMode()
         {
@@ -76,10 +77,12 @@ namespace EnrollmentStation
 
                 _currentMode = neo.GetMode();
 
+                _deferCheckboxEvents = true;
                 chkOTP.Checked = _currentMode.HasOtp;
                 chkCCID.Checked = _currentMode.HasCcid;
                 chkU2f.Checked = _currentMode.HasU2f;
                 chkEject.Checked = _currentMode.HasEjectMode;
+                _deferCheckboxEvents = false;
 
                 SetStatus(Color.GreenYellow, "Currently set to " + _currentMode.Mode);
             }
@@ -87,10 +90,16 @@ namespace EnrollmentStation
 
         private void checkBox_Changed(object sender, EventArgs e)
         {
+            if (_deferCheckboxEvents)
+                return;
+
             _currentMode.HasOtp = chkOTP.Checked;
             _currentMode.HasCcid = chkCCID.Checked;
             _currentMode.HasU2f = chkU2f.Checked;
             _currentMode.HasEjectMode = chkEject.Checked;
+
+            // Enable Eject mode if CCID is enabled (the view is not locked) and if CCID is checked (Eject applies only to CCID)
+            chkEject.Enabled = chkCCID.Checked && chkCCID.Enabled;
 
             cmdChange.Enabled = _currentMode.IsValid;
         }
