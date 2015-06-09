@@ -492,11 +492,11 @@ namespace EnrollmentStation
 
         private void tsbAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This application is CSIS' entry to the YubiKing competition." + Environment.NewLine + Environment.NewLine +
-                            "Some companies use 'enrollment stations' to enroll users to smart cards." +
-                            "YubiKey NEO now have smart card functionality, but do not yet have full write support in Windows." +
-                            " This application is the missing piece, that makes it possible to enroll users to smart cards" +
-                            " when coupled with Windows Active Directory Certificate Services." + Environment.NewLine + Environment.NewLine +
+            MessageBox.Show("This application is CSIS' entry to the YubiKing competition. " + Environment.NewLine + Environment.NewLine +
+                            "Some companies use 'enrollment stations' to enroll users to smart cards. " +
+                            "YubiKey NEO now have smart card functionality, but do not yet have full write support in Windows. " +
+                            "This application is the missing piece, that makes it possible to enroll users to smart cards " +
+                            "when coupled with Windows Active Directory Certificate Services." + Environment.NewLine + Environment.NewLine +
                             "Written by Michael Bisbjerg and Ian Qvist", "YubiKey Enrollment Station"
                             , MessageBoxButtons.OK);
         }
