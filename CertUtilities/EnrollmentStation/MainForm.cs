@@ -66,8 +66,6 @@ namespace EnrollmentStation
                 YubicoNeoMode currentMode = neoManager.GetMode();
                 bool enableCcid = !currentMode.HasCcid;
 
-                btnEnableCCID.Text = enableCcid ? "Enable CCID" : "Disable CCID";
-
                 btnEnableCCID.Enabled = _devicePresent;
                 btnExportCert.Enabled = _devicePresent & !enableCcid;
                 btnViewCert.Enabled = _devicePresent & !enableCcid;
