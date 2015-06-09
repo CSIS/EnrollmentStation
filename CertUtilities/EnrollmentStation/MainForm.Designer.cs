@@ -310,7 +310,7 @@ namespace EnrollmentStation
             this.btnEnableCCID.Name = "btnEnableCCID";
             this.btnEnableCCID.Size = new System.Drawing.Size(88, 23);
             this.btnEnableCCID.TabIndex = 4;
-            this.btnEnableCCID.Text = "Enable CCID";
+            this.btnEnableCCID.Text = "Change Mode";
             this.btnEnableCCID.UseVisualStyleBackColor = true;
             this.btnEnableCCID.Click += new System.EventHandler(this.btnEnableCCID_Click);
             // 
