@@ -351,7 +351,7 @@ namespace EnrollmentStation
                 lblInsertedMode.ForeColor = Color.Red;
 
             lblInsertedSerial.Text = _neoManager.GetSerialNumber().ToString();
-            lblInsertedMode.Text = currentMode.ToString(); //TODO: Get text in the format OTP+CCID
+            lblInsertedMode.Text = currentMode.ToString();
             lblInsertedFirmware.Text = _neoManager.GetVersion().ToString();
         }
 

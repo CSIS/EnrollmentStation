@@ -84,7 +84,7 @@ namespace EnrollmentStation
                 chkEject.Checked = _currentMode.HasEjectMode;
                 _deferCheckboxEvents = false;
 
-                SetStatus(Color.GreenYellow, "Currently set to " + _currentMode.Mode);
+                SetStatus(Color.GreenYellow, "Currently set to " + _currentMode);
             }
         }
 

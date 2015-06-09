@@ -114,5 +114,25 @@ namespace EnrollmentStation.Code
         {
             Mode = mode;
         }
+
+        public override string ToString()
+        {
+            string res = string.Empty;
+
+            if (HasOtp)
+                res += "OTP";
+
+            if (HasCcid && res.Length > 0)
+                res += "+CCID";
+            else if (HasCcid)
+                res += "CCID";
+
+            if (HasU2f && res.Length > 0)
+                res += "+U2F";
+            else if (HasU2f)
+                res += "U2F";
+
+            return res;
+        }
     }
 }

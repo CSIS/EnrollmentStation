@@ -129,7 +129,7 @@ namespace EnrollmentStation
             int serialNumber = neo.GetSerialNumber();
             lblInsertedSerial.Text = serialNumber.ToString();
             lblInsertedFirmware.Text = neo.GetVersion().ToString();
-            lblInsertedMode.Text = neo.GetMode().Mode.ToString();
+            lblInsertedMode.Text = neo.GetMode().ToString();
 
             lblInsertedHasBeenEnrolled.Text = _dataStore.Search(serialNumber).Any().ToString();
         }
