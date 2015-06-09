@@ -38,7 +38,7 @@
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 1;
-            this.btnOk.Text = "Ok";
+            this.btnOk.Text = "Select";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
@@ -59,7 +59,7 @@
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.btnOk);
             this.Name = "DlgSelectUser";
-            this.Text = "Select user";
+            this.Text = "Browse users";
             this.Load += new System.EventHandler(this.DlgSelectUser_Load);
             this.ResumeLayout(false);
 

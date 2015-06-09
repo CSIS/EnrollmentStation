@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using System.DirectoryServices.ActiveDirectory;
@@ -15,25 +16,39 @@ namespace EnrollmentStation
 
         private void DlgSelectUser_Load(object sender, EventArgs e)
         {
-            Domain d = Domain.GetCurrentDomain();
+            listBox1.Items.Add("Please wait...");
 
-            using (var context = new PrincipalContext(ContextType.Domain, d.Name))
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.RunWorkerAsync();
+
+            worker.DoWork += (o, args) =>
             {
-                using (var searcher = new PrincipalSearcher(new UserPrincipal(context)))
+                Domain d = Domain.GetCurrentDomain();
+
+                using (var context = new PrincipalContext(ContextType.Domain, d.Name))
                 {
-                    foreach (var result in searcher.FindAll())
+                    using (var searcher = new PrincipalSearcher(new UserPrincipal(context)))
                     {
-                        DirectoryEntry de = result.GetUnderlyingObject() as DirectoryEntry;
+                        PrincipalSearchResult<Principal> results = searcher.FindAll();
+                        listBox1.Items.Clear();
+                        listBox1.BeginUpdate();
 
-                        UserContainer container = new UserContainer();
-                        container.Name = GetValue(de.Properties["givenName"]) + " " + GetValue(de.Properties["sn"]);
-                        container.Username = GetValue(de.Properties["samAccountName"]);
-                        container.DirectoryEntry = de;
+                        foreach (var result in results)
+                        {
+                            DirectoryEntry de = result.GetUnderlyingObject() as DirectoryEntry;
 
-                        listBox1.Items.Add(container);
+                            UserContainer container = new UserContainer();
+                            container.Name = GetValue(de.Properties["givenName"]) + " " + GetValue(de.Properties["sn"]);
+                            container.Username = GetValue(de.Properties["samAccountName"]);
+                            container.DirectoryEntry = de;
+
+                            listBox1.Items.Add(container);
+                        }
+
+                        listBox1.EndUpdate();
                     }
                 }
-            }
+            };
         }
 
         private string GetValue(PropertyValueCollection item)
