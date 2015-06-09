@@ -65,6 +65,7 @@
             // chkEject
             // 
             this.chkEject.AutoSize = true;
+            this.chkEject.Enabled = false;
             this.chkEject.Location = new System.Drawing.Point(6, 55);
             this.chkEject.Name = "chkEject";
             this.chkEject.Size = new System.Drawing.Size(80, 17);
