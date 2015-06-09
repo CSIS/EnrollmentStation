@@ -82,7 +82,9 @@ namespace EnrollmentStation
             this.clmUser = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmEnrolledAt = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmCertificateSerial = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lblStatusStripVersion = new System.Windows.Forms.ToolStripStatusLabel();
             this.contextMenuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.gbInsertedKey.SuspendLayout();
             this.gbSelectedKey.SuspendLayout();
@@ -153,11 +155,13 @@ namespace EnrollmentStation
             // 
             // statusStrip1
             // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblStatusStripVersion});
             this.statusStrip1.Location = new System.Drawing.Point(0, 452);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(880, 22);
             this.statusStrip1.TabIndex = 8;
-            this.statusStrip1.Text = "statusStrip1";
+            this.statusStrip1.Text = "fgsgsdf";
             // 
             // lblHSMPresent
             // 
@@ -551,6 +555,12 @@ namespace EnrollmentStation
             this.clmCertificateSerial.Text = "Certificate";
             this.clmCertificateSerial.Width = 153;
             // 
+            // lblStatusStripVersion
+            // 
+            this.lblStatusStripVersion.Name = "lblStatusStripVersion";
+            this.lblStatusStripVersion.Size = new System.Drawing.Size(115, 17);
+            this.lblStatusStripVersion.Text = "lblStatusStripVersion";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -570,6 +580,8 @@ namespace EnrollmentStation
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.gbInsertedKey.ResumeLayout(false);
@@ -634,5 +646,6 @@ namespace EnrollmentStation
         private ColumnHeader clmUser;
         private ColumnHeader clmEnrolledAt;
         private ColumnHeader clmCertificateSerial;
+        private ToolStripStatusLabel lblStatusStripVersion;
     }
 }

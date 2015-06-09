@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
@@ -38,6 +39,8 @@ namespace EnrollmentStation
             RefreshInsertedKey(_neoManager);
 
             RefreshHsm();
+
+            lblStatusStripVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version;
 
             // Start worker that checks for inserted yubikeys
             YubikeyDetector.Instance.StateChanged += YubikeyStateChange;
