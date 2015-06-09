@@ -34,8 +34,7 @@ namespace EnrollmentStation
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cancelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.revocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.revokeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.terminateToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.viewCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,9 +43,6 @@ namespace EnrollmentStation
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblHSMPresent = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tsbEnroll = new System.Windows.Forms.ToolStripButton();
-            this.tsbSettings = new System.Windows.Forms.ToolStripButton();
-            this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.gbInsertedKey = new System.Windows.Forms.GroupBox();
             this.lblInsertedHasBeenEnrolled = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -83,6 +79,10 @@ namespace EnrollmentStation
             this.clmEnrolledAt = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmCertificateSerial = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lblStatusStripVersion = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsbEnroll = new System.Windows.Forms.ToolStripButton();
+            this.tsbSettings = new System.Windows.Forms.ToolStripButton();
+            this.tsbAbout = new System.Windows.Forms.ToolStripButton();
+            this.lblDummyStatusStrip = new System.Windows.Forms.ToolStripStatusLabel();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -94,41 +94,33 @@ namespace EnrollmentStation
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cancelToolStripMenuItem,
+            this.revocationToolStripMenuItem,
             this.viewCertificateToolStripMenuItem,
             this.exportCertificateToolStripMenuItem,
             this.changePINToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(165, 92);
             // 
-            // cancelToolStripMenuItem
+            // revocationToolStripMenuItem
             // 
-            this.cancelToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.resetToolStripMenuItem,
+            this.revocationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.revokeToolStripMenuItem,
             this.terminateToolStripMenuItem1});
-            this.cancelToolStripMenuItem.Name = "cancelToolStripMenuItem";
-            this.cancelToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.cancelToolStripMenuItem.Text = "Retire";
-            // 
-            // resetToolStripMenuItem
-            // 
-            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.resetToolStripMenuItem.Text = "Reset";
-            this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
+            this.revocationToolStripMenuItem.Name = "revocationToolStripMenuItem";
+            this.revocationToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.revocationToolStripMenuItem.Text = "&Revocation";
             // 
             // revokeToolStripMenuItem
             // 
             this.revokeToolStripMenuItem.Name = "revokeToolStripMenuItem";
-            this.revokeToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.revokeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.revokeToolStripMenuItem.Text = "Revoke";
             this.revokeToolStripMenuItem.Click += new System.EventHandler(this.revokeToolStripMenuItem_Click_1);
             // 
             // terminateToolStripMenuItem1
             // 
             this.terminateToolStripMenuItem1.Name = "terminateToolStripMenuItem1";
-            this.terminateToolStripMenuItem1.Size = new System.Drawing.Size(128, 22);
+            this.terminateToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.terminateToolStripMenuItem1.Text = "Terminate";
             this.terminateToolStripMenuItem1.Click += new System.EventHandler(this.terminateToolStripMenuItem1_Click);
             // 
@@ -156,12 +148,12 @@ namespace EnrollmentStation
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblDummyStatusStrip,
             this.lblStatusStripVersion});
             this.statusStrip1.Location = new System.Drawing.Point(0, 452);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(880, 22);
             this.statusStrip1.TabIndex = 8;
-            this.statusStrip1.Text = "fgsgsdf";
             // 
             // lblHSMPresent
             // 
@@ -181,42 +173,6 @@ namespace EnrollmentStation
             this.toolStrip1.Size = new System.Drawing.Size(880, 32);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // tsbEnroll
-            // 
-            this.tsbEnroll.AutoSize = false;
-            this.tsbEnroll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbEnroll.Image = ((System.Drawing.Image)(resources.GetObject("tsbEnroll.Image")));
-            this.tsbEnroll.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbEnroll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbEnroll.Name = "tsbEnroll";
-            this.tsbEnroll.Size = new System.Drawing.Size(50, 30);
-            this.tsbEnroll.Text = "Enroll YubiKey";
-            this.tsbEnroll.Click += new System.EventHandler(this.tsbEnrollKey_Click);
-            // 
-            // tsbSettings
-            // 
-            this.tsbSettings.AutoSize = false;
-            this.tsbSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbSettings.Image = ((System.Drawing.Image)(resources.GetObject("tsbSettings.Image")));
-            this.tsbSettings.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSettings.Name = "tsbSettings";
-            this.tsbSettings.Size = new System.Drawing.Size(50, 30);
-            this.tsbSettings.Text = "Settings";
-            this.tsbSettings.Click += new System.EventHandler(this.tsbSettings_Click);
-            // 
-            // tsbAbout
-            // 
-            this.tsbAbout.AutoSize = false;
-            this.tsbAbout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbAbout.Image = global::EnrollmentStation.Properties.Resources.gnome_app_install_star;
-            this.tsbAbout.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAbout.Name = "tsbAbout";
-            this.tsbAbout.Size = new System.Drawing.Size(50, 30);
-            this.tsbAbout.Text = "About";
-            this.tsbAbout.Click += new System.EventHandler(this.tsbAbout_Click);
             // 
             // gbInsertedKey
             // 
@@ -309,6 +265,7 @@ namespace EnrollmentStation
             // 
             // btnEnableCCID
             // 
+            this.btnEnableCCID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnEnableCCID.Enabled = false;
             this.btnEnableCCID.Location = new System.Drawing.Point(12, 422);
             this.btnEnableCCID.Name = "btnEnableCCID";
@@ -320,6 +277,7 @@ namespace EnrollmentStation
             // 
             // btnViewCert
             // 
+            this.btnViewCert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnViewCert.Enabled = false;
             this.btnViewCert.Location = new System.Drawing.Point(106, 422);
             this.btnViewCert.Name = "btnViewCert";
@@ -331,6 +289,7 @@ namespace EnrollmentStation
             // 
             // btnExportCert
             // 
+            this.btnExportCert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnExportCert.Enabled = false;
             this.btnExportCert.Location = new System.Drawing.Point(216, 422);
             this.btnExportCert.Name = "btnExportCert";
@@ -520,6 +479,9 @@ namespace EnrollmentStation
             // 
             // lstItems
             // 
+            this.lstItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lstItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.clmSerial,
             this.clmUser,
@@ -561,6 +523,48 @@ namespace EnrollmentStation
             this.lblStatusStripVersion.Size = new System.Drawing.Size(115, 17);
             this.lblStatusStripVersion.Text = "lblStatusStripVersion";
             // 
+            // tsbEnroll
+            // 
+            this.tsbEnroll.AutoSize = false;
+            this.tsbEnroll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbEnroll.Image = ((System.Drawing.Image)(resources.GetObject("tsbEnroll.Image")));
+            this.tsbEnroll.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbEnroll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbEnroll.Name = "tsbEnroll";
+            this.tsbEnroll.Size = new System.Drawing.Size(50, 30);
+            this.tsbEnroll.Text = "Enroll YubiKey";
+            this.tsbEnroll.Click += new System.EventHandler(this.tsbEnrollKey_Click);
+            // 
+            // tsbSettings
+            // 
+            this.tsbSettings.AutoSize = false;
+            this.tsbSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbSettings.Image = ((System.Drawing.Image)(resources.GetObject("tsbSettings.Image")));
+            this.tsbSettings.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSettings.Name = "tsbSettings";
+            this.tsbSettings.Size = new System.Drawing.Size(50, 30);
+            this.tsbSettings.Text = "Settings";
+            this.tsbSettings.Click += new System.EventHandler(this.tsbSettings_Click);
+            // 
+            // tsbAbout
+            // 
+            this.tsbAbout.AutoSize = false;
+            this.tsbAbout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbAbout.Image = global::EnrollmentStation.Properties.Resources.gnome_app_install_star;
+            this.tsbAbout.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAbout.Name = "tsbAbout";
+            this.tsbAbout.Size = new System.Drawing.Size(50, 30);
+            this.tsbAbout.Text = "About";
+            this.tsbAbout.Click += new System.EventHandler(this.tsbAbout_Click);
+            // 
+            // lblDummyStatusStrip
+            // 
+            this.lblDummyStatusStrip.Name = "lblDummyStatusStrip";
+            this.lblDummyStatusStrip.Size = new System.Drawing.Size(750, 17);
+            this.lblDummyStatusStrip.Spring = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -575,6 +579,7 @@ namespace EnrollmentStation
             this.Controls.Add(this.lstItems);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
+            this.MinimumSize = new System.Drawing.Size(896, 512);
             this.Name = "MainForm";
             this.Text = "CSIS Enrollment Station";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -603,8 +608,7 @@ namespace EnrollmentStation
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel lblHSMPresent;
         private ToolStripMenuItem changePINToolStripMenuItem;
-        private ToolStripMenuItem cancelToolStripMenuItem;
-        private ToolStripMenuItem resetToolStripMenuItem;
+        private ToolStripMenuItem revocationToolStripMenuItem;
         private ToolStripMenuItem revokeToolStripMenuItem;
         private ToolStripMenuItem terminateToolStripMenuItem1;
         private ToolStrip toolStrip1;
@@ -647,5 +651,6 @@ namespace EnrollmentStation
         private ColumnHeader clmEnrolledAt;
         private ColumnHeader clmCertificateSerial;
         private ToolStripStatusLabel lblStatusStripVersion;
+        private ToolStripStatusLabel lblDummyStatusStrip;
     }
 }

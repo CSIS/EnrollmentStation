@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
 
@@ -320,21 +321,40 @@ namespace EnrollmentStation
             if (result != DialogResult.OK)
                 return;
 
-            using (YubikeyDetector.Instance.GetExclusiveLock())
-            using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
+            DlgProgress prg = new DlgProgress("Resetting Yubikey");
+            prg.WorkerAction = worker =>
             {
-                // Attempt an invalid PIN X times
-                pivTool.BlockPin();
+                worker.ReportProgress(20, "Resetting Yubikey ...");
 
-                // Attempt an invalid PUK X times
-                pivTool.BlockPuk();
-
-                bool resetDevice = pivTool.ResetDevice();
-                if (!resetDevice)
+                // Begin
+                using (YubikeyDetector.Instance.GetExclusiveLock())
+                using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
                 {
-                    MessageBox.Show("Unable to reset the yubikey. Try resetting it manually.", "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    // Attempt an invalid PIN X times
+                    worker.ReportProgress(40);
+                    pivTool.BlockPin();
+
+                    // Attempt an invalid PUK X times
+                    worker.ReportProgress(60);
+                    pivTool.BlockPuk();
+
+                    worker.ReportProgress(80);
+                    bool resetDevice = pivTool.ResetDevice();
+                    if (!resetDevice)
+                    {
+                        MessageBox.Show("Unable to reset the yubikey. Try resetting it manually.", "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
-            }
+
+                worker.ReportProgress(100, string.Empty);
+
+                // Write to disk
+                _dataStore.Save(FileStore);
+            };
+
+            prg.ShowDialog();
+
+            RefreshUserStore();
         }
 
         private void revokeToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -352,23 +372,43 @@ namespace EnrollmentStation
                    "Subject: " + item.Certificate.Subject + Environment.NewLine +
                    "Issuer: " + item.Certificate.Issuer + Environment.NewLine +
                    "Valid: " + item.Certificate.StartDate + " to " + item.Certificate.ExpireDate,
-                   "Revoke certificate?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                   "Revoke certificate?", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
 
             if (dlgResult != DialogResult.Yes)
                 return;
 
-            try
+            DlgProgress prg = new DlgProgress("Revoking certificate");
+            prg.WorkerAction = worker =>
             {
-                CertificateUtilities.RevokeCertificate(item.CA, item.Certificate.Serial);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("We were unable to revoke the certificate. Details: " + ex.Message, "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                worker.ReportProgress(20, "Revoking certificate ...");
 
-            // Remove the item from the datastore
-            _dataStore.Remove(item);
+                // Begin
+                try
+                {
+                    CertificateUtilities.RevokeCertificate(item.CA, item.Certificate.Serial);
+
+                    // Revoked
+                    _dataStore.Remove(item);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "Unable to revoke certificate " + item.Certificate.Serial + " of " + item.CA +
+                        " enrolled on " + item.EnrolledAt + ". There was an error." + Environment.NewLine +
+                        Environment.NewLine + ex.Message, "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                worker.ReportProgress(100, string.Empty);
+
+                // Write to disk
+                _dataStore.Save(FileStore);
+            };
+
+            prg.ShowDialog();
+
+            RefreshUserStore();
         }
 
         private void terminateToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -397,40 +437,57 @@ namespace EnrollmentStation
             if (result != DialogResult.OK)
                 return;
 
-            // Begin
-            try
+            DlgProgress prg = new DlgProgress("Terminating certificate");
+            prg.WorkerAction = worker =>
             {
-                CertificateUtilities.RevokeCertificate(item.CA, item.Certificate.Serial);
+                worker.ReportProgress(20, "Revoking certificate ...");
 
-                // Revoked
-                _dataStore.Remove(item);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    "Unable to revoke certificate " + item.Certificate.Serial + " of " + item.CA +
-                    " enrolled on " + item.EnrolledAt + ". There was an error." + Environment.NewLine +
-                    Environment.NewLine + ex.Message, "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                return;
-            }
-
-            // Wipe the Yubikey
-            using (YubikeyDetector.Instance.GetExclusiveLock())
-            using (YubikeyPivTool piv = new YubikeyPivTool())
-            {
-                piv.BlockPin();
-                piv.BlockPuk();
-
-                bool reset = piv.ResetDevice();
-                if (!reset)
+                // Begin
+                try
                 {
-                    MessageBox.Show("Unable to reset the yubikey. Try resetting it manually.", "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CertificateUtilities.RevokeCertificate(item.CA, item.Certificate.Serial);
+
+                    // Revoked
+                    _dataStore.Remove(item);
                 }
-            }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "Unable to revoke certificate " + item.Certificate.Serial + " of " + item.CA +
+                        " enrolled on " + item.EnrolledAt + ". There was an error." + Environment.NewLine +
+                        Environment.NewLine + ex.Message, "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-            _dataStore.Save(FileStore);
+                    return;
+                }
 
+                // Wipe the Yubikey
+                worker.ReportProgress(50, "Wiping Yubikey ...");
+
+                using (YubikeyDetector.Instance.GetExclusiveLock())
+                using (YubikeyPivTool piv = new YubikeyPivTool())
+                {
+                    piv.BlockPin();
+                    worker.ReportProgress(70);
+
+                    piv.BlockPuk();
+                    worker.ReportProgress(90);
+
+                    bool reset = piv.ResetDevice();
+                    if (!reset)
+                    {
+                        MessageBox.Show("Unable to reset the yubikey. Try resetting it manually.", "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+
+                    worker.ReportProgress(100);
+                }
+
+                // Write to disk
+                _dataStore.Save(FileStore);
+            };
+
+            prg.ShowDialog();
+
+            RefreshUserStore();
         }
 
         private void tsbAbout_Click(object sender, EventArgs e)

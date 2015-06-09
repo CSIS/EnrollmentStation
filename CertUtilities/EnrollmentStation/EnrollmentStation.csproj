@@ -85,6 +85,12 @@
     <Compile Include="DlgChangeMode.Designer.cs">
       <DependentUpon>DlgChangeMode.cs</DependentUpon>
     </Compile>
+    <Compile Include="DlgProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DlgProgress.Designer.cs">
+      <DependentUpon>DlgProgress.cs</DependentUpon>
+    </Compile>
     <Compile Include="DlgResetPin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,6 +136,9 @@
     </Compile>
     <EmbeddedResource Include="DlgChangeMode.resx">
       <DependentUpon>DlgChangeMode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DlgProgress.resx">
+      <DependentUpon>DlgProgress.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DlgResetPin.resx">
       <DependentUpon>DlgResetPin.cs</DependentUpon>
