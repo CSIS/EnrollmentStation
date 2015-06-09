@@ -24,16 +24,13 @@ namespace EnrollmentStation
                     foreach (var result in searcher.FindAll())
                     {
                         DirectoryEntry de = result.GetUnderlyingObject() as DirectoryEntry;
-                        string firstName = GetValue(de.Properties["givenName"]);
-                        string lastName = GetValue(de.Properties["sn"]);
-                        string samAccountName = GetValue(de.Properties["samAccountName"]);
-                        //string userPrincipalName = de.Properties["userPrincipalName"].Value.ToString();
 
-                        ListViewItem item = new ListViewItem();
-                        item.Tag = de;
-                        item.Text = firstName + " " + lastName + " (" + samAccountName + ")";
+                        UserContainer container = new UserContainer();
+                        container.Name = GetValue(de.Properties["givenName"]) + " " + GetValue(de.Properties["sn"]);
+                        container.Username = GetValue(de.Properties["samAccountName"]);
+                        container.DirectoryEntry = de;
 
-                        listBox1.Items.Add(item);
+                        listBox1.Items.Add(container);
                     }
                 }
             }
@@ -55,13 +52,25 @@ namespace EnrollmentStation
 
         public string SelectedUser { get; set; }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedItems.Count <= 0)
                 return;
 
-            DirectoryEntry de = (DirectoryEntry)listBox1.SelectedItems[0];
-            SelectedUser = de.Properties["samAccountName"].Value.ToString();
+            UserContainer user = (UserContainer)listBox1.SelectedItems[0];
+            SelectedUser = user.Username;
+        }
+
+        private class UserContainer
+        {
+            public DirectoryEntry DirectoryEntry { get; set; }
+            public string Username { get; set; }
+            public string Name { get; set; }
+
+            public override string ToString()
+            {
+                return Name + " (" + Username + ")";
+            }
         }
     }
 }

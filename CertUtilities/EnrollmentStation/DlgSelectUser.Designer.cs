@@ -30,12 +30,11 @@
         {
             this.btnOk = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(302, 314);
+            this.btnOk.Location = new System.Drawing.Point(302, 308);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 1;
@@ -46,31 +45,23 @@
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(12, 38);
+            this.listBox1.Location = new System.Drawing.Point(12, 12);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(372, 264);
+            this.listBox1.Size = new System.Drawing.Size(365, 290);
             this.listBox1.TabIndex = 2;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(12, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(365, 20);
-            this.textBox1.TabIndex = 3;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // DlgSelectUser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(389, 349);
-            this.Controls.Add(this.textBox1);
+            this.ClientSize = new System.Drawing.Size(389, 337);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.btnOk);
             this.Name = "DlgSelectUser";
             this.Text = "Select user";
             this.Load += new System.EventHandler(this.DlgSelectUser_Load);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -78,6 +69,5 @@
 
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.TextBox textBox1;
     }
 }
