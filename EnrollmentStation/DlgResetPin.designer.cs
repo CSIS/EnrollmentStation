@@ -123,6 +123,7 @@
             // 
             // cmdChange
             // 
+            this.cmdChange.Enabled = false;
             this.cmdChange.Location = new System.Drawing.Point(181, 138);
             this.cmdChange.Name = "cmdChange";
             this.cmdChange.Size = new System.Drawing.Size(75, 23);

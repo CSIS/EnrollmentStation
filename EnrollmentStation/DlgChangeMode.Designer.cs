@@ -60,7 +60,7 @@
             this.grpChangeMode.Size = new System.Drawing.Size(291, 100);
             this.grpChangeMode.TabIndex = 1;
             this.grpChangeMode.TabStop = false;
-            this.grpChangeMode.Text = "Change Mode";
+            this.grpChangeMode.Text = "Mode";
             // 
             // chkEject
             // 
@@ -124,6 +124,7 @@
             this.ClientSize = new System.Drawing.Size(315, 185);
             this.Controls.Add(this.grpChangeMode);
             this.Controls.Add(this.lblStatus);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DlgChangeMode";
