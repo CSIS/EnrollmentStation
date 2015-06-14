@@ -182,6 +182,6 @@ $RECYCLE.BIN/
 
 # Custom
 Website/App_Data/Elmah.Errors/
-Yubico/ManagementKey.bin
-Yubico/enrollmentagent.txt
-Yubico/log.txt
+Scripts/ManagementKey.bin
+Scripts/enrollmentagent.txt
+Scripts/log.txt

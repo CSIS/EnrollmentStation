@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EOBOSigner", "EOBOSigner\EOBOSigner.csproj", "{8887232D-A505-4748-92FD-733F6DB36841}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EOBOSigner", "CertUtilities\EOBOSigner\EOBOSigner.csproj", "{8887232D-A505-4748-92FD-733F6DB36841}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevokeCert", "RevokeCert\RevokeCert.csproj", "{9B805BCF-A80D-43FA-880A-D213AC3F11F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevokeCert", "CertUtilities\RevokeCert\RevokeCert.csproj", "{9B805BCF-A80D-43FA-880A-D213AC3F11F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HSMRNG", "HSMRNG\HSMRNG.csproj", "{E36C2960-5187-4EF8-8C7C-9ECC991E0874}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HSMRNG", "CertUtilities\HSMRNG\HSMRNG.csproj", "{E36C2960-5187-4EF8-8C7C-9ECC991E0874}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnrollmentStation", "EnrollmentStation\EnrollmentStation.csproj", "{AE47EAD6-6A80-4E62-8898-6299BF9EA0A2}"
 EndProject
