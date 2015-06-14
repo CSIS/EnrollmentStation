@@ -37,11 +37,11 @@
       <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="CERTCLIENTLib">
-      <HintPath>..\COM\CERTCLIENTLib.dll</HintPath>
+      <HintPath>..\Certutilities\COM\CERTCLIENTLib.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="CERTENROLLLib">
-      <HintPath>..\COM\CERTENROLLLib.dll</HintPath>
+      <HintPath>..\Certutilities\COM\CERTENROLLLib.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Newtonsoft.Json">
