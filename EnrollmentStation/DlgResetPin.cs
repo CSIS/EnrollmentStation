@@ -72,7 +72,11 @@ namespace EnrollmentStation
                 bool changed = piv.UnblockPin(_yubikey.PukKey, txtPinNew.Text);
 
                 if (changed)
+                {
                     MessageBox.Show("The PIN code has been reset.", "Success.", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    Close();
+                }
                 else
                     MessageBox.Show("An error occured while resetting the PIN code. Please try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
