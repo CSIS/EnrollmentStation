@@ -76,6 +76,7 @@ namespace EnrollmentStation
             this.txtAgentCert.ReadOnly = true;
             this.txtAgentCert.Size = new System.Drawing.Size(317, 20);
             this.txtAgentCert.TabIndex = 4;
+            this.txtAgentCert.Validating += new System.ComponentModel.CancelEventHandler(this.txtAgentCert_Validating);
             // 
             // llBrowseAgentCert
             // 
@@ -103,6 +104,7 @@ namespace EnrollmentStation
             this.txtCSREndpoint.Name = "txtCSREndpoint";
             this.txtCSREndpoint.Size = new System.Drawing.Size(317, 20);
             this.txtCSREndpoint.TabIndex = 1;
+            this.txtCSREndpoint.Validating += new System.ComponentModel.CancelEventHandler(this.txtCSREndpoint_Validating);
             // 
             // label5
             // 
@@ -120,6 +122,7 @@ namespace EnrollmentStation
             this.txtCaTemplate.Size = new System.Drawing.Size(317, 20);
             this.txtCaTemplate.TabIndex = 7;
             this.txtCaTemplate.Text = "SmartcardLogon";
+            this.txtCaTemplate.Validating += new System.ComponentModel.CancelEventHandler(this.txtCaTemplate_Validating);
             // 
             // llBrowseCA
             // 
@@ -212,6 +215,7 @@ namespace EnrollmentStation
             this.txtManagementKey.Name = "txtManagementKey";
             this.txtManagementKey.Size = new System.Drawing.Size(317, 20);
             this.txtManagementKey.TabIndex = 3;
+            this.txtManagementKey.Validating += new System.ComponentModel.CancelEventHandler(this.txtManagementKey_Validating);
             // 
             // label4
             // 
@@ -227,6 +231,7 @@ namespace EnrollmentStation
             this.AcceptButton = this.btnSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(508, 208);
             this.Controls.Add(this.groupBox3);

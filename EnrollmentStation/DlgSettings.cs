@@ -1,5 +1,6 @@
 ﻿using System;
 using System.DirectoryServices.ActiveDirectory;
+using System.Drawing;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
@@ -59,13 +60,8 @@ namespace EnrollmentStation
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            txtManagementKey.Text = txtManagementKey.Text.ToUpper();
-
-            if (!managementKeyRegex.IsMatch(txtManagementKey.Text))
-            {
-                MessageBox.Show("Management key must be 48 hex-characters", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            if (!ValidateChildren())
                 return;
-            }
 
             _settings.CSREndpoint = txtCSREndpoint.Text;
             _settings.EnrollmentAgentCertificate = txtAgentCert.Text;
@@ -88,11 +84,13 @@ namespace EnrollmentStation
             {
                 CCertConfig objCertConfig = new CCertConfig();
 
-
                 string config = objCertConfig.GetConfig(CC_UIPICKCONFIG);
 
                 if (!string.IsNullOrEmpty(config))
+                {
                     txtCSREndpoint.Text = config;
+                    txtCSREndpoint.BackColor = Color.White;
+                }
             }
             catch (Exception)
             {
@@ -142,6 +140,7 @@ namespace EnrollmentStation
                 foreach (X509Certificate2 certificate in selected)
                 {
                     txtAgentCert.Text = certificate.Thumbprint;
+                    txtAgentCert.BackColor = Color.White;
                     break;
                 }
             }
@@ -164,6 +163,63 @@ namespace EnrollmentStation
             }
 
             txtManagementKey.Text = BitConverter.ToString(newKey).Replace("-", string.Empty);
+            txtManagementKey.BackColor = Color.White;
+        }
+
+        private void txtManagementKey_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!managementKeyRegex.IsMatch(txtManagementKey.Text))
+            {
+                txtManagementKey.BackColor = Color.LightCoral;
+                e.Cancel = true;
+            }
+            else
+            {
+                txtManagementKey.BackColor = Color.White;
+                e.Cancel = false;
+            }
+        }
+
+        private void txtCSREndpoint_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtCSREndpoint.Text))
+            {
+                txtCSREndpoint.BackColor = Color.LightCoral;
+                e.Cancel = true;
+            }
+            else
+            {
+                txtCSREndpoint.BackColor = Color.White;
+                e.Cancel = false;
+            }
+        }
+
+        private void txtAgentCert_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtAgentCert.Text))
+            {
+                txtAgentCert.BackColor = Color.LightCoral;
+                e.Cancel = true;
+            }
+            else
+            {
+                txtAgentCert.BackColor = Color.White;
+                e.Cancel = false;
+            }
+        }
+
+        private void txtCaTemplate_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtCaTemplate.Text))
+            {
+                txtCaTemplate.BackColor = Color.LightCoral;
+                e.Cancel = true;
+            }
+            else
+            {
+                txtCaTemplate.BackColor = Color.White;
+                e.Cancel = false;
+            }
         }
     }
 }
