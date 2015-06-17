@@ -179,6 +179,7 @@ namespace EnrollmentStation
 
             X509Certificate2 cert;
 
+            using (YubikeyDetector.Instance.GetExclusiveLock())
             using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
                 cert = pivTool.GetCertificate9a();
 
@@ -194,8 +195,15 @@ namespace EnrollmentStation
                 return;
 
             X509Certificate2 cert;
-            using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
-                cert = pivTool.GetCertificate9a();
+            int deviceSerial;
+            using (YubikeyDetector.Instance.GetExclusiveLock())
+            {
+                _neoManager.RefreshDevice();
+                deviceSerial = _neoManager.GetSerialNumber();
+
+                using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
+                    cert = pivTool.GetCertificate9a();
+            }
 
             if (cert == null)
             {
@@ -204,7 +212,7 @@ namespace EnrollmentStation
             }
 
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = _neoManager.GetSerialNumber() + "-" + cert.SerialNumber + ".crt"; //TODO: GetSerialNumber() can possibly fail
+            saveFileDialog.FileName = deviceSerial + "-" + cert.SerialNumber + ".crt"; //TODO: GetSerialNumber() can possibly fail
 
             DialogResult dlgResult = saveFileDialog.ShowDialog();
 
