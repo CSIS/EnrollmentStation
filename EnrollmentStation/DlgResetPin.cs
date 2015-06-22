@@ -56,6 +56,7 @@ namespace EnrollmentStation
 
         private void cmdChange_Click(object sender, EventArgs e)
         {
+            using (YubikeyDetector.Instance.GetExclusiveLock())
             using (YubikeyPivTool piv = new YubikeyPivTool())
             {
                 bool authed = piv.Authenticate(_yubikey.ManagementKey);
