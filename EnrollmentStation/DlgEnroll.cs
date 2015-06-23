@@ -254,12 +254,13 @@ namespace EnrollmentStation
                 _enrollWorker.ReportProgress(11);
 
                 // 12 - Enroll
-                bool enrolled = CertificateUtilities.Enroll(user, enrollmentAgent, ca, caTemplate, csr, out cert);
+                string enrollError;
+                bool enrolled = CertificateUtilities.Enroll(user, enrollmentAgent, ca, caTemplate, csr, out enrollError, out cert);
 
                 if (!enrolled)
                 {
                     doWorkEventArgs.Cancel = true;
-                    _enrollWorkerMessage = "Unable to enroll a certificate";
+                    _enrollWorkerMessage = "Unable to enroll a certificate." + Environment.NewLine + enrollError;
                     return;
                 }
 

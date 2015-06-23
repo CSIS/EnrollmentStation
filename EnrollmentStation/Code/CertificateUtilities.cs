@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using CERTCLIENTLib;
 using CERTENROLLLib;
@@ -17,8 +18,9 @@ namespace EnrollmentStation.Code
         private const int CR_DISP_UNDER_SUBMISSION = 0x5;
         private const int CR_OUT_BASE64 = 0x1;
 
-        public static bool Enroll(string username, string agentCertificate, string caConfig, string template, string csr, out X509Certificate2 cert)
+        public static bool Enroll(string username, string agentCertificate, string caConfig, string template, string csr, out string errorMessage, out X509Certificate2 cert)
         {
+            errorMessage = null;
             cert = null;
 
             string argsKey = agentCertificate;
@@ -28,17 +30,55 @@ namespace EnrollmentStation.Code
             store.Open(OpenFlags.ReadOnly);
 
             // Create a PKCS 10 inner request.
-            CX509CertificateRequestPkcs10 pkcs10Req = new CX509CertificateRequestPkcs10();
-            pkcs10Req.InitializeDecode(csr, EncodingType.XCN_CRYPT_STRING_BASE64_ANY);
+            CX509CertificateRequestPkcs10 pkcs10Req;
+            try
+            {
+                pkcs10Req = new CX509CertificateRequestPkcs10();
+                pkcs10Req.InitializeDecode(csr, EncodingType.XCN_CRYPT_STRING_BASE64_ANY);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Unable to create PKCS10 request, malformed CSR?" + Environment.NewLine + ex.Message;
+                return false;
+            }
 
             // Create a CMC outer request and initialize
-            CX509CertificateRequestCmc cmcReq = new CX509CertificateRequestCmc();
-            cmcReq.InitializeFromInnerRequestTemplateName(pkcs10Req, template);
-            cmcReq.RequesterName = argsUser;
+            CX509CertificateRequestCmc cmcReq;
 
-            CSignerCertificate signer = new CSignerCertificate();
-            signer.Initialize(false, X509PrivateKeyVerify.VerifyNone, (EncodingType)0xc, argsKey);
-            cmcReq.SignerCertificate = signer;
+            try
+            {
+                cmcReq = new CX509CertificateRequestCmc();
+                cmcReq.InitializeFromInnerRequestTemplateName(pkcs10Req, template);
+                cmcReq.RequesterName = argsUser;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Unable to create CMC request, bad certificate template?" + Environment.NewLine + ex.Message;
+                return false;
+            }
+
+            try
+            {
+                CSignerCertificate signer = new CSignerCertificate();
+                signer.Initialize(false, X509PrivateKeyVerify.VerifyNone, (EncodingType) 0xc, argsKey);
+                cmcReq.SignerCertificate = signer;
+            }
+            catch (COMException ex)
+            {
+                if (ex.HResult == -2146885628)
+                {
+                    errorMessage = "Agent certificate was not found";
+                    return false;
+                }
+
+                errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
+                return false;
+            }
 
             // encode the request
             cmcReq.Encode();
@@ -51,7 +91,16 @@ namespace EnrollmentStation.Code
             string strCAConfig = caConfig;
 
             // Submit the request
-            int iDisposition = objCertRequest.Submit(CR_IN_BASE64 | CR_IN_FORMATANY, strRequest, null, strCAConfig);
+            int iDisposition;
+            try
+            {
+                iDisposition = objCertRequest.Submit(CR_IN_BASE64 | CR_IN_FORMATANY, strRequest, null, strCAConfig);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Unable to submit signing request, bad CA config?" + Environment.NewLine + ex.Message;
+                return false;
+            }
 
             // Check the submission status
             if (CR_DISP_ISSUED != iDisposition) // Not enrolled
