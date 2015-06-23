@@ -140,7 +140,7 @@ namespace EnrollmentStation
                 foreach (X509Certificate2 certificate in selected)
                 {
                     txtAgentCert.Text = certificate.Thumbprint;
-                    txtAgentCert.BackColor = Color.White;
+                    txtAgentCert.BackColor = SystemColors.Control;
                     break;
                 }
             }
@@ -203,7 +203,7 @@ namespace EnrollmentStation
             }
             else
             {
-                txtAgentCert.BackColor = Color.White;
+                txtAgentCert.BackColor = SystemColors.Control;
                 e.Cancel = false;
             }
         }

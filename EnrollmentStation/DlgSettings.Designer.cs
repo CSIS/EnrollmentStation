@@ -71,6 +71,7 @@ namespace EnrollmentStation
             // 
             // txtAgentCert
             // 
+            this.txtAgentCert.BackColor = System.Drawing.SystemColors.Control;
             this.txtAgentCert.Location = new System.Drawing.Point(119, 39);
             this.txtAgentCert.Name = "txtAgentCert";
             this.txtAgentCert.ReadOnly = true;
