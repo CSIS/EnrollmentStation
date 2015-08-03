@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EOBOSigner", "CertUtilities\EOBOSigner\EOBOSigner.csproj", "{8887232D-A505-4748-92FD-733F6DB36841}"
 EndProject
@@ -14,25 +14,43 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8887232D-A505-4748-92FD-733F6DB36841}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8887232D-A505-4748-92FD-733F6DB36841}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8887232D-A505-4748-92FD-733F6DB36841}.Debug|x86.ActiveCfg = Debug|x86
+		{8887232D-A505-4748-92FD-733F6DB36841}.Debug|x86.Build.0 = Debug|x86
 		{8887232D-A505-4748-92FD-733F6DB36841}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8887232D-A505-4748-92FD-733F6DB36841}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8887232D-A505-4748-92FD-733F6DB36841}.Release|x86.ActiveCfg = Release|x86
+		{8887232D-A505-4748-92FD-733F6DB36841}.Release|x86.Build.0 = Release|x86
 		{9B805BCF-A80D-43FA-880A-D213AC3F11F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B805BCF-A80D-43FA-880A-D213AC3F11F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B805BCF-A80D-43FA-880A-D213AC3F11F7}.Debug|x86.ActiveCfg = Debug|x86
+		{9B805BCF-A80D-43FA-880A-D213AC3F11F7}.Debug|x86.Build.0 = Debug|x86
 		{9B805BCF-A80D-43FA-880A-D213AC3F11F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B805BCF-A80D-43FA-880A-D213AC3F11F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B805BCF-A80D-43FA-880A-D213AC3F11F7}.Release|x86.ActiveCfg = Release|x86
+		{9B805BCF-A80D-43FA-880A-D213AC3F11F7}.Release|x86.Build.0 = Release|x86
 		{E36C2960-5187-4EF8-8C7C-9ECC991E0874}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E36C2960-5187-4EF8-8C7C-9ECC991E0874}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E36C2960-5187-4EF8-8C7C-9ECC991E0874}.Debug|x86.ActiveCfg = Debug|x86
+		{E36C2960-5187-4EF8-8C7C-9ECC991E0874}.Debug|x86.Build.0 = Debug|x86
 		{E36C2960-5187-4EF8-8C7C-9ECC991E0874}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E36C2960-5187-4EF8-8C7C-9ECC991E0874}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E36C2960-5187-4EF8-8C7C-9ECC991E0874}.Release|x86.ActiveCfg = Release|x86
+		{E36C2960-5187-4EF8-8C7C-9ECC991E0874}.Release|x86.Build.0 = Release|x86
 		{AE47EAD6-6A80-4E62-8898-6299BF9EA0A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AE47EAD6-6A80-4E62-8898-6299BF9EA0A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE47EAD6-6A80-4E62-8898-6299BF9EA0A2}.Debug|x86.ActiveCfg = Debug|x86
+		{AE47EAD6-6A80-4E62-8898-6299BF9EA0A2}.Debug|x86.Build.0 = Debug|x86
 		{AE47EAD6-6A80-4E62-8898-6299BF9EA0A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE47EAD6-6A80-4E62-8898-6299BF9EA0A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE47EAD6-6A80-4E62-8898-6299BF9EA0A2}.Release|x86.ActiveCfg = Release|x86
+		{AE47EAD6-6A80-4E62-8898-6299BF9EA0A2}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
