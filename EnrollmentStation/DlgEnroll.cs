@@ -12,14 +12,14 @@ namespace EnrollmentStation
 {
     public partial class DlgEnroll : Form
     {
-        private YubikeyNeoManager _neoManager;
         private readonly Settings _settings;
         private readonly DataStore _dataStore;
         private bool _devicePresent;
         private bool _hsmPresent;
 
         private string _enrollWorkerMessage;
-        private BackgroundWorker _enrollWorker;
+        private readonly BackgroundWorker _enrollWorker;
+        private readonly YubikeyNeoManager _neoManager;
 
         public DlgEnroll(Settings settings, DataStore dataStore)
         {
@@ -57,6 +57,7 @@ namespace EnrollmentStation
             using (YubikeyDetector.Instance.GetExclusiveLock())
                 _devicePresent = _neoManager.RefreshDevice();
 
+            RefreshEligibleForEnroll();
             RefreshInsertedKeyInfo();
 
             _hsmPresent = HsmRng.IsHsmPresent();
@@ -363,6 +364,9 @@ namespace EnrollmentStation
         private void RefreshEligibleForEnroll()
         {
             bool eligible = true;
+
+            if (!_devicePresent)
+                eligible = false;
 
             if (txtPin.Text.Length <= 0 || txtPin.Text.Length > 8)
                 eligible = false;
