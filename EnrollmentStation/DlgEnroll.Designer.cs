@@ -201,10 +201,9 @@ namespace EnrollmentStation
             // txtPinAgain
             // 
             this.txtPinAgain.Location = new System.Drawing.Point(114, 40);
-            this.txtPinAgain.MaxLength = 8;
             this.txtPinAgain.Name = "txtPinAgain";
             this.txtPinAgain.PasswordChar = '*';
-            this.txtPinAgain.Size = new System.Drawing.Size(81, 20);
+            this.txtPinAgain.Size = new System.Drawing.Size(177, 20);
             this.txtPinAgain.TabIndex = 3;
             this.txtPinAgain.UseSystemPasswordChar = true;
             this.txtPinAgain.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
@@ -212,10 +211,9 @@ namespace EnrollmentStation
             // txtPin
             // 
             this.txtPin.Location = new System.Drawing.Point(114, 14);
-            this.txtPin.MaxLength = 8;
             this.txtPin.Name = "txtPin";
             this.txtPin.PasswordChar = '*';
-            this.txtPin.Size = new System.Drawing.Size(81, 20);
+            this.txtPin.Size = new System.Drawing.Size(177, 20);
             this.txtPin.TabIndex = 1;
             this.txtPin.UseSystemPasswordChar = true;
             this.txtPin.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);

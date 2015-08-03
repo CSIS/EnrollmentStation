@@ -104,27 +104,25 @@
             // txtPinNewAgain
             // 
             this.txtPinNewAgain.Location = new System.Drawing.Point(116, 39);
-            this.txtPinNewAgain.MaxLength = 8;
             this.txtPinNewAgain.Name = "txtPinNewAgain";
             this.txtPinNewAgain.PasswordChar = '*';
-            this.txtPinNewAgain.Size = new System.Drawing.Size(100, 20);
+            this.txtPinNewAgain.Size = new System.Drawing.Size(122, 20);
             this.txtPinNewAgain.TabIndex = 3;
             this.txtPinNewAgain.TextChanged += new System.EventHandler(this.textField_Changed);
             // 
             // txtPinNew
             // 
             this.txtPinNew.Location = new System.Drawing.Point(116, 13);
-            this.txtPinNew.MaxLength = 8;
             this.txtPinNew.Name = "txtPinNew";
             this.txtPinNew.PasswordChar = '*';
-            this.txtPinNew.Size = new System.Drawing.Size(100, 20);
+            this.txtPinNew.Size = new System.Drawing.Size(122, 20);
             this.txtPinNew.TabIndex = 1;
             this.txtPinNew.TextChanged += new System.EventHandler(this.textField_Changed);
             // 
             // cmdChange
             // 
             this.cmdChange.Enabled = false;
-            this.cmdChange.Location = new System.Drawing.Point(181, 138);
+            this.cmdChange.Location = new System.Drawing.Point(175, 138);
             this.cmdChange.Name = "cmdChange";
             this.cmdChange.Size = new System.Drawing.Size(75, 23);
             this.cmdChange.TabIndex = 2;
