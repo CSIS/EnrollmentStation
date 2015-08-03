@@ -37,7 +37,9 @@ namespace EnrollmentStation
             RefreshSettings();
 
             RefreshSelectedKeyInfo();
-            RefreshInsertedKey(_neoManager);
+
+            using (YubikeyDetector.Instance.GetExclusiveLock())
+                RefreshInsertedKey(_neoManager);
 
             RefreshHsm();
 

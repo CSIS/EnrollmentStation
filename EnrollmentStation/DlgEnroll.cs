@@ -54,7 +54,8 @@ namespace EnrollmentStation
 
         private void YubikeyStateChange()
         {
-            _devicePresent = _neoManager.RefreshDevice();
+            using (YubikeyDetector.Instance.GetExclusiveLock())
+                _devicePresent = _neoManager.RefreshDevice();
 
             RefreshInsertedKeyInfo();
 
@@ -344,16 +345,19 @@ namespace EnrollmentStation
             if (!_devicePresent)
                 return;
 
-            YubicoNeoMode currentMode = _neoManager.GetMode();
+            using (YubikeyDetector.Instance.GetExclusiveLock())
+            {
+                YubicoNeoMode currentMode = _neoManager.GetMode();
 
-            if (currentMode.HasCcid)
-                lblInsertedMode.ForeColor = Color.Black;
-            else
-                lblInsertedMode.ForeColor = Color.Red;
+                if (currentMode.HasCcid)
+                    lblInsertedMode.ForeColor = Color.Black;
+                else
+                    lblInsertedMode.ForeColor = Color.Red;
 
-            lblInsertedSerial.Text = _neoManager.GetSerialNumber().ToString();
-            lblInsertedMode.Text = currentMode.ToString();
-            lblInsertedFirmware.Text = _neoManager.GetVersion().ToString();
+                lblInsertedSerial.Text = _neoManager.GetSerialNumber().ToString();
+                lblInsertedMode.Text = currentMode.ToString();
+                lblInsertedFirmware.Text = _neoManager.GetVersion().ToString();
+            }
         }
 
         private void RefreshEligibleForEnroll()
