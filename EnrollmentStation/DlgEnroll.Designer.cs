@@ -36,6 +36,7 @@ namespace EnrollmentStation
             this.txtUser = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.gbInsertedYubikey = new System.Windows.Forms.GroupBox();
+            this.lblAlreadyEnrolled = new System.Windows.Forms.Label();
             this.lblYubiHsm = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.lblInsertedFirmware = new System.Windows.Forms.Label();
@@ -98,6 +99,7 @@ namespace EnrollmentStation
             // 
             // gbInsertedYubikey
             // 
+            this.gbInsertedYubikey.Controls.Add(this.lblAlreadyEnrolled);
             this.gbInsertedYubikey.Controls.Add(this.lblYubiHsm);
             this.gbInsertedYubikey.Controls.Add(this.label5);
             this.gbInsertedYubikey.Controls.Add(this.lblInsertedFirmware);
@@ -112,6 +114,17 @@ namespace EnrollmentStation
             this.gbInsertedYubikey.TabIndex = 2;
             this.gbInsertedYubikey.TabStop = false;
             this.gbInsertedYubikey.Text = "Inserted Yubikey";
+            // 
+            // lblAlreadyEnrolled
+            // 
+            this.lblAlreadyEnrolled.AutoSize = true;
+            this.lblAlreadyEnrolled.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAlreadyEnrolled.ForeColor = System.Drawing.Color.Red;
+            this.lblAlreadyEnrolled.Location = new System.Drawing.Point(114, 0);
+            this.lblAlreadyEnrolled.Name = "lblAlreadyEnrolled";
+            this.lblAlreadyEnrolled.Size = new System.Drawing.Size(232, 13);
+            this.lblAlreadyEnrolled.TabIndex = 8;
+            this.lblAlreadyEnrolled.Text = "This yubikey has already been enrolled.";
             // 
             // lblYubiHsm
             // 
@@ -304,5 +317,6 @@ namespace EnrollmentStation
         private Label dlblInsertedSerial;
         private Label lblInsertedSerial;
         private LinkLabel llBrowseUser;
+        private Label lblAlreadyEnrolled;
     }
 }

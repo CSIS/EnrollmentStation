@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
@@ -15,6 +16,7 @@ namespace EnrollmentStation
         private readonly Settings _settings;
         private readonly DataStore _dataStore;
         private bool _devicePresent;
+        private bool _hasBeenEnrolled;
         private bool _hsmPresent;
 
         private string _enrollWorkerMessage;
@@ -55,7 +57,10 @@ namespace EnrollmentStation
         private void YubikeyStateChange()
         {
             using (YubikeyDetector.Instance.GetExclusiveLock())
+            {
                 _devicePresent = _neoManager.RefreshDevice();
+                _hasBeenEnrolled = _dataStore.Search(_neoManager.GetSerialNumber()).Any();
+            }
 
             RefreshEligibleForEnroll();
             RefreshInsertedKeyInfo();
@@ -346,6 +351,8 @@ namespace EnrollmentStation
             if (!_devicePresent)
                 return;
 
+            lblAlreadyEnrolled.Visible = _hasBeenEnrolled;
+
             using (YubikeyDetector.Instance.GetExclusiveLock())
             {
                 YubicoNeoMode currentMode = _neoManager.GetMode();
@@ -375,6 +382,9 @@ namespace EnrollmentStation
                 eligible = false;
 
             if (string.IsNullOrEmpty(txtUser.Text))
+                eligible = false;
+
+            if (_hasBeenEnrolled)
                 eligible = false;
 
             cmdEnroll.Enabled = eligible;
