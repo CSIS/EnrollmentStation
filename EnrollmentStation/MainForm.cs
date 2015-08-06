@@ -39,7 +39,10 @@ namespace EnrollmentStation
             RefreshSelectedKeyInfo();
 
             using (YubikeyDetector.Instance.GetExclusiveLock())
+            {
+                _devicePresent = _neoManager.RefreshDevice();
                 RefreshInsertedKey(_neoManager);
+            }
 
             RefreshHsm();
 
@@ -241,6 +244,12 @@ namespace EnrollmentStation
             enroll.ShowDialog();
 
             RefreshUserStore();
+
+            using (YubikeyDetector.Instance.GetExclusiveLock())
+            {
+                _devicePresent = _neoManager.RefreshDevice();
+                RefreshInsertedKey(_neoManager);
+            }
         }
 
         private void exportCertificateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -419,6 +428,12 @@ namespace EnrollmentStation
             prg.ShowDialog();
 
             RefreshUserStore();
+
+            using (YubikeyDetector.Instance.GetExclusiveLock())
+            {
+                _devicePresent = _neoManager.RefreshDevice();
+                RefreshInsertedKey(_neoManager);
+            }
         }
 
         private void terminateToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -498,6 +513,12 @@ namespace EnrollmentStation
             prg.ShowDialog();
 
             RefreshUserStore();
+
+            using (YubikeyDetector.Instance.GetExclusiveLock())
+            {
+                _devicePresent = _neoManager.RefreshDevice();
+                RefreshInsertedKey(_neoManager);
+            }
         }
 
         private void tsbAbout_Click(object sender, EventArgs e)
