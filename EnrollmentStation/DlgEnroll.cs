@@ -375,7 +375,7 @@ namespace EnrollmentStation
             if (!_devicePresent)
                 eligible = false;
 
-            if (txtPin.Text.Length <= 0 || txtPin.Text.Length > 8)
+            if (txtPin.Text.Length <= 0)
                 eligible = false;
 
             if (txtPin.Text != txtPinAgain.Text)
