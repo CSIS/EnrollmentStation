@@ -34,7 +34,7 @@ namespace EnrollmentStation
         {
             bool eligible = true;
 
-            if (txtPinNew.Text.Length <= 0 || txtPinNew.Text.Length > 8)
+            if (txtPinNew.Text.Length <= 0)
                 eligible = false;
 
             if (txtPinNew.Text != txtPinNewAgain.Text)
