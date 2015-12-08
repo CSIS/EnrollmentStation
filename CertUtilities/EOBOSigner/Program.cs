@@ -4,7 +4,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using CERTENROLLLib;
 
 #if WIN8_COMPILE
@@ -37,9 +36,6 @@ namespace EOBOSigner
             string argsCsr = args[2];
             string argsCrt = args[3];
             string argsCrtTmpl = args[4];
-
-            X509Store store = new X509Store("My", StoreLocation.CurrentUser);
-            store.Open(OpenFlags.ReadOnly);
 
             string csr = string.Join("\n", File.ReadAllLines(argsCsr).Where(s => s.Length > 0 && !s.StartsWith("--")));
 
