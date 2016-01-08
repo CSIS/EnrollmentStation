@@ -240,7 +240,7 @@ namespace EnrollmentStation.Code
             publicKey = new RSAParameters();
 
             byte[] templ = { 0, YKPIV_INS_GENERATE_ASYMMERTRIC, 0, 0x9A };
-            byte[] inData = new byte[5];
+            byte[] inData = new byte[5];    // TODO: Newer versions of yubico-piv-tool use 11 bytes of data, see: https://github.com/Yubico/yubico-piv-tool/blob/b08de955970c5cd544c740990fb68f496fedb814/tool/yubico-piv-tool.c#L122
             byte[] outData = new byte[1024];
             int outLength = outData.Length, sw = -1;
 
