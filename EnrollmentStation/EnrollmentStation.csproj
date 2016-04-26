@@ -92,6 +92,7 @@
     <Compile Include="Code\RevokeReason.cs" />
     <Compile Include="Code\Settings.cs" />
     <Compile Include="Code\Utilities.cs" />
+    <Compile Include="Code\Win32DeviceMgmt.cs" />
     <Compile Include="Code\YubicoNeoMode.cs" />
     <Compile Include="Code\YubicoNeoModeEnum.cs" />
     <Compile Include="Code\YubicoNeoReturnCode.cs" />

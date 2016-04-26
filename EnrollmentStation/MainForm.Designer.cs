@@ -113,14 +113,14 @@ namespace EnrollmentStation
             // revokeToolStripMenuItem
             // 
             this.revokeToolStripMenuItem.Name = "revokeToolStripMenuItem";
-            this.revokeToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.revokeToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.revokeToolStripMenuItem.Text = "Revoke";
             this.revokeToolStripMenuItem.Click += new System.EventHandler(this.revokeToolStripMenuItem_Click_1);
             // 
             // terminateToolStripMenuItem1
             // 
             this.terminateToolStripMenuItem1.Name = "terminateToolStripMenuItem1";
-            this.terminateToolStripMenuItem1.Size = new System.Drawing.Size(128, 22);
+            this.terminateToolStripMenuItem1.Size = new System.Drawing.Size(127, 22);
             this.terminateToolStripMenuItem1.Text = "Terminate";
             this.terminateToolStripMenuItem1.Click += new System.EventHandler(this.terminateToolStripMenuItem1_Click);
             // 
@@ -148,6 +148,7 @@ namespace EnrollmentStation
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblHSMPresent,
             this.lblDummyStatusStrip,
             this.lblStatusStripVersion});
             this.statusStrip1.Location = new System.Drawing.Point(0, 452);
@@ -158,13 +159,13 @@ namespace EnrollmentStation
             // lblDummyStatusStrip
             // 
             this.lblDummyStatusStrip.Name = "lblDummyStatusStrip";
-            this.lblDummyStatusStrip.Size = new System.Drawing.Size(750, 17);
+            this.lblDummyStatusStrip.Size = new System.Drawing.Size(635, 17);
             this.lblDummyStatusStrip.Spring = true;
             // 
             // lblStatusStripVersion
             // 
             this.lblStatusStripVersion.Name = "lblStatusStripVersion";
-            this.lblStatusStripVersion.Size = new System.Drawing.Size(115, 17);
+            this.lblStatusStripVersion.Size = new System.Drawing.Size(114, 17);
             this.lblStatusStripVersion.Text = "lblStatusStripVersion";
             // 
             // lblHSMPresent

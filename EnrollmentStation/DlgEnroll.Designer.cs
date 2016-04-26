@@ -37,8 +37,6 @@ namespace EnrollmentStation
             this.label2 = new System.Windows.Forms.Label();
             this.gbInsertedYubikey = new System.Windows.Forms.GroupBox();
             this.lblAlreadyEnrolled = new System.Windows.Forms.Label();
-            this.lblYubiHsm = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.lblInsertedFirmware = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.lblInsertedMode = new System.Windows.Forms.Label();
@@ -52,6 +50,8 @@ namespace EnrollmentStation
             this.label6 = new System.Windows.Forms.Label();
             this.cmdEnroll = new System.Windows.Forms.Button();
             this.prgEnroll = new System.Windows.Forms.ProgressBar();
+            this.label5 = new System.Windows.Forms.Label();
+            this.specialYubiHsm = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.gbInsertedYubikey.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -100,7 +100,7 @@ namespace EnrollmentStation
             // gbInsertedYubikey
             // 
             this.gbInsertedYubikey.Controls.Add(this.lblAlreadyEnrolled);
-            this.gbInsertedYubikey.Controls.Add(this.lblYubiHsm);
+            this.gbInsertedYubikey.Controls.Add(this.specialYubiHsm);
             this.gbInsertedYubikey.Controls.Add(this.label5);
             this.gbInsertedYubikey.Controls.Add(this.lblInsertedFirmware);
             this.gbInsertedYubikey.Controls.Add(this.label8);
@@ -125,24 +125,6 @@ namespace EnrollmentStation
             this.lblAlreadyEnrolled.Size = new System.Drawing.Size(232, 13);
             this.lblAlreadyEnrolled.TabIndex = 8;
             this.lblAlreadyEnrolled.Text = "This yubikey has already been enrolled.";
-            // 
-            // lblYubiHsm
-            // 
-            this.lblYubiHsm.AutoSize = true;
-            this.lblYubiHsm.Location = new System.Drawing.Point(114, 89);
-            this.lblYubiHsm.Name = "lblYubiHsm";
-            this.lblYubiHsm.Size = new System.Drawing.Size(59, 13);
-            this.lblYubiHsm.TabIndex = 7;
-            this.lblYubiHsm.Text = "lblYubiHsm";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 89);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(97, 13);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "YubiHSM avaliable";
             // 
             // lblInsertedFirmware
             // 
@@ -267,6 +249,24 @@ namespace EnrollmentStation
             this.prgEnroll.Size = new System.Drawing.Size(251, 23);
             this.prgEnroll.TabIndex = 3;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(13, 89);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(97, 13);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "YubiHSM avaliable";
+            // 
+            // specialYubiHsm
+            // 
+            this.specialYubiHsm.AutoSize = true;
+            this.specialYubiHsm.Location = new System.Drawing.Point(114, 89);
+            this.specialYubiHsm.Name = "specialYubiHsm";
+            this.specialYubiHsm.Size = new System.Drawing.Size(82, 13);
+            this.specialYubiHsm.TabIndex = 7;
+            this.specialYubiHsm.Text = "specialYubiHsm";
+            // 
             // DlgEnroll
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -308,8 +308,6 @@ namespace EnrollmentStation
         private Label label6;
         private Button cmdEnroll;
         private ProgressBar prgEnroll;
-        private Label lblYubiHsm;
-        private Label label5;
         private Label lblInsertedFirmware;
         private Label label8;
         private Label lblInsertedMode;
@@ -318,5 +316,7 @@ namespace EnrollmentStation
         private Label lblInsertedSerial;
         private LinkLabel llBrowseUser;
         private Label lblAlreadyEnrolled;
+        private Label specialYubiHsm;
+        private Label label5;
     }
 }

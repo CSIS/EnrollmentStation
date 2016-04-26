@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
 
@@ -19,6 +18,8 @@ namespace EnrollmentStation
 
         private bool _devicePresent;
         private bool _hsmPresent;
+
+        private readonly Timer _hsmUpdateTimer = new Timer();
 
         public MainForm()
         {
@@ -39,7 +40,9 @@ namespace EnrollmentStation
                 RefreshInsertedKey();
             }
 
-            RefreshHsm();
+            _hsmUpdateTimer.Interval = 1000;
+            _hsmUpdateTimer.Tick += HsmUpdateTimerOnTick;
+            _hsmUpdateTimer.Start();
 
             lblStatusStripVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version;
 
@@ -58,6 +61,13 @@ namespace EnrollmentStation
                     Close();
                 }
             }
+
+            RefreshHsm();
+        }
+
+        private void HsmUpdateTimerOnTick(object sender, EventArgs e)
+        {
+            RefreshHsm();
         }
 
         private void YubikeyStateChange()
@@ -73,7 +83,6 @@ namespace EnrollmentStation
                 btnExportCert.Enabled = _devicePresent & !enableCcid;
                 btnViewCert.Enabled = _devicePresent & !enableCcid;
 
-                RefreshHsm();
                 RefreshInsertedKey();
             }
         }
@@ -114,8 +123,7 @@ namespace EnrollmentStation
         private void RefreshHsm()
         {
             _hsmPresent = HsmRng.IsHsmPresent();
-
-            lblHSMPresent.Text = "HSM present: " + (_hsmPresent ? "Yes" : "No");
+            btnViewCert.InvokeIfNeeded(() => lblHSMPresent.Text = "HSM present: " + (_hsmPresent ? "Yes" : "No"));
         }
 
         private void RefreshInsertedKey()

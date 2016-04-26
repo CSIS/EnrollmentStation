@@ -21,6 +21,7 @@ namespace EnrollmentStation
 
         private string _enrollWorkerMessage;
         private readonly BackgroundWorker _enrollWorker;
+        private readonly Timer _hsmUpdateTimer = new Timer();
 
         public DlgEnroll(Settings settings, DataStore dataStore)
         {
@@ -48,6 +49,17 @@ namespace EnrollmentStation
 
             // Call once for initial setup
             RefreshView();
+
+            _hsmUpdateTimer.Interval = 1000;
+            _hsmUpdateTimer.Tick += HsmUpdateTimerOnTick;
+            _hsmUpdateTimer.Start();
+
+            RefreshHSM();
+        }
+
+        private void HsmUpdateTimerOnTick(object sender, EventArgs eventArgs)
+        {
+            RefreshHSM();
         }
 
         private void DlgEnroll_FormClosing(object sender, FormClosingEventArgs e)
@@ -70,9 +82,12 @@ namespace EnrollmentStation
         {
             RefreshEligibleForEnroll();
             RefreshInsertedKeyInfo();
+        }
 
+        private void RefreshHSM()
+        {
             _hsmPresent = HsmRng.IsHsmPresent();
-            lblYubiHsm.Text = _hsmPresent ? "Yes" : "No";
+            specialYubiHsm.InvokeIfNeeded(() => specialYubiHsm.Text = _hsmPresent ? "Yes" : "No");
         }
 
         private void EnrollWorkerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
