@@ -507,9 +507,10 @@ namespace EnrollmentStation
         private void llBrowseUser_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             DlgSelectUser dialog = new DlgSelectUser();
-            dialog.ShowDialog();
+            DialogResult result = dialog.ShowDialog();
 
-            txtUser.Text = dialog.SelectedUser;
+            if (result == DialogResult.OK)
+                txtUser.Text = dialog.SelectedUser;
         }
 
         private void textBoxes_TextChanged(object sender, EventArgs e)
