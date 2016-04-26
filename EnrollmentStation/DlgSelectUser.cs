@@ -16,6 +16,8 @@ namespace EnrollmentStation
 
         private void DlgSelectUser_Load(object sender, EventArgs e)
         {
+            AcceptButton = btnOk;
+
             listBox1.Items.Add("Please wait...");
 
             BackgroundWorker worker = new BackgroundWorker();

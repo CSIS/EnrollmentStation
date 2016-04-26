@@ -31,8 +31,10 @@ namespace EnrollmentStation
             lblStatus.BackColor = color;
         }
 
-        private void DlgChangeMode_Load(object sender, System.EventArgs e)
+        private void DlgChangeMode_Load(object sender, EventArgs e)
         {
+            AcceptButton = cmdChange;
+
             YubikeyDetector.Instance.StateChanged += InstanceOnStateChanged;
             YubikeyDetector.Instance.Start();
 

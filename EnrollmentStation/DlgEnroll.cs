@@ -38,6 +38,8 @@ namespace EnrollmentStation
 
         private void DlgEnroll_Load(object sender, EventArgs e)
         {
+            AcceptButton = cmdEnroll;
+
             // Start worker that checks for inserted yubikeys
             YubikeyDetector.Instance.StateChanged += YubikeyStateChange;
             YubikeyDetector.Instance.Start();

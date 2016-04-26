@@ -45,6 +45,8 @@ namespace EnrollmentStation
 
         private void DlgChangePin_Load(object sender, EventArgs e)
         {
+            AcceptButton = cmdChange;
+
             using (YubikeyDetector.Instance.GetExclusiveLock())
             {
                 int yubiSerial = YubikeyNeoManager.Instance.GetSerialNumber();
