@@ -42,8 +42,7 @@ namespace EnrollmentStation.Code
         private static extern YubicoNeoReturnCode YkNeoManagerListDevices(IntPtr dev, IntPtr buffer, ref int length);
 
         public static YubikeyNeoManager Instance { get; } = new YubikeyNeoManager();
-
-        private bool _isDisposed;
+        
         private IntPtr _currentDevice;
 
         private YubikeyNeoManager()
@@ -71,9 +70,8 @@ namespace EnrollmentStation.Code
 
         public void Dispose()
         {
-            if (_isDisposed)
+            if (_currentDevice == IntPtr.Zero)
                 return;
-            _isDisposed = true;
 
             YkNeoManagerDone(_currentDevice);
             _currentDevice = IntPtr.Zero;
@@ -83,7 +81,7 @@ namespace EnrollmentStation.Code
 
         public int GetSerialNumber()
         {
-            if (_isDisposed)
+            if (_currentDevice== IntPtr.Zero)
                 return -1;
 
             if (_currentDevice == IntPtr.Zero)
@@ -94,7 +92,7 @@ namespace EnrollmentStation.Code
 
         public Version GetVersion()
         {
-            if (_isDisposed)
+            if (_currentDevice == IntPtr.Zero)
                 return new Version();
 
             if (_currentDevice == IntPtr.Zero)
@@ -109,7 +107,7 @@ namespace EnrollmentStation.Code
 
         public YubicoNeoMode GetMode()
         {
-            if (_isDisposed)
+            if (_currentDevice == IntPtr.Zero)
                 return new YubicoNeoMode(0);
 
             if (_currentDevice == IntPtr.Zero)
@@ -120,7 +118,7 @@ namespace EnrollmentStation.Code
 
         public void SetMode(YubicoNeoModeEnum mode)
         {
-            if (_isDisposed)
+            if (_currentDevice == IntPtr.Zero)
                 return;
 
             if (_currentDevice == IntPtr.Zero)
@@ -134,7 +132,7 @@ namespace EnrollmentStation.Code
 
         public bool RefreshDevice()
         {
-            if (_isDisposed)
+            if (_currentDevice == IntPtr.Zero)
                 return false;
 
             YubicoNeoReturnCode res = YkNeoManagerDiscover(_currentDevice);
