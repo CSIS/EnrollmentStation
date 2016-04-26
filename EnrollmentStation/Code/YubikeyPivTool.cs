@@ -40,10 +40,10 @@ namespace EnrollmentStation.Code
         private static extern YubicoPivReturnCode YkPivSetManagementKey(IntPtr state, byte[] newKey);
 
         [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_sign_data", CharSet = CharSet.Ansi, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivSignData(IntPtr state, byte[] inData, int inLength, byte[] outData, ref  int outLength, byte algorithm, byte key);
+        private static extern YubicoPivReturnCode YkPivSignData(IntPtr state, byte[] inData, int inLength, byte[] outData, ref int outLength, byte algorithm, byte key);
 
         [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_transfer_data", CharSet = CharSet.Ansi, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivTransferData(IntPtr state, byte[] templ, byte[] inData, int inLength, byte[] outData, ref  int outLength, ref int sw);
+        private static extern YubicoPivReturnCode YkPivTransferData(IntPtr state, byte[] templ, byte[] inData, int inLength, byte[] outData, ref int outLength, ref int sw);
 
         private const int YKPIV_ALGO_3DES = 0x03;
         private const int YKPIV_ALGO_RSA1024 = 0x06;
@@ -375,8 +375,8 @@ namespace EnrollmentStation.Code
 
         public bool SetCertificate9a(X509Certificate2 cert)
         {
-            byte[] data = new byte[2048];
             byte[] certData = cert.GetRawCertData();
+            byte[] data = new byte[certData.Length + 1 + 3 + 5];
 
             data[0] = 0x70;
             int offset = 1;
