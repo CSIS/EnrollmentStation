@@ -21,13 +21,11 @@ namespace EnrollmentStation
 
         private string _enrollWorkerMessage;
         private readonly BackgroundWorker _enrollWorker;
-        private readonly YubikeyNeoManager _neoManager;
 
         public DlgEnroll(Settings settings, DataStore dataStore)
         {
             _settings = settings;
             _dataStore = dataStore;
-            _neoManager = new YubikeyNeoManager();
 
             _enrollWorker = new BackgroundWorker();
             _enrollWorker.DoWork += EnrollWorkerOnDoWork;
@@ -44,6 +42,8 @@ namespace EnrollmentStation
             YubikeyDetector.Instance.StateChanged += YubikeyStateChange;
             YubikeyDetector.Instance.Start();
 
+            _devicePresent = YubikeyDetector.Instance.CurrentState;
+
             // Call once for initial setup
             RefreshView();
         }
@@ -57,8 +57,8 @@ namespace EnrollmentStation
         {
             using (YubikeyDetector.Instance.GetExclusiveLock())
             {
-                _devicePresent = _neoManager.RefreshDevice();
-                _hasBeenEnrolled = _dataStore.Search(_neoManager.GetSerialNumber()).Any();
+                _devicePresent = YubikeyNeoManager.Instance.RefreshDevice();
+                _hasBeenEnrolled = _dataStore.Search(YubikeyNeoManager.Instance.GetSerialNumber()).Any();
             }
 
             RefreshView();
@@ -114,8 +114,8 @@ namespace EnrollmentStation
             using (YubikeyDetector.Instance.GetExclusiveLock())
             {
                 // 1. Prep device info
-                int deviceId = _neoManager.GetSerialNumber();
-                string neoFirmware = _neoManager.GetVersion().ToString();
+                int deviceId = YubikeyNeoManager.Instance.GetSerialNumber();
+                string neoFirmware = YubikeyNeoManager.Instance.GetVersion().ToString();
                 string pivFirmware;
 
                 using (YubikeyPivTool piv = new YubikeyPivTool())
@@ -359,16 +359,16 @@ namespace EnrollmentStation
 
             using (YubikeyDetector.Instance.GetExclusiveLock())
             {
-                YubicoNeoMode currentMode = _neoManager.GetMode();
+                YubicoNeoMode currentMode = YubikeyNeoManager.Instance.GetMode();
 
                 if (currentMode.HasCcid)
                     lblInsertedMode.ForeColor = Color.Black;
                 else
                     lblInsertedMode.ForeColor = Color.Red;
 
-                lblInsertedSerial.Text = _neoManager.GetSerialNumber().ToString();
+                lblInsertedSerial.Text = YubikeyNeoManager.Instance.GetSerialNumber().ToString();
                 lblInsertedMode.Text = currentMode.ToString();
-                lblInsertedFirmware.Text = _neoManager.GetVersion().ToString();
+                lblInsertedFirmware.Text = YubikeyNeoManager.Instance.GetVersion().ToString();
             }
         }
 

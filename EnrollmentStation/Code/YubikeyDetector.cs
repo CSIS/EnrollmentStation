@@ -38,24 +38,23 @@ namespace EnrollmentStation.Code
                     continue;
                 }
 
+                bool hadChange;
                 try
                 {
                     // Read the state
-                    using (YubikeyNeoManager neo = new YubikeyNeoManager())
-                    {
-                        bool hadDevice = neo.RefreshDevice();
-                        bool hadChange = hadDevice != CurrentState;
+                    bool hadDevice = YubikeyNeoManager.Instance.RefreshDevice();
+                    hadChange = hadDevice != CurrentState;
 
-                        CurrentState = hadDevice;
-                        if (hadChange)
-                            // Change
-                            OnStateChanged();
-                    }
+                    CurrentState = hadDevice;
                 }
                 finally
                 {
                     _exclusiveLock.ExitWriteLock();
                 }
+
+                if (hadChange)
+                    // Change
+                    OnStateChanged();
 
                 // Wait up to 1s
                 Thread.Sleep(1000);
@@ -78,12 +77,7 @@ namespace EnrollmentStation.Code
 
         protected virtual void OnStateChanged()
         {
-            Task.Factory.StartNew(() =>
-            {
-                Action handler = StateChanged;
-                if (handler != null)
-                    handler();
-            });
+            StateChanged?.Invoke();
         }
 
         public void Dispose()

@@ -7,16 +7,13 @@ namespace EnrollmentStation
     public partial class DlgPleaseInsertYubikey : Form
     {
         private readonly EnrolledYubikey _key;
-
-        private YubikeyNeoManager _neo;
-
+        
         private bool _hadDevice;
         private bool _hasBeenFound;
 
         public DlgPleaseInsertYubikey(EnrolledYubikey key)
         {
             _key = key;
-            _neo = new YubikeyNeoManager();
 
             CheckForYubikey();
 
@@ -68,11 +65,11 @@ namespace EnrollmentStation
 
         private void CheckForYubikey()
         {
-            _hadDevice = _neo.RefreshDevice();
+            _hadDevice = YubikeyNeoManager.Instance.RefreshDevice();
             if (!_hadDevice)
                 return;
 
-            _hasBeenFound = _neo.GetSerialNumber() == _key.DeviceSerial;
+            _hasBeenFound = YubikeyNeoManager.Instance.GetSerialNumber() == _key.DeviceSerial;
         }
 
         private void UpdateView()

@@ -41,23 +41,40 @@ namespace EnrollmentStation.Code
         [DllImport("Binaries\\libykneomgr-0.dll", EntryPoint = "ykneomgr_list_devices", CharSet = CharSet.Auto, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
         private static extern YubicoNeoReturnCode YkNeoManagerListDevices(IntPtr dev, IntPtr buffer, ref int length);
 
+        public static YubikeyNeoManager Instance { get; } = new YubikeyNeoManager();
+
+        private bool _isDisposed;
         private IntPtr _currentDevice;
 
-        public YubikeyNeoManager()
+        private YubikeyNeoManager()
+        {
+            Init();
+        }
+
+        public void Init()
         {
             YubicoNeoReturnCode code = YkNeoManagerGlobalInit(1);
 
             if (code != YubicoNeoReturnCode.YKNEOMGR_OK)
                 throw new Exception("Unable to init: " + code);
 
-            code = YkNeoManagerInit(ref _currentDevice);
+            YkNeoManagerInit(ref _currentDevice);
+        }
 
-            if (code != YubicoNeoReturnCode.YKNEOMGR_OK)
-                throw new Exception("Unable to init device: " + code);
+        public void Close()
+        {
+            YkNeoManagerDone(_currentDevice);
+            _currentDevice = IntPtr.Zero;
+
+            YkNeoManagerGlobalDone();
         }
 
         public void Dispose()
         {
+            if (_isDisposed)
+                return;
+            _isDisposed = true;
+
             YkNeoManagerDone(_currentDevice);
             _currentDevice = IntPtr.Zero;
 
@@ -66,6 +83,9 @@ namespace EnrollmentStation.Code
 
         public int GetSerialNumber()
         {
+            if (_isDisposed)
+                return -1;
+
             if (_currentDevice == IntPtr.Zero)
                 throw new Exception("Not initialized");
 
@@ -74,6 +94,9 @@ namespace EnrollmentStation.Code
 
         public Version GetVersion()
         {
+            if (_isDisposed)
+                return new Version();
+
             if (_currentDevice == IntPtr.Zero)
                 throw new Exception("Not initialized");
 
@@ -86,6 +109,9 @@ namespace EnrollmentStation.Code
 
         public YubicoNeoMode GetMode()
         {
+            if (_isDisposed)
+                return new YubicoNeoMode(0);
+
             if (_currentDevice == IntPtr.Zero)
                 throw new Exception("Not initialized");
 
@@ -94,6 +120,9 @@ namespace EnrollmentStation.Code
 
         public void SetMode(YubicoNeoModeEnum mode)
         {
+            if (_isDisposed)
+                return;
+
             if (_currentDevice == IntPtr.Zero)
                 throw new Exception("Not initialized");
 
@@ -105,6 +134,9 @@ namespace EnrollmentStation.Code
 
         public bool RefreshDevice()
         {
+            if (_isDisposed)
+                return false;
+
             YubicoNeoReturnCode res = YkNeoManagerDiscover(_currentDevice);
 
             if (res == YubicoNeoReturnCode.YKNEOMGR_OK)
@@ -114,33 +146,19 @@ namespace EnrollmentStation.Code
                 return false;
 
             if (res == YubicoNeoReturnCode.YKNEOMGR_BACKEND_ERROR)
+            {
+                Close();
+                Init();
+
+                res = YkNeoManagerDiscover(_currentDevice);
+
+                if (res == YubicoNeoReturnCode.YKNEOMGR_OK)
+                    return true;
+
                 return false;
+            }
 
             throw new Exception("Unable to find device: " + res);
-        }
-
-        public string[] Listdevices()
-        {
-            if (_currentDevice == IntPtr.Zero)
-                throw new Exception("Not initialized");
-
-            int length = 0;
-            YubicoNeoReturnCode res = YkNeoManagerListDevices(IntPtr.Zero, IntPtr.Zero, ref length);
-
-            byte[] data = new byte[length];
-            IntPtr buffer = Marshal.AllocHGlobal(length);
-            try
-            {
-                res = YkNeoManagerListDevices(IntPtr.Zero, buffer, ref length);
-
-                Marshal.Copy(buffer, data, 0, length);
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(buffer);
-            }
-
-            throw new NotImplementedException();
         }
     }
 }

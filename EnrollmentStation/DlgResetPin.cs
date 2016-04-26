@@ -46,11 +46,8 @@ namespace EnrollmentStation
         private void DlgChangePin_Load(object sender, EventArgs e)
         {
             using (YubikeyDetector.Instance.GetExclusiveLock())
-            using (YubikeyNeoManager neo = new YubikeyNeoManager())
             {
-                neo.RefreshDevice();
-
-                int yubiSerial = neo.GetSerialNumber();
+                int yubiSerial = YubikeyNeoManager.Instance.GetSerialNumber();
                 lblSerialNumber.Text = yubiSerial.ToString();
             }
         }

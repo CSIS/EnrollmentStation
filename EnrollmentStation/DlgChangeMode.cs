@@ -62,9 +62,8 @@ namespace EnrollmentStation
                 return;
 
             using (YubikeyDetector.Instance.GetExclusiveLock())
-            using (YubikeyNeoManager neo = new YubikeyNeoManager())
             {
-                bool device = neo.RefreshDevice();
+                bool device = YubikeyNeoManager.Instance.RefreshDevice();
 
                 foreach (Control control in grpChangeMode.Controls)
                     control.Enabled = device;
@@ -75,7 +74,7 @@ namespace EnrollmentStation
                     return;
                 }
 
-                _currentMode = neo.GetMode();
+                _currentMode = YubikeyNeoManager.Instance.GetMode();
 
                 _deferCheckboxEvents = true;
                 chkOTP.Checked = _currentMode.HasOtp;
@@ -109,9 +108,8 @@ namespace EnrollmentStation
             SetStatus(Color.Orange, "DO NOT REMOVE THE YUBIKEY");
 
             using (YubikeyDetector.Instance.GetExclusiveLock())
-            using (YubikeyNeoManager neo = new YubikeyNeoManager())
             {
-                bool device = neo.RefreshDevice();
+                bool device = YubikeyNeoManager.Instance.RefreshDevice();
                 if (!device)
                 {
                     SetStatus(Color.Yellow, "Insert a Yubikey");
@@ -120,7 +118,7 @@ namespace EnrollmentStation
 
                 try
                 {
-                    neo.SetMode(_currentMode.Mode);
+                    YubikeyNeoManager.Instance.SetMode(_currentMode.Mode);
                     SetStatus(Color.GreenYellow, "The mode was set. Please remove the Yubikey from the system.");
                 }
                 catch (Exception ex)

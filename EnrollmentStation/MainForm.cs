@@ -11,8 +11,6 @@ namespace EnrollmentStation
 {
     public partial class MainForm : Form
     {
-        private YubikeyNeoManager _neoManager;
-
         private DataStore _dataStore;
         private Settings _settings;
 
@@ -27,8 +25,6 @@ namespace EnrollmentStation
             CheckForIllegalCrossThreadCalls = false; //TODO: remove
 
             InitializeComponent();
-
-            _neoManager = new YubikeyNeoManager();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -40,8 +36,7 @@ namespace EnrollmentStation
 
             using (YubikeyDetector.Instance.GetExclusiveLock())
             {
-                _devicePresent = _neoManager.RefreshDevice();
-                RefreshInsertedKey(_neoManager);
+                RefreshInsertedKey();
             }
 
             RefreshHsm();
@@ -67,12 +62,11 @@ namespace EnrollmentStation
 
         private void YubikeyStateChange()
         {
-            using (YubikeyDetector.Instance.GetExclusiveLock())
-            using (YubikeyNeoManager neoManager = new YubikeyNeoManager())
-            {
-                _devicePresent = neoManager.RefreshDevice();
+            _devicePresent = YubikeyDetector.Instance.CurrentState;
 
-                YubicoNeoMode currentMode = neoManager.GetMode();
+            using (YubikeyDetector.Instance.GetExclusiveLock())
+            {
+                YubicoNeoMode currentMode = YubikeyNeoManager.Instance.GetMode();
                 bool enableCcid = !currentMode.HasCcid;
 
                 btnEnableCCID.Enabled = _devicePresent;
@@ -80,7 +74,7 @@ namespace EnrollmentStation
                 btnViewCert.Enabled = _devicePresent & !enableCcid;
 
                 RefreshHsm();
-                RefreshInsertedKey(neoManager);
+                RefreshInsertedKey();
             }
         }
 
@@ -124,7 +118,7 @@ namespace EnrollmentStation
             lblHSMPresent.Text = "HSM present: " + (_hsmPresent ? "Yes" : "No");
         }
 
-        private void RefreshInsertedKey(YubikeyNeoManager neo)
+        private void RefreshInsertedKey()
         {
             foreach (Control control in gbInsertedKey.Controls)
             {
@@ -135,10 +129,10 @@ namespace EnrollmentStation
             if (!_devicePresent)
                 return;
 
-            int serialNumber = neo.GetSerialNumber();
+            int serialNumber = YubikeyNeoManager.Instance.GetSerialNumber();
             lblInsertedSerial.Text = serialNumber.ToString();
-            lblInsertedFirmware.Text = neo.GetVersion().ToString();
-            lblInsertedMode.Text = neo.GetMode().ToString();
+            lblInsertedFirmware.Text = YubikeyNeoManager.Instance.GetVersion().ToString();
+            lblInsertedMode.Text = YubikeyNeoManager.Instance.GetMode().ToString();
 
             lblInsertedHasBeenEnrolled.Text = _dataStore.Search(serialNumber).Any().ToString();
         }
@@ -203,8 +197,7 @@ namespace EnrollmentStation
             int deviceSerial;
             using (YubikeyDetector.Instance.GetExclusiveLock())
             {
-                _neoManager.RefreshDevice();
-                deviceSerial = _neoManager.GetSerialNumber();
+                deviceSerial = YubikeyNeoManager.Instance.GetSerialNumber();
 
                 using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
                     cert = pivTool.GetCertificate9a();
@@ -247,8 +240,7 @@ namespace EnrollmentStation
 
             using (YubikeyDetector.Instance.GetExclusiveLock())
             {
-                _devicePresent = _neoManager.RefreshDevice();
-                RefreshInsertedKey(_neoManager);
+                RefreshInsertedKey();
             }
         }
 
@@ -293,7 +285,7 @@ namespace EnrollmentStation
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _neoManager.Dispose();
+            YubikeyNeoManager.Instance.Dispose();
         }
 
         private void tsbSettings_Click(object sender, EventArgs e)
@@ -431,8 +423,7 @@ namespace EnrollmentStation
 
             using (YubikeyDetector.Instance.GetExclusiveLock())
             {
-                _devicePresent = _neoManager.RefreshDevice();
-                RefreshInsertedKey(_neoManager);
+                RefreshInsertedKey();
             }
         }
 
@@ -516,8 +507,7 @@ namespace EnrollmentStation
 
             using (YubikeyDetector.Instance.GetExclusiveLock())
             {
-                _devicePresent = _neoManager.RefreshDevice();
-                RefreshInsertedKey(_neoManager);
+                RefreshInsertedKey();
             }
         }
 
