@@ -1,5 +1,4 @@
-﻿using System.Drawing.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace EnrollmentStation.Code
 {

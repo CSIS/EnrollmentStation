@@ -9,8 +9,8 @@ namespace EnrollmentStation
     {
         private YubicoNeoMode _currentMode;
 
-        private bool _stateWaitingToRemove = false;
-        private bool _deferCheckboxEvents = false;
+        private bool _stateWaitingToRemove;
+        private bool _deferCheckboxEvents;
 
         public DlgChangeMode()
         {
@@ -18,11 +18,6 @@ namespace EnrollmentStation
 
             _currentMode = new YubicoNeoMode(YubicoNeoModeEnum.OtpOnly);
             SetStatus(Color.Yellow, "Insert a Yubikey");
-        }
-
-        private void SetStatus(string text)
-        {
-            SetStatus(BackColor, text);
         }
 
         private void SetStatus(Color color, string text)
