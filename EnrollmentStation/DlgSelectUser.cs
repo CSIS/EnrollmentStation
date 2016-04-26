@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using System.DirectoryServices.ActiveDirectory;
 using System.Windows.Forms;
+using EnrollmentStation.Code;
 
 namespace EnrollmentStation
 {
@@ -18,11 +20,12 @@ namespace EnrollmentStation
         {
             if (keyData == Keys.Escape)
             {
-                this.Close();
+                Close();
                 return true;
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
 
         private void DlgSelectUser_Load(object sender, EventArgs e)
         {
@@ -31,36 +34,61 @@ namespace EnrollmentStation
             listBox1.Items.Add("Please wait...");
 
             BackgroundWorker worker = new BackgroundWorker();
+            worker.WorkerReportsProgress = true;
             worker.RunWorkerAsync();
-
             worker.DoWork += (o, args) =>
             {
                 Domain d = Domain.GetCurrentDomain();
 
-                using (var context = new PrincipalContext(ContextType.Domain, d.Name))
+                using (PrincipalContext context = new PrincipalContext(ContextType.Domain, d.Name))
                 {
-                    using (var searcher = new PrincipalSearcher(new UserPrincipal(context)))
-                    {
-                        PrincipalSearchResult<Principal> results = searcher.FindAll();
-                        listBox1.Items.Clear();
-                        listBox1.BeginUpdate();
+                    UserPrincipal p = new UserPrincipal(context);
+                    p.Enabled = true;
+                    p.Name = "*";
 
-                        foreach (var result in results)
+                    using (PrincipalSearcher searcher = new PrincipalSearcher(new UserPrincipal(context)))
+                    {
+                        searcher.QueryFilter = p;
+                        PrincipalSearchResult<Principal> results = searcher.FindAll();
+
+                        List<UserContainer> containers = new List<UserContainer>();
+
+                        foreach (Principal result in results)
                         {
                             DirectoryEntry de = result.GetUnderlyingObject() as DirectoryEntry;
 
+                            if (de == null)
+                                continue;
+
                             UserContainer container = new UserContainer();
-                            container.Name = GetValue(de.Properties["givenName"]) + " " + GetValue(de.Properties["sn"]);
+
+                            container.Name = GetValue(de.Properties["displayName"]);
                             container.Username = GetValue(de.Properties["samAccountName"]);
                             container.DirectoryEntry = de;
 
-                            listBox1.Items.Add(container);
+                            containers.Add(container);
                         }
 
-                        listBox1.EndUpdate();
+                        worker.ReportProgress(100, containers);
                     }
                 }
             };
+
+            worker.ProgressChanged += Worker_ProgressChanged;
+        }
+
+        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            List<UserContainer> containers = (List<UserContainer>)e.UserState;
+
+            listBox1.Items.Clear();
+
+            listBox1.BeginUpdate();
+            foreach (UserContainer userContainer in containers)
+            {
+                listBox1.Items.Add(userContainer);
+            }
+            listBox1.EndUpdate();
         }
 
         private string GetValue(PropertyValueCollection item)
@@ -96,7 +124,10 @@ namespace EnrollmentStation
 
             public override string ToString()
             {
-                return Name + " (" + Username + ")";
+                if (!string.IsNullOrWhiteSpace(Name))
+                    return Name + " (" + Username + ")";
+
+                return Username;
             }
         }
     }
