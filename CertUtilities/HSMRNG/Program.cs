@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Management;
@@ -38,21 +39,11 @@ namespace HSMRNG
             SerialPort device = null;
 
             //Looking for YubiHSM
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM WIN32_SerialPort"))
+            List<Win32DeviceMgmt.DeviceInfo> results = Win32DeviceMgmt.GetAllCOMPorts();
+            foreach (Win32DeviceMgmt.DeviceInfo deviceInfo in results)
             {
-                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList();
-
-                foreach (ManagementBaseObject obj in ports)
-                {
-                    string deviceId = obj["DeviceID"].ToString();
-                    string caption = obj["Caption"].ToString();
-
-                    if (caption.Contains("Yubico YubiHSM"))
-                    {
-                        device = new SerialPort(deviceId);
-                        break;
-                    }
-                }
+                if (deviceInfo.bus_description == "Yubico YubiHSM")
+                    device = new SerialPort(deviceInfo.name);
             }
 
             if (device == null)
