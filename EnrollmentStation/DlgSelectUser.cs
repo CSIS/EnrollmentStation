@@ -14,6 +14,16 @@ namespace EnrollmentStation
             InitializeComponent();
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                this.Close();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         private void DlgSelectUser_Load(object sender, EventArgs e)
         {
             listBox1.Items.Add("Please wait...");
