@@ -45,8 +45,7 @@ namespace EnrollmentStation
             YubikeyDetector.Instance.Start();
 
             // Call once for initial setup
-            YubikeyStateChange();
-            RefreshEligibleForEnroll();
+            RefreshView();
         }
 
         private void DlgEnroll_FormClosing(object sender, FormClosingEventArgs e)
@@ -62,6 +61,11 @@ namespace EnrollmentStation
                 _hasBeenEnrolled = _dataStore.Search(_neoManager.GetSerialNumber()).Any();
             }
 
+            RefreshView();
+        }
+
+        private void RefreshView()
+        {
             RefreshEligibleForEnroll();
             RefreshInsertedKeyInfo();
 
