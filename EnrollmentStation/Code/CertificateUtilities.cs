@@ -57,27 +57,57 @@ namespace EnrollmentStation.Code
                 return false;
             }
 
+            bool tryMachinestore = false;
+
             try
             {
                 CSignerCertificate signer = new CSignerCertificate();
-                signer.Initialize(false, X509PrivateKeyVerify.VerifyNone, (EncodingType) 0xc, argsKey);
+                signer.Initialize(false, X509PrivateKeyVerify.VerifyNone, (EncodingType)0xc, argsKey);
                 cmcReq.SignerCertificate = signer;
             }
             catch (COMException ex)
             {
                 if (ex.HResult == -2146885628)
                 {
-                    errorMessage = "Agent certificate was not found";
+                    // Certificate was not found - perhaps it's not in the users store
+                    tryMachinestore = true;
+                }
+                else
+                {
+                    errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
                     return false;
                 }
-
-                errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
-                return false;
             }
             catch (Exception ex)
             {
                 errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
                 return false;
+            }
+
+            if (tryMachinestore)
+            {
+                try
+                {
+                    CSignerCertificate signer = new CSignerCertificate();
+                    signer.Initialize(true, X509PrivateKeyVerify.VerifyNone, (EncodingType)0xc, argsKey);
+                    cmcReq.SignerCertificate = signer;
+                }
+                catch (COMException ex)
+                {
+                    if (ex.HResult == -2146885628)
+                    {
+                        errorMessage = "Agent certificate was not found";
+                        return false;
+                    }
+
+                    errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
+                    return false;
+                }
             }
 
             // encode the request
