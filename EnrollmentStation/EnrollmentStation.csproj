@@ -101,12 +101,6 @@
     <Compile Include="Code\YubikeyNeoManager.cs" />
     <Compile Include="Code\YubikeyPivTool.cs" />
     <Compile Include="Code\YubikeyVersions.cs" />
-    <Compile Include="DlgChangeMode.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DlgChangeMode.Designer.cs">
-      <DependentUpon>DlgChangeMode.cs</DependentUpon>
-    </Compile>
     <Compile Include="DlgProgress.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,9 +150,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="DlgChangeMode.resx">
-      <DependentUpon>DlgChangeMode.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="DlgProgress.resx">
       <DependentUpon>DlgProgress.cs</DependentUpon>
     </EmbeddedResource>
@@ -224,6 +215,8 @@
     <Content Include="Binaries\RevokeCert\RevokeCert.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\csis.ico" />
+    <Content Include="Resources\csis.png" />
     <None Include="Resources\gnome-app-install-star.png" />
     <None Include="Resources\1433811248_gnome-app-install.png" />
     <None Include="Resources\1433811232_applications-system.png" />

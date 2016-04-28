@@ -55,7 +55,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 16);
+            this.label1.Location = new System.Drawing.Point(6, 20);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(71, 13);
             this.label1.TabIndex = 0;
@@ -64,7 +64,7 @@
             // lblSerialNumber
             // 
             this.lblSerialNumber.AutoSize = true;
-            this.lblSerialNumber.Location = new System.Drawing.Point(116, 16);
+            this.lblSerialNumber.Location = new System.Drawing.Point(116, 20);
             this.lblSerialNumber.Name = "lblSerialNumber";
             this.lblSerialNumber.Size = new System.Drawing.Size(80, 13);
             this.lblSerialNumber.TabIndex = 1;
@@ -86,7 +86,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 42);
+            this.label2.Location = new System.Drawing.Point(6, 45);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(86, 13);
             this.label2.TabIndex = 2;
@@ -95,7 +95,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 16);
+            this.label3.Location = new System.Drawing.Point(6, 20);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(50, 13);
             this.label3.TabIndex = 0;
@@ -103,7 +103,7 @@
             // 
             // txtPinNewAgain
             // 
-            this.txtPinNewAgain.Location = new System.Drawing.Point(116, 39);
+            this.txtPinNewAgain.Location = new System.Drawing.Point(116, 41);
             this.txtPinNewAgain.Name = "txtPinNewAgain";
             this.txtPinNewAgain.PasswordChar = '*';
             this.txtPinNewAgain.Size = new System.Drawing.Size(122, 20);
@@ -112,7 +112,7 @@
             // 
             // txtPinNew
             // 
-            this.txtPinNew.Location = new System.Drawing.Point(116, 13);
+            this.txtPinNew.Location = new System.Drawing.Point(116, 16);
             this.txtPinNew.Name = "txtPinNew";
             this.txtPinNew.PasswordChar = '*';
             this.txtPinNew.Size = new System.Drawing.Size(122, 20);
@@ -122,7 +122,7 @@
             // cmdChange
             // 
             this.cmdChange.Enabled = false;
-            this.cmdChange.Location = new System.Drawing.Point(175, 138);
+            this.cmdChange.Location = new System.Drawing.Point(181, 138);
             this.cmdChange.Name = "cmdChange";
             this.cmdChange.Size = new System.Drawing.Size(75, 23);
             this.cmdChange.TabIndex = 2;
@@ -134,7 +134,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(266, 169);
+            this.ClientSize = new System.Drawing.Size(266, 164);
             this.Controls.Add(this.cmdChange);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);

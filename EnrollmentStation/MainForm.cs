@@ -53,7 +53,7 @@ namespace EnrollmentStation
             if (!File.Exists(FileSettings))
             {
                 DlgSettings dialog = new DlgSettings(_settings);
-                var res = dialog.ShowDialog();
+                DialogResult res = dialog.ShowDialog();
 
                 if (res != DialogResult.OK)
                 {
@@ -79,7 +79,6 @@ namespace EnrollmentStation
                 YubicoNeoMode currentMode = YubikeyNeoManager.Instance.GetMode();
                 bool enableCcid = !currentMode.HasCcid;
 
-                btnEnableCCID.Enabled = _devicePresent;
                 btnExportCert.Enabled = _devicePresent & !enableCcid;
                 btnViewCert.Enabled = _devicePresent & !enableCcid;
 
@@ -172,6 +171,8 @@ namespace EnrollmentStation
 
                 lstItems.Items.Add(lsItem);
             }
+
+            RefreshSelectedKeyInfo();
         }
 
         private void RefreshSettings()
@@ -230,13 +231,6 @@ namespace EnrollmentStation
                 byte[] data = cert.GetRawCertData();
                 fs.Write(data, 0, data.Length);
             }
-        }
-
-        private void btnEnableCCID_Click(object sender, EventArgs e)
-        {
-            DlgChangeMode changeMode = new DlgChangeMode();
-            DialogResult resp = changeMode.ShowDialog();
-
         }
 
         private void tsbEnrollKey_Click(object sender, EventArgs e)
@@ -318,62 +312,6 @@ namespace EnrollmentStation
 
             DlgResetPin changePin = new DlgResetPin(item);
             changePin.ShowDialog();
-        }
-
-        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (lstItems.SelectedItems.Count <= 0)
-                return;
-
-            EnrolledYubikey item = lstItems.SelectedItems[0].Tag as EnrolledYubikey;
-            if (item == null)
-                return;
-
-            DialogResult dlgResult = MessageBox.Show("This will reset the Yubikey, wiping the PIN, PUK, management key and certificates. This will NOT revoke the certifcates. Proceeed?", "Reset YubiKey", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button2);
-
-            if (dlgResult != DialogResult.Yes)
-                return;
-
-            DlgPleaseInsertYubikey yubiWaiter = new DlgPleaseInsertYubikey(item);
-            DialogResult result = yubiWaiter.ShowDialog();
-
-            if (result != DialogResult.OK)
-                return;
-
-            DlgProgress prg = new DlgProgress("Resetting Yubikey");
-            prg.WorkerAction = worker =>
-            {
-                worker.ReportProgress(20, "Resetting Yubikey ...");
-
-                // Begin
-                using (YubikeyDetector.Instance.GetExclusiveLock())
-                using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
-                {
-                    // Attempt an invalid PIN X times
-                    worker.ReportProgress(40);
-                    pivTool.BlockPin();
-
-                    // Attempt an invalid PUK X times
-                    worker.ReportProgress(60);
-                    pivTool.BlockPuk();
-
-                    worker.ReportProgress(80);
-                    bool resetDevice = pivTool.ResetDevice();
-                    if (!resetDevice)
-                    {
-                        MessageBox.Show("Unable to reset the yubikey. Try resetting it manually.", "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
-
-                worker.ReportProgress(100, string.Empty);
-
-                // Write to disk
-                _dataStore.Save(FileStore);
-            };
-
-            prg.ShowDialog();
-
-            RefreshUserStore();
         }
 
         private void revokeToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -521,12 +459,17 @@ namespace EnrollmentStation
 
         private void tsbAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This application is CSIS' entry to the YubiKing competition. " + Environment.NewLine + Environment.NewLine +
-                            "Some companies use 'enrollment stations' to enroll users to smart cards. " +
-                            "YubiKey NEO now have smart card functionality, but do not yet have full write support in Windows. " +
-                            "This application is the missing piece, that makes it possible to enroll users to smart cards " +
-                            "when coupled with Windows Active Directory Certificate Services." + Environment.NewLine + Environment.NewLine +
-                            "Written by Michael Bisbjerg and Ian Qvist", "YubiKey Enrollment Station"
+            MessageBox.Show("CSIS Enrollment Station" +
+                            Environment.NewLine +
+                            Environment.NewLine +
+                            "YubiKey 4/NEO have smart card functionality and with this application, you can enroll smart cards on behalf of users " +
+                            "when coupled with Windows Active Directory and Microsoft Windows Certificate Services." +
+                            Environment.NewLine +
+                            Environment.NewLine +
+                            "https://github.com/CSIS/EnrollmentStation/" +
+                            Environment.NewLine +
+                            Environment.NewLine +
+                            "Written by Michael Bisbjerg and Ian Qvist", "CSIS Enrollment Station"
                             , MessageBoxButtons.OK);
         }
     }

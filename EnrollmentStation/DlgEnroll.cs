@@ -41,7 +41,7 @@ namespace EnrollmentStation
         {
             if (keyData == Keys.Escape)
             {
-                this.Close();
+                Close();
                 return true;
             }
             return base.ProcessCmdKey(ref msg, keyData);
@@ -58,7 +58,7 @@ namespace EnrollmentStation
             _devicePresent = YubikeyDetector.Instance.CurrentState;
 
             // Call once for initial setup
-            RefreshView();
+            YubikeyStateChange();
 
             _hsmUpdateTimer.Interval = 1000;
             _hsmUpdateTimer.Tick += HsmUpdateTimerOnTick;
@@ -151,23 +151,8 @@ namespace EnrollmentStation
                 _enrollWorker.ReportProgress(1);
 
                 // 2 - Generate PUK, prep PIN
-                string puk;
-
-                if (_hsmPresent)
-                {
-                    byte[] random = HsmRng.FetchRandom(8);
-                    puk = Utilities.MapBytesToString(random);
-                }
-                else
-                {
-                    using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
-                    {
-                        byte[] random = new byte[8];
-                        rng.GetBytes(random);
-
-                        puk = Utilities.MapBytesToString(random);
-                    }
-                }
+                byte[] randomKey = Utilities.GenerateRandomKey();
+                string puk = Utilities.MapBytesToString(randomKey.Take(8).ToArray());
 
                 string pin = txtPin.Text;
 
@@ -479,9 +464,10 @@ namespace EnrollmentStation
                 ProcessStartInfo start = new ProcessStartInfo(binary);
                 start.Arguments = "-a verify-pin -P " + pin + " -s 9a -a request-certificate -S \"/CN=example/O=test/\" -i " + tmpPub + " -o " + tmpCsr + "";
                 start.WorkingDirectory = Path.GetFullPath(".");
+                start.CreateNoWindow = true;
+                start.UseShellExecute = false;
                 //start.RedirectStandardError = true;
                 //start.RedirectStandardOutput = true;
-                //start.UseShellExecute = false;
 
                 Process proc = Process.Start(start);
                 proc.WaitForExit();

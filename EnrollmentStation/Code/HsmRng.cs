@@ -33,10 +33,10 @@ namespace EnrollmentStation.Code
         public static byte[] FetchRandom(int numBytes)
         {
             if (numBytes <= 0)
-                throw new ArgumentOutOfRangeException("numBytes", "Number of bytes must be 1 or more");
+                throw new ArgumentOutOfRangeException(nameof(numBytes), "Number of bytes must be 1 or more");
 
             if (numBytes > YSM_MAX_PKT_SIZE - 1)
-                throw new ArgumentOutOfRangeException("numBytes", "Number of bytes can't exceed " + (YSM_MAX_PKT_SIZE - 1));
+                throw new ArgumentOutOfRangeException(nameof(numBytes), "Number of bytes can't exceed " + (YSM_MAX_PKT_SIZE - 1));
 
             SerialPort device = FindDevice();
 

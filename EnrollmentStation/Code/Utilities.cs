@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using Org.BouncyCastle.Asn1.X509;
@@ -10,9 +11,38 @@ namespace EnrollmentStation.Code
 {
     public static class Utilities
     {
+        public static byte[] GenerateRandomKey()
+        {
+            byte[] key1 = new byte[64];
+            byte[] key2 = new byte[64];
+
+            if (HsmRng.IsHsmPresent())
+            {
+                key1 = HsmRng.FetchRandom(key1.Length);
+
+                using (RNGCryptoServiceProvider cryptoService = new RNGCryptoServiceProvider())
+                    cryptoService.GetBytes(key2);
+            }
+            else
+            {
+                using (RNGCryptoServiceProvider cryptoService = new RNGCryptoServiceProvider())
+                {
+                    cryptoService.GetBytes(key1);
+                    cryptoService.GetBytes(key2);
+                }
+            }
+
+            byte[] full = key1.Concat(key2).ToArray();
+
+            using (SHA256 sha = SHA256.Create())
+            {
+                return sha.ComputeHash(full);
+            }
+        }
+
         public static string MapBytesToString(byte[] data, string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345678")
         {
-            string res = "";
+            string res = string.Empty;
 
             for (int i = 0; i < data.Length; i++)
                 res += characters[data[i] % characters.Length];

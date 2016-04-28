@@ -37,6 +37,8 @@ namespace EnrollmentStation
             this.label2 = new System.Windows.Forms.Label();
             this.gbInsertedYubikey = new System.Windows.Forms.GroupBox();
             this.lblAlreadyEnrolled = new System.Windows.Forms.Label();
+            this.specialYubiHsm = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.lblInsertedFirmware = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.lblInsertedMode = new System.Windows.Forms.Label();
@@ -50,8 +52,6 @@ namespace EnrollmentStation
             this.label6 = new System.Windows.Forms.Label();
             this.cmdEnroll = new System.Windows.Forms.Button();
             this.prgEnroll = new System.Windows.Forms.ProgressBar();
-            this.label5 = new System.Windows.Forms.Label();
-            this.specialYubiHsm = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.gbInsertedYubikey.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -110,7 +110,7 @@ namespace EnrollmentStation
             this.gbInsertedYubikey.Controls.Add(this.lblInsertedSerial);
             this.gbInsertedYubikey.Location = new System.Drawing.Point(2, 132);
             this.gbInsertedYubikey.Name = "gbInsertedYubikey";
-            this.gbInsertedYubikey.Size = new System.Drawing.Size(350, 114);
+            this.gbInsertedYubikey.Size = new System.Drawing.Size(350, 118);
             this.gbInsertedYubikey.TabIndex = 2;
             this.gbInsertedYubikey.TabStop = false;
             this.gbInsertedYubikey.Text = "Inserted Yubikey";
@@ -126,10 +126,28 @@ namespace EnrollmentStation
             this.lblAlreadyEnrolled.TabIndex = 8;
             this.lblAlreadyEnrolled.Text = "This yubikey has already been enrolled.";
             // 
+            // specialYubiHsm
+            // 
+            this.specialYubiHsm.AutoSize = true;
+            this.specialYubiHsm.Location = new System.Drawing.Point(114, 95);
+            this.specialYubiHsm.Name = "specialYubiHsm";
+            this.specialYubiHsm.Size = new System.Drawing.Size(82, 13);
+            this.specialYubiHsm.TabIndex = 7;
+            this.specialYubiHsm.Text = "specialYubiHsm";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(13, 95);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(97, 13);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "YubiHSM avaliable";
+            // 
             // lblInsertedFirmware
             // 
             this.lblInsertedFirmware.AutoSize = true;
-            this.lblInsertedFirmware.Location = new System.Drawing.Point(114, 66);
+            this.lblInsertedFirmware.Location = new System.Drawing.Point(114, 70);
             this.lblInsertedFirmware.Name = "lblInsertedFirmware";
             this.lblInsertedFirmware.Size = new System.Drawing.Size(97, 13);
             this.lblInsertedFirmware.TabIndex = 5;
@@ -138,7 +156,7 @@ namespace EnrollmentStation
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(13, 66);
+            this.label8.Location = new System.Drawing.Point(13, 70);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(49, 13);
             this.label8.TabIndex = 4;
@@ -147,7 +165,7 @@ namespace EnrollmentStation
             // lblInsertedMode
             // 
             this.lblInsertedMode.AutoSize = true;
-            this.lblInsertedMode.Location = new System.Drawing.Point(114, 43);
+            this.lblInsertedMode.Location = new System.Drawing.Point(114, 45);
             this.lblInsertedMode.Name = "lblInsertedMode";
             this.lblInsertedMode.Size = new System.Drawing.Size(82, 13);
             this.lblInsertedMode.TabIndex = 3;
@@ -156,7 +174,7 @@ namespace EnrollmentStation
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(13, 43);
+            this.label14.Location = new System.Drawing.Point(13, 45);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(71, 13);
             this.label14.TabIndex = 2;
@@ -165,7 +183,7 @@ namespace EnrollmentStation
             // dlblInsertedSerial
             // 
             this.dlblInsertedSerial.AutoSize = true;
-            this.dlblInsertedSerial.Location = new System.Drawing.Point(13, 19);
+            this.dlblInsertedSerial.Location = new System.Drawing.Point(13, 20);
             this.dlblInsertedSerial.Name = "dlblInsertedSerial";
             this.dlblInsertedSerial.Size = new System.Drawing.Size(73, 13);
             this.dlblInsertedSerial.TabIndex = 0;
@@ -174,7 +192,7 @@ namespace EnrollmentStation
             // lblInsertedSerial
             // 
             this.lblInsertedSerial.AutoSize = true;
-            this.lblInsertedSerial.Location = new System.Drawing.Point(114, 19);
+            this.lblInsertedSerial.Location = new System.Drawing.Point(114, 20);
             this.lblInsertedSerial.Name = "lblInsertedSerial";
             this.lblInsertedSerial.Size = new System.Drawing.Size(81, 13);
             this.lblInsertedSerial.TabIndex = 1;
@@ -195,7 +213,7 @@ namespace EnrollmentStation
             // 
             // txtPinAgain
             // 
-            this.txtPinAgain.Location = new System.Drawing.Point(114, 40);
+            this.txtPinAgain.Location = new System.Drawing.Point(114, 41);
             this.txtPinAgain.Name = "txtPinAgain";
             this.txtPinAgain.PasswordChar = '*';
             this.txtPinAgain.Size = new System.Drawing.Size(177, 20);
@@ -205,7 +223,7 @@ namespace EnrollmentStation
             // 
             // txtPin
             // 
-            this.txtPin.Location = new System.Drawing.Point(114, 14);
+            this.txtPin.Location = new System.Drawing.Point(114, 16);
             this.txtPin.Name = "txtPin";
             this.txtPin.PasswordChar = '*';
             this.txtPin.Size = new System.Drawing.Size(177, 20);
@@ -216,7 +234,7 @@ namespace EnrollmentStation
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(13, 44);
+            this.label7.Location = new System.Drawing.Point(13, 45);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(60, 13);
             this.label7.TabIndex = 2;
@@ -225,7 +243,7 @@ namespace EnrollmentStation
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 18);
+            this.label6.Location = new System.Drawing.Point(13, 20);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(25, 13);
             this.label6.TabIndex = 0;
@@ -233,7 +251,7 @@ namespace EnrollmentStation
             // 
             // cmdEnroll
             // 
-            this.cmdEnroll.Location = new System.Drawing.Point(266, 252);
+            this.cmdEnroll.Location = new System.Drawing.Point(269, 256);
             this.cmdEnroll.Name = "cmdEnroll";
             this.cmdEnroll.Size = new System.Drawing.Size(75, 23);
             this.cmdEnroll.TabIndex = 4;
@@ -243,35 +261,17 @@ namespace EnrollmentStation
             // 
             // prgEnroll
             // 
-            this.prgEnroll.Location = new System.Drawing.Point(9, 252);
+            this.prgEnroll.Location = new System.Drawing.Point(12, 256);
             this.prgEnroll.Maximum = 15;
             this.prgEnroll.Name = "prgEnroll";
             this.prgEnroll.Size = new System.Drawing.Size(251, 23);
             this.prgEnroll.TabIndex = 3;
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 89);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(97, 13);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "YubiHSM avaliable";
-            // 
-            // specialYubiHsm
-            // 
-            this.specialYubiHsm.AutoSize = true;
-            this.specialYubiHsm.Location = new System.Drawing.Point(114, 89);
-            this.specialYubiHsm.Name = "specialYubiHsm";
-            this.specialYubiHsm.Size = new System.Drawing.Size(82, 13);
-            this.specialYubiHsm.TabIndex = 7;
-            this.specialYubiHsm.Text = "specialYubiHsm";
-            // 
             // DlgEnroll
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(353, 282);
+            this.ClientSize = new System.Drawing.Size(353, 291);
             this.Controls.Add(this.prgEnroll);
             this.Controls.Add(this.cmdEnroll);
             this.Controls.Add(this.groupBox3);

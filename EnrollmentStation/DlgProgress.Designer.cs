@@ -43,7 +43,7 @@
             // 
             // lblStatus
             // 
-            this.lblStatus.Location = new System.Drawing.Point(12, 49);
+            this.lblStatus.Location = new System.Drawing.Point(12, 38);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(439, 23);
             this.lblStatus.TabIndex = 1;
@@ -54,7 +54,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(463, 85);
+            this.ClientSize = new System.Drawing.Size(463, 65);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.prgProgress);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -62,7 +62,7 @@
             this.MinimizeBox = false;
             this.Name = "DlgProgress";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "DlgProgress";
+            this.Text = "Progress";
             this.Load += new System.EventHandler(this.DlgProgress_Load);
             this.ResumeLayout(false);
 

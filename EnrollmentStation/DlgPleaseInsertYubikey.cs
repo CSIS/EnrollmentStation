@@ -23,6 +23,16 @@ namespace EnrollmentStation
             lblUsername.Text = _key.Username;
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                Close();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         public new DialogResult ShowDialog()
         {
             if (_hasBeenFound)

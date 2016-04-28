@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
@@ -13,7 +15,8 @@ namespace EnrollmentStation
     public partial class DlgSettings : Form
     {
         private const int CC_UIPICKCONFIG = 0x1;
-        private static Regex managementKeyRegex = new Regex("^[A-F0-9]{48}$", RegexOptions.Compiled);
+        private static readonly Regex _managementKeyRegex = new Regex("^[A-F0-9]{48}$", RegexOptions.Compiled);
+        private string _selectedCertificateThumb;
 
         private readonly Settings _settings;
 
@@ -53,8 +56,6 @@ namespace EnrollmentStation
 
         private void UpdateView()
         {
-            lblHSMAvaliable.Text = HsmRng.IsHsmPresent() ? "Yes" : "No";
-
             if (_settings.EnrollmentManagementKey != null && _settings.EnrollmentManagementKey.Length > 0)
                 txtManagementKey.Text = BitConverter.ToString(_settings.EnrollmentManagementKey).Replace("-", "");
 
@@ -65,7 +66,17 @@ namespace EnrollmentStation
                 txtCaTemplate.Text = _settings.EnrollmentCaTemplate;
 
             if (!string.IsNullOrWhiteSpace(_settings.EnrollmentAgentCertificate))
-                txtAgentCert.Text = _settings.EnrollmentAgentCertificate;
+            {
+                _selectedCertificateThumb = _settings.EnrollmentAgentCertificate;
+                X509Certificate2 cert = IterateStores(cert2 => cert2.Thumbprint == _settings.EnrollmentAgentCertificate).SingleOrDefault();
+                if (cert != null)
+                    txtAgentCert.Text = cert.GetNameInfo(X509NameType.SimpleName, false) + " (Valid Enrollment Agent)";
+                else
+                    MessageBox.Show(this,
+                        "The certificate with the thumbprint " + _selectedCertificateThumb +
+                        " was not found in your certificate store.", "Certificate not found", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -74,7 +85,7 @@ namespace EnrollmentStation
                 return;
 
             _settings.CSREndpoint = txtCSREndpoint.Text;
-            _settings.EnrollmentAgentCertificate = txtAgentCert.Text;
+            _settings.EnrollmentAgentCertificate = _selectedCertificateThumb;
             _settings.EnrollmentManagementKey = Utilities.StringToByteArray(txtManagementKey.Text);
             _settings.EnrollmentCaTemplate = txtCaTemplate.Text;
 
@@ -109,49 +120,45 @@ namespace EnrollmentStation
 
         private void llBrowseAgentCert_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            X509Store store = new X509Store(StoreName.My);
+            X509Certificate2[] eligible = IterateStores(CanBeUsed).ToArray();
+            X509Certificate2Collection selected = X509Certificate2UI.SelectFromCollection(new X509Certificate2Collection(eligible), "Chose a certificate", "Pick an enrollment agent certificate to use.", X509SelectionFlag.SingleSelection);
+
+            if (selected.Count > 0)
+            {
+                _selectedCertificateThumb = selected[0].Thumbprint;
+                txtAgentCert.Text = selected[0].GetNameInfo(X509NameType.SimpleName, false) + " (Valid Enrollment Agent)";
+                txtAgentCert.BackColor = SystemColors.Control;
+            }
+        }
+
+        private IEnumerable<X509Certificate2> IterateStores(Func<X509Certificate2, bool> filter)
+        {
+            X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            try
+            {
+                store.Open(OpenFlags.ReadOnly);
+
+                foreach (X509Certificate2 certificate in store.Certificates)
+                {
+                    if (filter(certificate))
+                        yield return certificate;
+                }
+            }
+            finally
+            {
+                store.Close();
+            }
+
+            store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
 
             try
             {
                 store.Open(OpenFlags.ReadOnly);
 
-                X509Certificate2Collection eligible = new X509Certificate2Collection();
-
                 foreach (X509Certificate2 certificate in store.Certificates)
                 {
-                    if (!certificate.HasPrivateKey)
-                        continue;
-
-                    // Enhanced Key Usage is 2.5.29.37
-                    X509EnhancedKeyUsageExtension ekuExtension = null;
-                    foreach (X509Extension extension in certificate.Extensions)
-                    {
-                        if (extension.Oid.Value == "2.5.29.37")
-                            ekuExtension = (X509EnhancedKeyUsageExtension)extension;
-                    }
-
-                    if (ekuExtension == null)
-                        continue;
-
-                    // Certificate Request Agent is 1.3.6.1.4.1.311.20.2.1
-                    bool canBeUsed = false;
-                    foreach (Oid oid in ekuExtension.EnhancedKeyUsages)
-                    {
-                        if (oid.Value == "1.3.6.1.4.1.311.20.2.1")
-                            canBeUsed = true;
-                    }
-
-                    if (canBeUsed)
-                        eligible.Add(certificate);
-                }
-
-                X509Certificate2Collection selected = X509Certificate2UI.SelectFromCollection(eligible, "Chose a certificate", "Pick an enrollment agent certificate to use.", X509SelectionFlag.SingleSelection);
-
-                foreach (X509Certificate2 certificate in selected)
-                {
-                    txtAgentCert.Text = certificate.Thumbprint;
-                    txtAgentCert.BackColor = SystemColors.Control;
-                    break;
+                    if (filter(certificate))
+                        yield return certificate;
                 }
             }
             finally
@@ -160,25 +167,41 @@ namespace EnrollmentStation
             }
         }
 
-        private void llGenerateMgtKey_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private bool CanBeUsed(X509Certificate2 cert)
         {
-            byte[] newKey = new byte[24];
+            if (!cert.HasPrivateKey)
+                return false;
 
-            if (HsmRng.IsHsmPresent())
-                newKey = HsmRng.FetchRandom(24);
-            else
+            // Enhanced Key Usage is 2.5.29.37
+            X509EnhancedKeyUsageExtension ekuExtension = null;
+            foreach (X509Extension extension in cert.Extensions)
             {
-                using (RNGCryptoServiceProvider cryptoService = new RNGCryptoServiceProvider())
-                    cryptoService.GetBytes(newKey);
+                if (extension.Oid.Value == "2.5.29.37")
+                    ekuExtension = (X509EnhancedKeyUsageExtension)extension;
             }
 
-            txtManagementKey.Text = BitConverter.ToString(newKey).Replace("-", string.Empty);
+            if (ekuExtension == null)
+                return false;
+
+            // Certificate Request Agent is 1.3.6.1.4.1.311.20.2.1
+            foreach (Oid oid in ekuExtension.EnhancedKeyUsages)
+            {
+                if (oid.Value == "1.3.6.1.4.1.311.20.2.1")
+                    return true;
+            }
+
+            return false;
+        }
+
+        private void llGenerateMgtKey_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            txtManagementKey.Text = BitConverter.ToString(Utilities.GenerateRandomKey()).Replace("-", string.Empty).Substring(0, 48);
             txtManagementKey.BackColor = Color.White;
         }
 
         private void txtManagementKey_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!managementKeyRegex.IsMatch(txtManagementKey.Text))
+            if (!_managementKeyRegex.IsMatch(txtManagementKey.Text))
             {
                 txtManagementKey.BackColor = Color.LightCoral;
                 e.Cancel = true;

@@ -42,7 +42,7 @@ namespace EnrollmentStation.Code
         private static extern YubicoNeoReturnCode YkNeoManagerListDevices(IntPtr dev, IntPtr buffer, ref int length);
 
         public static YubikeyNeoManager Instance { get; } = new YubikeyNeoManager();
-        
+
         private IntPtr _currentDevice;
 
         private YubikeyNeoManager()
@@ -81,7 +81,7 @@ namespace EnrollmentStation.Code
 
         public int GetSerialNumber()
         {
-            if (_currentDevice== IntPtr.Zero)
+            if (_currentDevice == IntPtr.Zero)
                 return -1;
 
             if (_currentDevice == IntPtr.Zero)
@@ -98,9 +98,9 @@ namespace EnrollmentStation.Code
             if (_currentDevice == IntPtr.Zero)
                 throw new Exception("Not initialized");
 
-            var major = YkNeoManagerGetVersionMajor(_currentDevice);
-            var minor = YkNeoManagerGetVersionMinor(_currentDevice);
-            var build = YkNeoManagerGetVersionBuild(_currentDevice);
+            byte major = YkNeoManagerGetVersionMajor(_currentDevice);
+            byte minor = YkNeoManagerGetVersionMinor(_currentDevice);
+            byte build = YkNeoManagerGetVersionBuild(_currentDevice);
 
             return new Version(major, minor, build);
         }
@@ -135,28 +135,35 @@ namespace EnrollmentStation.Code
             if (_currentDevice == IntPtr.Zero)
                 return false;
 
-            YubicoNeoReturnCode res = YkNeoManagerDiscover(_currentDevice);
-
-            if (res == YubicoNeoReturnCode.YKNEOMGR_OK)
-                return true;
-
-            if (res == YubicoNeoReturnCode.YKNEOMGR_NO_DEVICE)
-                return false;
-
-            if (res == YubicoNeoReturnCode.YKNEOMGR_BACKEND_ERROR)
+            try
             {
-                Close();
-                Init();
-
-                res = YkNeoManagerDiscover(_currentDevice);
+                YubicoNeoReturnCode res = YkNeoManagerDiscover(_currentDevice);
 
                 if (res == YubicoNeoReturnCode.YKNEOMGR_OK)
                     return true;
 
+                if (res == YubicoNeoReturnCode.YKNEOMGR_NO_DEVICE)
+                    return false;
+
+                if (res == YubicoNeoReturnCode.YKNEOMGR_BACKEND_ERROR)
+                {
+                    Close();
+                    Init();
+
+                    res = YkNeoManagerDiscover(_currentDevice);
+
+                    if (res == YubicoNeoReturnCode.YKNEOMGR_OK)
+                        return true;
+
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
                 return false;
             }
 
-            throw new Exception("Unable to find device: " + res);
+            return false;
         }
     }
 }
