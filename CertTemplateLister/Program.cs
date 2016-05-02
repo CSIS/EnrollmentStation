@@ -5,6 +5,8 @@ namespace CertTemplateLister
 {
     class Program
     {
+		// Documentation on PKI in AD: https://msdn.microsoft.com/en-us/library/cc226517.aspx
+		
         static void Main(string[] args)
         {
             DirectoryEntry rootDse = new DirectoryEntry("LDAP://RootDSE");
