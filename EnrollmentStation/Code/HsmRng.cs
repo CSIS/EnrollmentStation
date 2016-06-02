@@ -14,12 +14,18 @@ namespace EnrollmentStation.Code
 
         private static SerialPort FindDevice()
         {
-            //Looking for YubiHSM
-            List<Win32DeviceMgmt.DeviceInfo> results = Win32DeviceMgmt.GetAllCOMPorts();
-            foreach (Win32DeviceMgmt.DeviceInfo deviceInfo in results)
+            try
             {
-                if (deviceInfo.bus_description == "Yubico YubiHSM")
-                    return new SerialPort(deviceInfo.name);
+                //Looking for YubiHSM
+                List<Win32DeviceMgmt.DeviceInfo> results = Win32DeviceMgmt.GetAllCOMPorts();
+                foreach (Win32DeviceMgmt.DeviceInfo deviceInfo in results)
+                {
+                    if (deviceInfo.bus_description == "Yubico YubiHSM")
+                        return new SerialPort(deviceInfo.name);
+                }
+            }
+            catch (Exception)
+            {
             }
 
             return null;

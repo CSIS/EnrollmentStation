@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -203,6 +202,7 @@ namespace EnrollmentStation.Code
             /// </summary>
             SPDRP_LOCATION_PATHS = 0x00000023,
         }
+
         private const uint DICS_FLAG_GLOBAL = 0x00000001;
         private const uint DIREG_DEV = 0x00000001;
         private const uint KEY_QUERY_VALUE = 0x0001;
@@ -217,8 +217,7 @@ namespace EnrollmentStation.Code
             public Guid ClassGuid;
             public uint DevInst;
             public UIntPtr Reserved;
-        };
-
+        }
 
         [StructLayout(LayoutKind.Sequential)]
         struct DEVPROPKEY
@@ -226,7 +225,6 @@ namespace EnrollmentStation.Code
             public Guid fmtid;
             public uint pid;
         }
-
 
         [DllImport("setupapi.dll")]
         private static extern int SetupDiDestroyDeviceInfoList(IntPtr DeviceInfoSet);
@@ -321,31 +319,36 @@ namespace EnrollmentStation.Code
             {
                 IntPtr hDeviceInfoSet = SetupDiGetClassDevs(ref guids[index], 0, 0, DiGetClassFlags.DIGCF_PRESENT);
                 if (hDeviceInfoSet == IntPtr.Zero)
-                {
-                    throw new Exception("Failed to get device information set for the COM ports");
-                }
+                    return new List<DeviceInfo>(); //Failed to get device information set for the COM ports
 
                 try
                 {
                     uint iMemberIndex = 0;
                     while (true)
                     {
-                        SP_DEVINFO_DATA deviceInfoData = new SP_DEVINFO_DATA();
-                        deviceInfoData.cbSize = (uint)Marshal.SizeOf(typeof(SP_DEVINFO_DATA));
-                        bool success = SetupDiEnumDeviceInfo(hDeviceInfoSet, iMemberIndex, ref deviceInfoData);
-                        if (!success)
+                        try
                         {
-                            // No more devices in the device information set
-                            break;
+                            SP_DEVINFO_DATA deviceInfoData = new SP_DEVINFO_DATA();
+                            deviceInfoData.cbSize = (uint)Marshal.SizeOf(typeof(SP_DEVINFO_DATA));
+                            bool success = SetupDiEnumDeviceInfo(hDeviceInfoSet, iMemberIndex, ref deviceInfoData);
+                            if (!success)
+                            {
+                                // No more devices in the device information set
+                                break;
+                            }
+
+                            DeviceInfo deviceInfo = new DeviceInfo();
+                            deviceInfo.name = GetDeviceName(hDeviceInfoSet, deviceInfoData);
+                            deviceInfo.description = GetDeviceDescription(hDeviceInfoSet, deviceInfoData);
+                            deviceInfo.bus_description = GetDeviceBusDescription(hDeviceInfoSet, deviceInfoData);
+                            devices.Add(deviceInfo);
+
+                            iMemberIndex++;
+                        }
+                        catch (Exception)
+                        {
                         }
 
-                        DeviceInfo deviceInfo = new DeviceInfo();
-                        deviceInfo.name = GetDeviceName(hDeviceInfoSet, deviceInfoData);
-                        deviceInfo.description = GetDeviceDescription(hDeviceInfoSet, deviceInfoData);
-                        deviceInfo.bus_description = GetDeviceBusDescription(hDeviceInfoSet, deviceInfoData);
-                        devices.Add(deviceInfo);
-
-                        iMemberIndex++;
                     }
                 }
                 finally
@@ -358,12 +361,10 @@ namespace EnrollmentStation.Code
 
         private static string GetDeviceName(IntPtr pDevInfoSet, SP_DEVINFO_DATA deviceInfoData)
         {
-            IntPtr hDeviceRegistryKey = SetupDiOpenDevRegKey(pDevInfoSet, ref deviceInfoData,
-                DICS_FLAG_GLOBAL, 0, DIREG_DEV, KEY_QUERY_VALUE);
+            IntPtr hDeviceRegistryKey = SetupDiOpenDevRegKey(pDevInfoSet, ref deviceInfoData, DICS_FLAG_GLOBAL, 0, DIREG_DEV, KEY_QUERY_VALUE);
+
             if (hDeviceRegistryKey == IntPtr.Zero)
-            {
-                throw new Exception("Failed to open a registry key for device-specific configuration information");
-            }
+                return string.Empty; //Failed to open a registry key for device-specific configuration information
 
             byte[] ptrBuf = new byte[BUFFER_SIZE];
             uint length = (uint)ptrBuf.Length;
@@ -371,17 +372,16 @@ namespace EnrollmentStation.Code
             {
                 uint lpRegKeyType;
                 int result = RegQueryValueEx(hDeviceRegistryKey, "PortName", 0, out lpRegKeyType, ptrBuf, ref length);
-                if (result != 0)
-                {
-                    throw new Exception("Can not read registry value PortName for device " + deviceInfoData.ClassGuid);
-                }
+
+                if (result == 0)
+                    return Encoding.Unicode.GetString(ptrBuf, 0, (int)length - utf16terminatorSize_bytes);
             }
             finally
             {
                 RegCloseKey(hDeviceRegistryKey);
             }
 
-            return Encoding.Unicode.GetString(ptrBuf, 0, (int)length - utf16terminatorSize_bytes);
+            return string.Empty; //Can not read registry value PortName for device
         }
 
         private static string GetDeviceDescription(IntPtr hDeviceInfoSet, SP_DEVINFO_DATA deviceInfoData)
@@ -391,11 +391,11 @@ namespace EnrollmentStation.Code
             uint RequiredSize;
             bool success = SetupDiGetDeviceRegistryProperty(hDeviceInfoSet, ref deviceInfoData, SPDRP.SPDRP_DEVICEDESC,
                 out propRegDataType, ptrBuf, BUFFER_SIZE, out RequiredSize);
-            if (!success)
-            {
-                throw new Exception("Can not read registry value PortName for device " + deviceInfoData.ClassGuid);
-            }
-            return Encoding.Unicode.GetString(ptrBuf, 0, (int)RequiredSize - utf16terminatorSize_bytes);
+
+            if (success)
+                return Encoding.Unicode.GetString(ptrBuf, 0, (int)RequiredSize - utf16terminatorSize_bytes);
+
+            return string.Empty; //Can not read registry value PortName for device
         }
 
         private static string GetDeviceBusDescription(IntPtr hDeviceInfoSet, SP_DEVINFO_DATA deviceInfoData)
@@ -405,11 +405,11 @@ namespace EnrollmentStation.Code
             uint RequiredSize;
             bool success = SetupDiGetDevicePropertyW(hDeviceInfoSet, ref deviceInfoData, ref DEVPKEY_Device_BusReportedDeviceDesc,
                 out propRegDataType, ptrBuf, BUFFER_SIZE, out RequiredSize, 0);
-            if (!success)
-            {
-                throw new Exception("Can not read Bus provided device description device " + deviceInfoData.ClassGuid);
-            }
-            return Encoding.Unicode.GetString(ptrBuf, 0, (int)RequiredSize - utf16terminatorSize_bytes);
+
+            if (success)
+                return Encoding.Unicode.GetString(ptrBuf, 0, (int)RequiredSize - utf16terminatorSize_bytes);
+
+            return string.Empty; //Can not read Bus provided device description device
         }
 
         private static Guid[] GetClassGUIDs(string className)
@@ -426,8 +426,6 @@ namespace EnrollmentStation.Code
                     SetupDiClassGuidsFromName(className, ref guidArray[0], requiredSize, out requiredSize);
                 }
             }
-            else
-                throw new Win32Exception();
 
             return guidArray;
         }
