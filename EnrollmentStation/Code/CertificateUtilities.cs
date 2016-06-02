@@ -137,14 +137,11 @@ namespace EnrollmentStation.Code
             {
                 string strDisposition = objCertRequest.GetDispositionMessage();
 
+                errorMessage = strDisposition;
                 if (CR_DISP_UNDER_SUBMISSION == iDisposition)
-                {
-                    Console.WriteLine("The submission is pending: " + strDisposition);
                     return false;
-                }
 
-                Console.WriteLine("The submission failed: " + strDisposition);
-                Console.WriteLine("Last status: " + objCertRequest.GetLastStatus());
+                errorMessage = errorMessage + Environment.NewLine + objCertRequest.GetLastStatus();
                 return false;
             }
 
