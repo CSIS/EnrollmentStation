@@ -43,9 +43,13 @@ You can also read our Manual to find methods with accompanying screenshots.
 ## Documentation
 See the pdf manual, at [Manual-GUI.pdf](Manual-GUI.pdf)
 
+## Used open source projects
+
+This project makes use of the following open source projects
+
+* [Active Directory Object picker](https://github.com/Tulpep/Active-Directory-Object-Picker)
+
 ## Todo
-* Improve YubiHSM handling (remember choices, fail if missing and previously used)
 * Handle more diverse PKI setups (possibly store a favourite CA in an options)
 * Encrypt the configuration
-* Verify data from AD (e.g. specified usernames to enroll on behalf of)
 * Describe revoke procedure and requirements thereto (permissions, COM object .. )

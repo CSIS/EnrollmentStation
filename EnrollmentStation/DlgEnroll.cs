@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
+using Tulpep.ActiveDirectoryObjectPicker;
 
 namespace EnrollmentStation
 {
@@ -65,6 +67,18 @@ namespace EnrollmentStation
             _hsmUpdateTimer.Start();
 
             RefreshHSM();
+
+            try
+            {
+                Domain domain = Domain.GetComputerDomain();
+
+                if (!string.IsNullOrWhiteSpace(domain.Name))
+                    llBrowseUser.Visible = true;
+            }
+            catch (ActiveDirectoryObjectNotFoundException)
+            {
+                llBrowseUser.Visible = false;
+            }
         }
 
         private void HsmUpdateTimerOnTick(object sender, EventArgs eventArgs)
@@ -492,11 +506,27 @@ namespace EnrollmentStation
 
         private void llBrowseUser_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            DlgSelectUser dialog = new DlgSelectUser();
-            DialogResult result = dialog.ShowDialog();
+            DirectoryObjectPickerDialog picker = new DirectoryObjectPickerDialog()
+            {
+                AllowedObjectTypes = ObjectTypes.Users,
+                DefaultObjectTypes = ObjectTypes.Users,
+                AllowedLocations = Locations.All,
+                DefaultLocations = Locations.JoinedDomain,
+                MultiSelect = false,
+                ShowAdvancedView = true,
+                AttributesToFetch = { "samAccountName" }
+            };
 
-            if (result == DialogResult.OK)
-                txtUser.Text = dialog.SelectedUser;
+            if (picker.ShowDialog() == DialogResult.OK)
+            {
+                DirectoryObject sel = picker.SelectedObjects.FirstOrDefault();
+                string userName = sel?.FetchedAttributes.FirstOrDefault() as string;
+
+                if (sel != null)
+                {
+                    txtUser.Text = userName;
+                }
+            }
         }
 
         private void textBoxes_TextChanged(object sender, EventArgs e)

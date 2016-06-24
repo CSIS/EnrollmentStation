@@ -64,6 +64,10 @@
       <HintPath>..\Certutilities\COM\CERTENROLLLib.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Interop.ActiveDs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=515ab092c8839750, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tulpep.ActiveDirectoryObjectPicker.2.0.97\lib\net35\Interop.ActiveDs.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -77,6 +81,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tulpep.ActiveDirectoryObjectPicker, Version=2.0.97.0, Culture=neutral, PublicKeyToken=515ab092c8839750, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tulpep.ActiveDirectoryObjectPicker.2.0.97\lib\net35\Tulpep.ActiveDirectoryObjectPicker.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\CertificateDetails.cs" />
@@ -121,12 +129,6 @@
     <Compile Include="DlgPleaseInsertYubikey.Designer.cs">
       <DependentUpon>DlgPleaseInsertYubikey.cs</DependentUpon>
     </Compile>
-    <Compile Include="DlgSelectUser.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DlgSelectUser.Designer.cs">
-      <DependentUpon>DlgSelectUser.cs</DependentUpon>
-    </Compile>
     <Compile Include="DlgSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,9 +159,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DlgPleaseInsertYubikey.resx">
       <DependentUpon>DlgPleaseInsertYubikey.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DlgSelectUser.resx">
-      <DependentUpon>DlgSelectUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DlgSettings.resx">
       <DependentUpon>DlgSettings.cs</DependentUpon>
