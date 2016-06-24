@@ -62,12 +62,12 @@ namespace EnrollmentStation.Code
             try
             {
                 CSignerCertificate signer = new CSignerCertificate();
-                signer.Initialize(false, X509PrivateKeyVerify.VerifyNone, (EncodingType)0xc, argsKey);
+                signer.Initialize(false, X509PrivateKeyVerify.VerifyNone, EncodingType.XCN_CRYPT_STRING_HEXRAW, argsKey);
                 cmcReq.SignerCertificate = signer;
             }
             catch (COMException ex)
             {
-                if (ex.HResult == -2146885628)
+                if (ex.HResult == (int)WindowsCryptoApiErrors.CRYPT_E_NOT_FOUND)
                 {
                     // Certificate was not found - perhaps it's not in the users store
                     tryMachinestore = true;
@@ -89,12 +89,12 @@ namespace EnrollmentStation.Code
                 try
                 {
                     CSignerCertificate signer = new CSignerCertificate();
-                    signer.Initialize(true, X509PrivateKeyVerify.VerifyNone, (EncodingType)0xc, argsKey);
+                    signer.Initialize(true, X509PrivateKeyVerify.VerifyNone, EncodingType.XCN_CRYPT_STRING_HEXRAW, argsKey);
                     cmcReq.SignerCertificate = signer;
                 }
                 catch (COMException ex)
                 {
-                    if (ex.HResult == -2146885628)
+                    if (ex.HResult == (int)WindowsCryptoApiErrors.CRYPT_E_NOT_FOUND)
                     {
                         errorMessage = "Agent certificate was not found";
                         return false;
