@@ -15,7 +15,7 @@ namespace EnrollmentStation
     public partial class DlgSettings : Form
     {
         private const int CC_UIPICKCONFIG = 0x1;
-        private static readonly Regex _managementKeyRegex = new Regex("^[A-F0-9]{48}$", RegexOptions.Compiled);
+        private static readonly Regex _managementKeyRegex = new Regex("^[a-fA-F0-9]{48}$", RegexOptions.Compiled);
         private string _selectedCertificateThumb;
 
         private readonly Settings _settings;
