@@ -316,12 +316,12 @@ namespace EnrollmentStation
                         return;
                     }
 
-                    bool imported = pivTool.SetCertificate9a(cert);
+                    YubicoPivReturnCode imported = pivTool.SetCertificate9a(cert);
 
-                    if (!imported)
+                    if (imported != YubicoPivReturnCode.YKPIV_OK)
                     {
                         doWorkEventArgs.Cancel = true;
-                        _enrollWorkerMessage = "Unable to import a certificate";
+                        _enrollWorkerMessage = $"Unable to import a certificate, return code {imported}";
                         return;
                     }
 

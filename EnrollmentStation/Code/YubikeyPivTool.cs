@@ -373,7 +373,7 @@ namespace EnrollmentStation.Code
             return new X509Certificate2(data);
         }
 
-        public bool SetCertificate9a(X509Certificate2 cert)
+        public YubicoPivReturnCode SetCertificate9a(X509Certificate2 cert)
         {
             byte[] certData = cert.GetRawCertData();
             byte[] data = new byte[certData.Length + 1 + 3 + 5];
@@ -392,11 +392,8 @@ namespace EnrollmentStation.Code
             data[offset++] = 0;
 
             YubicoPivReturnCode code = YkPivSaveObject(_state, YKPIV_OBJ_AUTHENTICATION, data, offset);
-
-            if (code != YubicoPivReturnCode.YKPIV_OK)
-                return false;
-
-            return true;
+            
+            return code;
         }
 
         public bool SetCHUID(Guid newId, out byte[] newChuid)
