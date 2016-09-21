@@ -279,12 +279,13 @@ namespace EnrollmentStation
 
                 // 11 - Yubico: Make CSR
                 string csr;
-                bool madeCsr = MakeCsr(Utilities.ExportPublicKeyToPEMFormat(publicKey), pin, out csr);
+                string csrError;
+                bool madeCsr = MakeCsr(Utilities.ExportPublicKeyToPEMFormat(publicKey), pin, out csrError, out csr);
 
                 if (!madeCsr)
                 {
                     doWorkEventArgs.Cancel = true;
-                    _enrollWorkerMessage = "Unable to generate a CSR";
+                    _enrollWorkerMessage = "Unable to generate a CSR" + Environment.NewLine + csrError;
                     return;
                 }
 
@@ -449,7 +450,7 @@ namespace EnrollmentStation
             _enrollWorker.RunWorkerAsync();
         }
 
-        private bool MakeCsr(string pubKeyAsPem, string pin, out string csr)
+        private bool MakeCsr(string pubKeyAsPem, string pin, out string error, out string csr)
         {
             csr = null;
 
@@ -480,17 +481,19 @@ namespace EnrollmentStation
                 start.WorkingDirectory = Path.GetFullPath(".");
                 start.CreateNoWindow = true;
                 start.UseShellExecute = false;
-                //start.RedirectStandardError = true;
-                //start.RedirectStandardOutput = true;
+                start.RedirectStandardError = true;
+                start.RedirectStandardOutput = true;
 
                 Process proc = Process.Start(start);
                 proc.WaitForExit();
 
-                //string stdErr = proc.StandardError.ReadToEnd();
-                //string stdOut = proc.StandardOutput.ReadToEnd();
+                string stdErr = proc.StandardError.ReadToEnd();
+                string stdOut = proc.StandardOutput.ReadToEnd();
 
                 if (File.Exists(tmpCsr))
                     csr = File.ReadAllText(tmpCsr);
+
+                error = "Debug info." + Environment.NewLine + "Output: " + stdOut + Environment.NewLine + "Error: " + stdErr;
 
                 return proc.ExitCode == 0;
             }
