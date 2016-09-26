@@ -25,6 +25,8 @@ namespace EnrollmentStation
         private readonly BackgroundWorker _enrollWorker;
         private readonly Timer _hsmUpdateTimer = new Timer();
 
+        private Version _insertedKeyPivVersion = new Version();
+
         public DlgEnroll(Settings settings, DataStore dataStore)
         {
             _settings = settings;
@@ -104,8 +106,8 @@ namespace EnrollmentStation
 
         private void RefreshView()
         {
-            RefreshEligibleForEnroll();
             RefreshInsertedKeyInfo();
+            RefreshEligibleForEnroll();
         }
 
         private void RefreshHSM()
@@ -157,7 +159,7 @@ namespace EnrollmentStation
                 // 1. Prep device info
                 int deviceId = YubikeyNeoManager.Instance.GetSerialNumber();
                 string neoFirmware = YubikeyNeoManager.Instance.GetVersion().ToString();
-                string pivFirmware;
+                Version pivFirmware;
 
                 using (YubikeyPivTool piv = new YubikeyPivTool())
                     pivFirmware = piv.GetVersion();
@@ -349,7 +351,7 @@ namespace EnrollmentStation
                 newEnrollment.EnrolledAt = DateTime.UtcNow;
 
                 newEnrollment.YubikeyVersions.NeoFirmware = neoFirmware;
-                newEnrollment.YubikeyVersions.PivApplet = pivFirmware;
+                newEnrollment.YubikeyVersions.PivApplet = pivFirmware.ToString();
 
                 _dataStore.Add(newEnrollment);
 
@@ -395,6 +397,12 @@ namespace EnrollmentStation
 
                 lblInsertedSerial.Text = YubikeyNeoManager.Instance.GetSerialNumber().ToString();
                 lblInsertedMode.Text = currentMode.ToString();
+
+                Version pivVersion;
+                using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
+                    pivVersion = pivTool.GetVersion();
+
+                _insertedKeyPivVersion = pivVersion;
                 lblInsertedFirmware.Text = YubikeyNeoManager.Instance.GetVersion().ToString();
             }
         }
@@ -406,7 +414,7 @@ namespace EnrollmentStation
             if (!_devicePresent)
                 eligible = false;
 
-            if (txtPin.Text.Length <= 0)
+            if (!YubikeyPolicyUtility.IsValidPin(_insertedKeyPivVersion, txtPin.Text))
                 eligible = false;
 
             if (txtPin.Text != txtPinAgain.Text)

@@ -7,6 +7,7 @@ namespace EnrollmentStation
     public partial class DlgResetPin : Form
     {
         private EnrolledYubikey _yubikey;
+        private Version _yubikeyVersion;
 
         public DlgResetPin(EnrolledYubikey key)
         {
@@ -14,6 +15,8 @@ namespace EnrollmentStation
 
             if (_yubikey == null)
                 throw new ArgumentNullException("key");
+
+            _yubikeyVersion = Version.Parse(key.YubikeyVersions.NeoFirmware);
 
             InitializeComponent();
         }
@@ -44,7 +47,7 @@ namespace EnrollmentStation
         {
             bool eligible = true;
 
-            if (txtPinNew.Text.Length <= 0)
+            if (!YubikeyPolicyUtility.IsValidPin(_yubikeyVersion, txtPinNew.Text))
                 eligible = false;
 
             if (txtPinNew.Text != txtPinNewAgain.Text)

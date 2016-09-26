@@ -109,7 +109,7 @@ namespace EnrollmentStation.Code
                 throw new Exception("Unable to connect to PIV: " + code);
         }
 
-        public string GetVersion()
+        public Version GetVersion()
         {
             const int length = 256;
 
@@ -119,7 +119,7 @@ namespace EnrollmentStation.Code
             if (code != YubicoPivReturnCode.YKPIV_OK)
                 throw new Exception("Unable to fetch PIV version: " + code);
 
-            return sb.ToString();
+            return Version.Parse(sb.ToString());
         }
 
         public bool Authenticate(byte[] managementKey)
