@@ -385,7 +385,7 @@ namespace EnrollmentStation
             X509Certificate2 currentCert = new X509Certificate2(item.Certificate.RawCertificate);
 
             DialogResult dlgResult = MessageBox.Show("This will terminate the Yubikey, wiping the PIN, PUK, Management Key and Certificates. " +
-                                                     "This will also revoke the certificiate. Proceeed?" + Environment.NewLine + Environment.NewLine +
+                                                     "This will also revoke the certificate. Proceeed?" + Environment.NewLine + Environment.NewLine +
                                                      "Will revoke: " + currentCert.Subject + Environment.NewLine +
                                                      "By: " + currentCert.Issuer, "Terminate (WILL revoke)",
                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
