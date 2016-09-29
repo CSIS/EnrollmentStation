@@ -46,9 +46,10 @@ namespace EnrollmentStation.Code
         private static extern YubicoPivReturnCode YkPivTransferData(IntPtr state, byte[] templ, byte[] inData, int inLength, byte[] outData, ref int outLength, ref int sw);
 
         private const int YKPIV_ALGO_3DES = 0x03;
-        private const int YKPIV_ALGO_RSA1024 = 0x06;
-        private const int YKPIV_ALGO_RSA2048 = 0x07;
-        private const int YKPIV_ALGO_ECCP256 = 0x11;
+        public const int YKPIV_ALGO_RSA1024 = 0x06;
+        public const int YKPIV_ALGO_RSA2048 = 0x07;
+        public const int YKPIV_ALGO_ECCP256 = 0x11;
+        public const int YKPIV_ALGO_ECCP384 = 0x14;
 
         private const int YKPIV_KEY_AUTHENTICATION = 0x9a;
         private const int YKPIV_KEY_CARDMGM = 0x9b;
@@ -235,7 +236,7 @@ namespace EnrollmentStation.Code
             return true;
         }
 
-        public bool GenerateKey9a(out RSAParameters publicKey)
+        public bool GenerateKey9a(byte algorithm, out RSAParameters publicKey)
         {
             publicKey = new RSAParameters();
 
@@ -249,7 +250,7 @@ namespace EnrollmentStation.Code
             inData[1] = 3;
             inData[2] = 0x80;
             inData[3] = 1;
-            inData[4] = YKPIV_ALGO_RSA2048;     // Possible accept different algorithms in the future
+            inData[4] = algorithm;
 
             YubicoPivReturnCode code = YkPivTransferData(_state, templ, inData, inData.Length, outData, ref outLength, ref sw);
 

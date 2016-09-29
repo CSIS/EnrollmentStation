@@ -39,6 +39,15 @@ namespace EnrollmentStation
 
         private void DlgSettings_Load(object sender, EventArgs e)
         {
+            // Prepare algorithms
+            foreach (YubikeyAlgorithm item in YubikeyPolicyUtility.GetYubicoAlgorithms())
+            {
+                drpAlgorithm.Items.Add(item);
+
+                if (item.Value == YubikeyPivTool.YKPIV_ALGO_RSA2048)
+                    drpAlgorithm.SelectedItem = item;
+            }
+
             UpdateView();
 
             try
@@ -77,6 +86,14 @@ namespace EnrollmentStation
                         " was not found in your certificate store.", "Certificate not found", MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
             }
+
+            if (_settings.DefaultAlgorithm > 0)
+            {
+                YubikeyAlgorithm algo = YubikeyPolicyUtility.GetYubicoAlgorithms().FirstOrDefault(s => s.Value == _settings.DefaultAlgorithm);
+
+                if (algo != null)
+                    drpAlgorithm.SelectedItem = algo;
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -88,6 +105,7 @@ namespace EnrollmentStation
             _settings.EnrollmentAgentCertificate = _selectedCertificateThumb;
             _settings.EnrollmentManagementKey = Utilities.StringToByteArray(txtManagementKey.Text);
             _settings.EnrollmentCaTemplate = txtCaTemplate.Text;
+            _settings.DefaultAlgorithm = ((YubikeyAlgorithm)drpAlgorithm.SelectedItem).Value;
 
             _settings.Save(MainForm.FileSettings);
 

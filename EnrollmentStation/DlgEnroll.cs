@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
@@ -24,7 +25,7 @@ namespace EnrollmentStation
         private string _enrollWorkerMessage;
         private readonly BackgroundWorker _enrollWorker;
         private readonly Timer _hsmUpdateTimer = new Timer();
-        
+
         public DlgEnroll(Settings settings, DataStore dataStore)
         {
             _settings = settings;
@@ -52,7 +53,7 @@ namespace EnrollmentStation
         private void DlgEnroll_Load(object sender, EventArgs e)
         {
             AcceptButton = cmdEnroll;
-
+            
             // Start worker that checks for inserted yubikeys
             YubikeyDetector.Instance.StateChanged += YubikeyStateChange;
             YubikeyDetector.Instance.Start();
@@ -78,6 +79,15 @@ namespace EnrollmentStation
             catch (ActiveDirectoryObjectNotFoundException)
             {
                 llBrowseUser.Visible = false;
+            }
+
+            // Prepare algorithms
+            foreach (YubikeyAlgorithm item in YubikeyPolicyUtility.GetYubicoAlgorithms())
+            {
+                drpAlgorithm.Items.Add(item);
+
+                if (item.Value == _settings.DefaultAlgorithm)
+                    drpAlgorithm.SelectedItem = item;
             }
         }
 
@@ -265,7 +275,9 @@ namespace EnrollmentStation
                     _enrollWorker.ReportProgress(9);
 
                     // 10 - Yubico: Generate Key
-                    bool keyGenerated = pivTool.GenerateKey9a(out publicKey);
+                    YubikeyAlgorithm algorithm = (YubikeyAlgorithm)drpAlgorithm.SelectedItem;
+
+                    bool keyGenerated = pivTool.GenerateKey9a(algorithm.Value, out publicKey);
 
                     if (!keyGenerated)
                     {
@@ -395,7 +407,7 @@ namespace EnrollmentStation
 
                 lblInsertedSerial.Text = YubikeyNeoManager.Instance.GetSerialNumber().ToString();
                 lblInsertedMode.Text = currentMode.ToString();
-                 
+
                 lblInsertedFirmware.Text = YubikeyNeoManager.Instance.GetVersion().ToString();
             }
         }

@@ -17,6 +17,8 @@ namespace EnrollmentStation.Code
 
         public string EnrollmentCaTemplate { get; set; }
 
+        public byte DefaultAlgorithm { get; set; }
+
         public static Settings Load(string file)
         {
             if (!File.Exists(file))

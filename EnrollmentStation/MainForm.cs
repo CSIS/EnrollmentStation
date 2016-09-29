@@ -50,7 +50,8 @@ namespace EnrollmentStation
             YubikeyDetector.Instance.StateChanged += YubikeyStateChange;
             YubikeyDetector.Instance.Start();
 
-            if (!File.Exists(FileSettings))
+            // Determine if we need to get the settings set
+            if (!File.Exists(FileSettings) || _settings.DefaultAlgorithm == 0)
             {
                 DlgSettings dialog = new DlgSettings(_settings);
                 DialogResult res = dialog.ShowDialog();

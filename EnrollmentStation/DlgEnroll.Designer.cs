@@ -52,9 +52,13 @@ namespace EnrollmentStation
             this.label6 = new System.Windows.Forms.Label();
             this.cmdEnroll = new System.Windows.Forms.Button();
             this.prgEnroll = new System.Windows.Forms.ProgressBar();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.drpAlgorithm = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.gbInsertedYubikey.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -108,7 +112,7 @@ namespace EnrollmentStation
             this.gbInsertedYubikey.Controls.Add(this.label14);
             this.gbInsertedYubikey.Controls.Add(this.dlblInsertedSerial);
             this.gbInsertedYubikey.Controls.Add(this.lblInsertedSerial);
-            this.gbInsertedYubikey.Location = new System.Drawing.Point(2, 132);
+            this.gbInsertedYubikey.Location = new System.Drawing.Point(2, 183);
             this.gbInsertedYubikey.Name = "gbInsertedYubikey";
             this.gbInsertedYubikey.Size = new System.Drawing.Size(350, 118);
             this.gbInsertedYubikey.TabIndex = 2;
@@ -253,7 +257,7 @@ namespace EnrollmentStation
             // 
             // cmdEnroll
             // 
-            this.cmdEnroll.Location = new System.Drawing.Point(269, 256);
+            this.cmdEnroll.Location = new System.Drawing.Point(269, 307);
             this.cmdEnroll.Name = "cmdEnroll";
             this.cmdEnroll.Size = new System.Drawing.Size(75, 23);
             this.cmdEnroll.TabIndex = 4;
@@ -263,18 +267,47 @@ namespace EnrollmentStation
             // 
             // prgEnroll
             // 
-            this.prgEnroll.Location = new System.Drawing.Point(12, 256);
+            this.prgEnroll.Location = new System.Drawing.Point(12, 307);
             this.prgEnroll.Maximum = 15;
             this.prgEnroll.Name = "prgEnroll";
             this.prgEnroll.Size = new System.Drawing.Size(251, 23);
             this.prgEnroll.TabIndex = 3;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.drpAlgorithm);
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Location = new System.Drawing.Point(2, 132);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(350, 45);
+            this.groupBox2.TabIndex = 5;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Card details";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(50, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Algorithm";
+            // 
+            // drpAlgorithm
+            // 
+            this.drpAlgorithm.FormattingEnabled = true;
+            this.drpAlgorithm.Location = new System.Drawing.Point(114, 17);
+            this.drpAlgorithm.Name = "drpAlgorithm";
+            this.drpAlgorithm.Size = new System.Drawing.Size(177, 21);
+            this.drpAlgorithm.TabIndex = 1;
             // 
             // DlgEnroll
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.ClientSize = new System.Drawing.Size(353, 291);
+            this.ClientSize = new System.Drawing.Size(353, 338);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.prgEnroll);
             this.Controls.Add(this.cmdEnroll);
             this.Controls.Add(this.groupBox3);
@@ -294,6 +327,8 @@ namespace EnrollmentStation
             this.gbInsertedYubikey.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -321,5 +356,8 @@ namespace EnrollmentStation
         private Label lblAlreadyEnrolled;
         private Label specialYubiHsm;
         private Label label5;
+        private GroupBox groupBox2;
+        private ComboBox drpAlgorithm;
+        private Label label1;
     }
 }

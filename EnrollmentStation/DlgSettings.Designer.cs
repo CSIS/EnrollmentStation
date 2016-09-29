@@ -47,8 +47,12 @@ namespace EnrollmentStation
             this.llGenerateMgtKey = new System.Windows.Forms.LinkLabel();
             this.txtManagementKey = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.drpAlgorithm = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -146,7 +150,7 @@ namespace EnrollmentStation
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(373, 152);
+            this.btnSave.Location = new System.Drawing.Point(373, 203);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 2;
@@ -157,7 +161,7 @@ namespace EnrollmentStation
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(454, 152);
+            this.btnCancel.Location = new System.Drawing.Point(454, 203);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -206,6 +210,34 @@ namespace EnrollmentStation
             this.label4.TabIndex = 2;
             this.label4.Text = "Management key";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.drpAlgorithm);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Location = new System.Drawing.Point(12, 152);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(517, 45);
+            this.groupBox2.TabIndex = 6;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Card details";
+            // 
+            // drpAlgorithm
+            // 
+            this.drpAlgorithm.FormattingEnabled = true;
+            this.drpAlgorithm.Location = new System.Drawing.Point(118, 17);
+            this.drpAlgorithm.Name = "drpAlgorithm";
+            this.drpAlgorithm.Size = new System.Drawing.Size(336, 21);
+            this.drpAlgorithm.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(13, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(86, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Default algorithm";
+            // 
             // DlgSettings
             // 
             this.AcceptButton = this.btnSave;
@@ -213,7 +245,8 @@ namespace EnrollmentStation
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(541, 180);
+            this.ClientSize = new System.Drawing.Size(541, 236);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
@@ -230,6 +263,8 @@ namespace EnrollmentStation
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -251,5 +286,8 @@ namespace EnrollmentStation
         private LinkLabel llGenerateMgtKey;
         private Label label5;
         private TextBox txtCaTemplate;
+        private GroupBox groupBox2;
+        private ComboBox drpAlgorithm;
+        private Label label2;
     }
 }
