@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
 
@@ -7,7 +8,6 @@ namespace EnrollmentStation
     public partial class DlgResetPin : Form
     {
         private EnrolledYubikey _yubikey;
-        private Version _yubikeyVersion;
 
         public DlgResetPin(EnrolledYubikey key)
         {
@@ -15,9 +15,7 @@ namespace EnrollmentStation
 
             if (_yubikey == null)
                 throw new ArgumentNullException("key");
-
-            _yubikeyVersion = Version.Parse(key.YubikeyVersions.NeoFirmware);
-
+            
             InitializeComponent();
         }
 
@@ -47,7 +45,7 @@ namespace EnrollmentStation
         {
             bool eligible = true;
 
-            if (!YubikeyPolicyUtility.IsValidPin(_yubikeyVersion, txtPinNew.Text))
+            if (!YubikeyPolicyUtility.IsValidPin(txtPinNew.Text))
                 eligible = false;
 
             if (txtPinNew.Text != txtPinNewAgain.Text)
@@ -99,6 +97,34 @@ namespace EnrollmentStation
         private void textField_Changed(object sender, EventArgs e)
         {
             RefreshEligibilityForReset();
+        }
+
+        private void txtPinNew_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!YubikeyPolicyUtility.IsValidPin(txtPinNew.Text))
+            {
+                txtPinNew.BackColor = Color.LightCoral;
+                e.Cancel = true;
+            }
+            else
+            {
+                txtPinNew.BackColor = Color.White;
+                e.Cancel = false;
+            }
+        }
+
+        private void txtPinNewAgain_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (txtPinNew.Text != txtPinNewAgain.Text)
+            {
+                txtPinNewAgain.BackColor = Color.LightCoral;
+                e.Cancel = true;
+            }
+            else
+            {
+                txtPinNewAgain.BackColor = Color.White;
+                e.Cancel = false;
+            }
         }
     }
 }

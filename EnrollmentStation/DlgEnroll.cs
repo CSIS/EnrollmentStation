@@ -24,9 +24,7 @@ namespace EnrollmentStation
         private string _enrollWorkerMessage;
         private readonly BackgroundWorker _enrollWorker;
         private readonly Timer _hsmUpdateTimer = new Timer();
-
-        private Version _insertedKeyPivVersion = new Version();
-
+        
         public DlgEnroll(Settings settings, DataStore dataStore)
         {
             _settings = settings;
@@ -397,12 +395,7 @@ namespace EnrollmentStation
 
                 lblInsertedSerial.Text = YubikeyNeoManager.Instance.GetSerialNumber().ToString();
                 lblInsertedMode.Text = currentMode.ToString();
-
-                Version pivVersion;
-                using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
-                    pivVersion = pivTool.GetVersion();
-
-                _insertedKeyPivVersion = pivVersion;
+                 
                 lblInsertedFirmware.Text = YubikeyNeoManager.Instance.GetVersion().ToString();
             }
         }
@@ -414,7 +407,7 @@ namespace EnrollmentStation
             if (!_devicePresent)
                 eligible = false;
 
-            if (!YubikeyPolicyUtility.IsValidPin(_insertedKeyPivVersion, txtPin.Text))
+            if (!YubikeyPolicyUtility.IsValidPin(txtPin.Text))
                 eligible = false;
 
             if (txtPin.Text != txtPinAgain.Text)
@@ -543,6 +536,34 @@ namespace EnrollmentStation
         private void textBoxes_TextChanged(object sender, EventArgs e)
         {
             RefreshEligibleForEnroll();
+        }
+
+        private void txtPin_Validating(object sender, CancelEventArgs e)
+        {
+            if (!YubikeyPolicyUtility.IsValidPin(txtPin.Text))
+            {
+                txtPin.BackColor = Color.LightCoral;
+                e.Cancel = true;
+            }
+            else
+            {
+                txtPin.BackColor = Color.White;
+                e.Cancel = false;
+            }
+        }
+
+        private void txtPinAgain_Validating(object sender, CancelEventArgs e)
+        {
+            if (txtPin.Text != txtPinAgain.Text)
+            {
+                txtPinAgain.BackColor = Color.LightCoral;
+                e.Cancel = true;
+            }
+            else
+            {
+                txtPinAgain.BackColor = Color.White;
+                e.Cancel = false;
+            }
         }
     }
 }

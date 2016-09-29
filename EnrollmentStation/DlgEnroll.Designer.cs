@@ -220,6 +220,7 @@ namespace EnrollmentStation
             this.txtPinAgain.TabIndex = 3;
             this.txtPinAgain.UseSystemPasswordChar = true;
             this.txtPinAgain.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
+            this.txtPinAgain.Validating += new System.ComponentModel.CancelEventHandler(this.txtPinAgain_Validating);
             // 
             // txtPin
             // 
@@ -230,6 +231,7 @@ namespace EnrollmentStation
             this.txtPin.TabIndex = 1;
             this.txtPin.UseSystemPasswordChar = true;
             this.txtPin.TextChanged += new System.EventHandler(this.textBoxes_TextChanged);
+            this.txtPin.Validating += new System.ComponentModel.CancelEventHandler(this.txtPin_Validating);
             // 
             // label7
             // 
@@ -271,6 +273,7 @@ namespace EnrollmentStation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ClientSize = new System.Drawing.Size(353, 291);
             this.Controls.Add(this.prgEnroll);
             this.Controls.Add(this.cmdEnroll);

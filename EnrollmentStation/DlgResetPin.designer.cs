@@ -109,6 +109,7 @@
             this.txtPinNewAgain.Size = new System.Drawing.Size(122, 20);
             this.txtPinNewAgain.TabIndex = 3;
             this.txtPinNewAgain.TextChanged += new System.EventHandler(this.textField_Changed);
+            this.txtPinNewAgain.Validating += new System.ComponentModel.CancelEventHandler(this.txtPinNewAgain_Validating);
             // 
             // txtPinNew
             // 
@@ -118,6 +119,7 @@
             this.txtPinNew.Size = new System.Drawing.Size(122, 20);
             this.txtPinNew.TabIndex = 1;
             this.txtPinNew.TextChanged += new System.EventHandler(this.textField_Changed);
+            this.txtPinNew.Validating += new System.ComponentModel.CancelEventHandler(this.txtPinNew_Validating);
             // 
             // cmdChange
             // 
@@ -134,6 +136,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.ClientSize = new System.Drawing.Size(266, 164);
             this.Controls.Add(this.cmdChange);
             this.Controls.Add(this.groupBox2);
