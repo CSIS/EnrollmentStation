@@ -101,6 +101,8 @@
     <Compile Include="Code\Utilities\HsmRng.cs" />
     <Compile Include="Code\Utilities\Utilities.cs" />
     <Compile Include="Code\Utilities\Win32DeviceMgmt.cs" />
+    <Compile Include="Code\Utilities\WindowsCertificate.cs" />
+    <Compile Include="Code\Utilities\WindowsCertStoreUtilities.cs" />
     <Compile Include="Code\YubicoNeoMode.cs" />
     <Compile Include="Code\YubikeyDetector.cs" />
     <Compile Include="Code\YubikeyNeoManager.cs" />

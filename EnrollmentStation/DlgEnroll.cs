@@ -56,7 +56,7 @@ namespace EnrollmentStation
         private void DlgEnroll_Load(object sender, EventArgs e)
         {
             AcceptButton = cmdEnroll;
-            
+
             // Start worker that checks for inserted yubikeys
             YubikeyDetector.Instance.StateChanged += YubikeyStateChange;
             YubikeyDetector.Instance.Start();
@@ -186,10 +186,17 @@ namespace EnrollmentStation
                 _enrollWorker.ReportProgress(2);
 
                 // 3 - Prep CA
-                string enrollmentAgent = _settings.EnrollmentAgentCertificate;
+                WindowsCertificate enrollmentAgent = WindowsCertStoreUtilities.FindCertificate(_settings.EnrollmentAgentCertificate);
                 string ca = _settings.CSREndpoint;
                 string caTemplate = _settings.EnrollmentCaTemplate;
                 string user = txtUser.Text;
+
+                if (enrollmentAgent == null)
+                {
+                    doWorkEventArgs.Cancel = true;
+                    _enrollWorkerMessage = "Unable to find the certificate with thumbprint: " + _settings.EnrollmentAgentCertificate;
+                    return;
+                }
 
                 _enrollWorker.ReportProgress(3);
 

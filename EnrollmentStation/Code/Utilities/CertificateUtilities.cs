@@ -19,12 +19,11 @@ namespace EnrollmentStation.Code.Utilities
         private const int CR_DISP_UNDER_SUBMISSION = 0x5;
         private const int CR_OUT_BASE64 = 0x1;
 
-        public static bool Enroll(string username, string agentCertificate, string caConfig, string template, string csr, out string errorMessage, out X509Certificate2 cert)
+        public static bool Enroll(string username, WindowsCertificate agentCertificate, string caConfig, string template, string csr, out string errorMessage, out X509Certificate2 cert)
         {
             errorMessage = null;
             cert = null;
 
-            string argsKey = agentCertificate;
             string argsUser = username;
 
             X509Store store = new X509Store("My", StoreLocation.CurrentUser);
@@ -58,50 +57,17 @@ namespace EnrollmentStation.Code.Utilities
                 return false;
             }
 
-            bool tryMachinestore = false;
-
-            try
-            {
-                CSignerCertificate signer = new CSignerCertificate();
-                signer.Initialize(false, X509PrivateKeyVerify.VerifyNone, EncodingType.XCN_CRYPT_STRING_HEXRAW, argsKey);
-                cmcReq.SignerCertificate = signer;
-            }
-            catch (COMException ex)
-            {
-                if (ex.HResult == (int)WindowsCryptoApiErrors.CRYPT_E_NOT_FOUND)
-                {
-                    // Certificate was not found - perhaps it's not in the users store
-                    tryMachinestore = true;
-                }
-                else
-                {
-                    errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
-                return false;
-            }
-
-            if (tryMachinestore)
+            if (agentCertificate.StoreLocation == StoreLocation.CurrentUser)
             {
                 try
                 {
                     CSignerCertificate signer = new CSignerCertificate();
-                    signer.Initialize(true, X509PrivateKeyVerify.VerifyNone, EncodingType.XCN_CRYPT_STRING_HEXRAW, argsKey);
+                    signer.Initialize(false, X509PrivateKeyVerify.VerifyNone, EncodingType.XCN_CRYPT_STRING_HEXRAW, agentCertificate.Certificate.Thumbprint);
                     cmcReq.SignerCertificate = signer;
                 }
-                catch (COMException ex)
+                catch (COMException ex) when (ex.HResult == (int)WindowsCryptoApiErrors.CRYPT_E_NOT_FOUND)
                 {
-                    if (ex.HResult == (int)WindowsCryptoApiErrors.CRYPT_E_NOT_FOUND)
-                    {
-                        errorMessage = "Agent certificate was not found";
-                        return false;
-                    }
-
-                    errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
+                    errorMessage = "Agent certificate was not found in the CurrentUser store";
                     return false;
                 }
                 catch (Exception ex)
@@ -109,6 +75,30 @@ namespace EnrollmentStation.Code.Utilities
                     errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
                     return false;
                 }
+            }
+            else if (agentCertificate.StoreLocation == StoreLocation.LocalMachine)
+            {
+                try
+                {
+                    CSignerCertificate signer = new CSignerCertificate();
+                    signer.Initialize(true, X509PrivateKeyVerify.VerifyNone, EncodingType.XCN_CRYPT_STRING_HEXRAW, agentCertificate.Certificate.Thumbprint);
+                    cmcReq.SignerCertificate = signer;
+                }
+                catch (COMException ex) when (ex.HResult == (int)WindowsCryptoApiErrors.CRYPT_E_NOT_FOUND)
+                {
+                    errorMessage = "Agent certificate was not found in the LocalMachine store";
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
+                    return false;
+                }
+            }
+            else
+            {
+                errorMessage = "Agent certificate was not found in any store";
+                return false;
             }
 
             // encode the request
