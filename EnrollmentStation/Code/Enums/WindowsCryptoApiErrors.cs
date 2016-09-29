@@ -2,6 +2,7 @@ namespace EnrollmentStation.Code.Enums
 {
     public enum WindowsCryptoApiErrors : int
     {
+        NTE_NO_KEY = -2146893811, // (0x8009000d)
         CRYPT_E_MSG_ERROR = -2146889727, // (0x80091001)
         CRYPT_E_UNKNOWN_ALGO = -2146889726, // (0x80091002)
         CRYPT_E_OID_FORMAT = -2146889725, // (0x80091003)

@@ -70,6 +70,11 @@ namespace EnrollmentStation.Code.Utilities
                     errorMessage = "Agent certificate was not found in the CurrentUser store";
                     return false;
                 }
+                catch (COMException ex) when (ex.HResult == (int)WindowsCryptoApiErrors.NTE_NO_KEY)
+                {
+                    errorMessage = "Could not access the key of the agent certificate. Perhaps you do not have permissions for it?" + Environment.NewLine + Environment.NewLine + "Consult the manual for more information";
+                    return false;
+                }
                 catch (Exception ex)
                 {
                     errorMessage = "Unable to initialize signer, bad agent certificate?" + Environment.NewLine + ex.Message;
@@ -87,6 +92,11 @@ namespace EnrollmentStation.Code.Utilities
                 catch (COMException ex) when (ex.HResult == (int)WindowsCryptoApiErrors.CRYPT_E_NOT_FOUND)
                 {
                     errorMessage = "Agent certificate was not found in the LocalMachine store";
+                    return false;
+                }
+                catch (COMException ex) when (ex.HResult == (int)WindowsCryptoApiErrors.NTE_NO_KEY)
+                {
+                    errorMessage = "Could not access the key of the agent certificate. Perhaps you do not have permissions for it?" + Environment.NewLine + Environment.NewLine + "Consult the manual for more information";
                     return false;
                 }
                 catch (Exception ex)
