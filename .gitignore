@@ -184,3 +184,5 @@ Website/App_Data/Elmah.Errors/
 Scripts/ManagementKey.bin
 Scripts/enrollmentagent.txt
 Scripts/log.txt
+Compiled/*.manifest
+Compiled/*.json
