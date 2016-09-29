@@ -73,7 +73,7 @@ namespace EnrollmentStation.Code
         private const int YKPIV_INS_VERIFY = 0x20;
         private const int YKPIV_INS_CHANGE_REFERENCE = 0x24;
         private const int YKPIV_INS_RESET_RETRY = 0x2c;
-        private const int YKPIV_INS_GENERATE_ASYMMERTRIC = 0x47;
+        private const int YKPIV_INS_GENERATE_ASYMMETRIC = 0x47;
         private const int YKPIV_INS_AUTHENTICATE = 0x87;
         private const int YKPIV_INS_GET_DATA = 0xcb;
         private const int YKPIV_INS_PUT_DATA = 0xdb;
@@ -239,7 +239,7 @@ namespace EnrollmentStation.Code
         {
             publicKey = new RSAParameters();
 
-            byte[] templ = { 0, YKPIV_INS_GENERATE_ASYMMERTRIC, 0, 0x9A };
+            byte[] templ = { 0, YKPIV_INS_GENERATE_ASYMMETRIC, 0, 0x9A };
             byte[] inData = new byte[5];    // TODO: Newer versions of yubico-piv-tool use 11 bytes of data, see: https://github.com/Yubico/yubico-piv-tool/blob/b08de955970c5cd544c740990fb68f496fedb814/tool/yubico-piv-tool.c#L122
             byte[] outData = new byte[1024];
             int outLength = outData.Length, sw = -1;
