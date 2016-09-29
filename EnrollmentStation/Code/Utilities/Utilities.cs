@@ -7,7 +7,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
-namespace EnrollmentStation.Code
+namespace EnrollmentStation.Code.Utilities
 {
     public static class Utilities
     {

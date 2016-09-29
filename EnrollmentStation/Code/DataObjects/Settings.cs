@@ -1,7 +1,7 @@
 using System.IO;
 using Newtonsoft.Json;
 
-namespace EnrollmentStation.Code
+namespace EnrollmentStation.Code.DataObjects
 {
     public class Settings
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace EnrollmentStation.Code
+namespace EnrollmentStation.Code.DataObjects
 {
     [Serializable]
     public class EnrolledYubikey

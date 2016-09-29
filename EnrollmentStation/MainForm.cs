@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
+using EnrollmentStation.Code.DataObjects;
+using EnrollmentStation.Code.Utilities;
 
 namespace EnrollmentStation
 {

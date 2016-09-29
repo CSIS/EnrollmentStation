@@ -4,7 +4,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Threading;
 
-namespace EnrollmentStation.Code
+namespace EnrollmentStation.Code.Utilities
 {
     public static class HsmRng
     {

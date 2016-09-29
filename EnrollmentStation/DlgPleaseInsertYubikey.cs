@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
+using EnrollmentStation.Code.DataObjects;
+using EnrollmentStation.Code.Utilities;
 
 namespace EnrollmentStation
 {

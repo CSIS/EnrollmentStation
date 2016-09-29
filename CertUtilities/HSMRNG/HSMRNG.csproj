@@ -57,7 +57,7 @@
     <Reference Include="System.Management" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\EnrollmentStation\Code\Win32DeviceMgmt.cs">
+    <Compile Include="..\..\EnrollmentStation\Code\Utilities\Win32DeviceMgmt.cs">
       <Link>Win32DeviceMgmt.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />

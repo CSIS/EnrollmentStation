@@ -4,7 +4,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using EnrollmentStation.Code;
+using EnrollmentStation.Code.Utilities;
 
 namespace HSMRNG
 {

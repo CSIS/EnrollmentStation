@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace EnrollmentStation.Code
+namespace EnrollmentStation.Code.DataObjects
 {
     public class YubikeyVersions
     {

@@ -9,6 +9,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CERTCLIENTLib;
 using EnrollmentStation.Code;
+using EnrollmentStation.Code.DataObjects;
+using EnrollmentStation.Code.Utilities;
 
 namespace EnrollmentStation
 {

@@ -1,4 +1,4 @@
-namespace EnrollmentStation.Code
+namespace EnrollmentStation.Code.Enums
 {
     public enum RevokeReason
     {

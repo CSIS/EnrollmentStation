@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace EnrollmentStation.Code
+namespace EnrollmentStation.Code.Utilities
 {
     public class Win32DeviceMgmt
     {

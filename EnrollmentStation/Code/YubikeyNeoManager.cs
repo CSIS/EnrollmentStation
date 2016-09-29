@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using EnrollmentStation.Code.Enums;
 
 namespace EnrollmentStation.Code
 {

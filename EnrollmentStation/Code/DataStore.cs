@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using EnrollmentStation.Code.DataObjects;
 using Newtonsoft.Json;
 
 namespace EnrollmentStation.Code

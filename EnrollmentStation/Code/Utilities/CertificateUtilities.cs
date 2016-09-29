@@ -6,8 +6,9 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using CERTCLIENTLib;
 using CERTENROLLLib;
+using EnrollmentStation.Code.Enums;
 
-namespace EnrollmentStation.Code
+namespace EnrollmentStation.Code.Utilities
 {
     public static class CertificateUtilities
     {

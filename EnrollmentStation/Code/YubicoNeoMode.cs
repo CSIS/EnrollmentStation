@@ -1,4 +1,5 @@
 using System;
+using EnrollmentStation.Code.Enums;
 
 namespace EnrollmentStation.Code
 {

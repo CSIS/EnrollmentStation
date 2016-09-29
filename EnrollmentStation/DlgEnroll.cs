@@ -10,6 +10,9 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
+using EnrollmentStation.Code.DataObjects;
+using EnrollmentStation.Code.Enums;
+using EnrollmentStation.Code.Utilities;
 using Tulpep.ActiveDirectoryObjectPicker;
 
 namespace EnrollmentStation

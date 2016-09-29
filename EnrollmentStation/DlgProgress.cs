@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
+using EnrollmentStation.Code.Utilities;
 
 namespace EnrollmentStation
 {

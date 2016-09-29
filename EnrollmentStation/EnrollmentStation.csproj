@@ -87,25 +87,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\CertificateDetails.cs" />
+    <Compile Include="Code\DataObjects\CertificateDetails.cs" />
+    <Compile Include="Code\DataObjects\EnrolledYubikey.cs" />
+    <Compile Include="Code\DataObjects\Settings.cs" />
+    <Compile Include="Code\DataObjects\YubikeyVersions.cs" />
     <Compile Include="Code\DataStore.cs" />
-    <Compile Include="Code\EnrolledYubikey.cs" />
-    <Compile Include="Code\CertificateUtilities.cs" />
-    <Compile Include="Code\HsmRng.cs" />
-    <Compile Include="Code\RevokeReason.cs" />
-    <Compile Include="Code\Settings.cs" />
-    <Compile Include="Code\Utilities.cs" />
-    <Compile Include="Code\Win32DeviceMgmt.cs" />
-    <Compile Include="Code\WindowsCryptoApiErrors.cs" />
+    <Compile Include="Code\Enums\RevokeReason.cs" />
+    <Compile Include="Code\Enums\WindowsCryptoApiErrors.cs" />
+    <Compile Include="Code\Enums\YubicoNeoModeEnum.cs" />
+    <Compile Include="Code\Enums\YubicoNeoReturnCode.cs" />
+    <Compile Include="Code\Enums\YubicoPivReturnCode.cs" />
+    <Compile Include="Code\Utilities\CertificateUtilities.cs" />
+    <Compile Include="Code\Utilities\HsmRng.cs" />
+    <Compile Include="Code\Utilities\Utilities.cs" />
+    <Compile Include="Code\Utilities\Win32DeviceMgmt.cs" />
     <Compile Include="Code\YubicoNeoMode.cs" />
-    <Compile Include="Code\YubicoNeoModeEnum.cs" />
-    <Compile Include="Code\YubicoNeoReturnCode.cs" />
-    <Compile Include="Code\YubicoPivReturnCode.cs" />
     <Compile Include="Code\YubikeyDetector.cs" />
     <Compile Include="Code\YubikeyNeoManager.cs" />
     <Compile Include="Code\YubikeyPivTool.cs" />
     <Compile Include="Code\YubikeyPolicyUtility.cs" />
-    <Compile Include="Code\YubikeyVersions.cs" />
     <Compile Include="DlgProgress.cs">
       <SubType>Form</SubType>
     </Compile>
