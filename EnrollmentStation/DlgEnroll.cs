@@ -494,7 +494,7 @@ namespace EnrollmentStation
                 if (File.Exists(tmpCsr))
                     csr = File.ReadAllText(tmpCsr);
 
-                error = "Debug info." + Environment.NewLine + "Output: " + stdOut + Environment.NewLine + "Error: " + stdErr;
+                error = "Output: " + stdOut + Environment.NewLine + "Error: " + stdErr;
 
                 return proc.ExitCode == 0;
             }
