@@ -65,6 +65,19 @@ namespace EnrollmentStation
             }
         }
 
+        private void DisplaySelectedCertificate(WindowsCertificate cert)
+        {
+            if (cert == null)
+                return;
+
+            string nameInfo = cert.Certificate.GetNameInfo(X509NameType.SimpleName, false);
+
+            if (WindowsCertStoreUtilities.IsAgentCertificate(cert.Certificate))
+                txtAgentCert.Text = $"{nameInfo} (Valid Enrollment Agent), store: {cert.StoreLocation}";
+            else
+                txtAgentCert.Text = $"{nameInfo} (NOT a valid Enrollment Agent), store: {cert.StoreLocation}";
+        }
+
         private void UpdateView()
         {
             if (_settings.EnrollmentManagementKey != null && _settings.EnrollmentManagementKey.Length > 0)
@@ -83,12 +96,7 @@ namespace EnrollmentStation
 
                 if (cert != null)
                 {
-                    string nameInfo = cert.Certificate.GetNameInfo(X509NameType.SimpleName, false);
-
-                    if (WindowsCertStoreUtilities.IsAgentCertificate(cert.Certificate))
-                        txtAgentCert.Text = $"{nameInfo} (Valid Enrollment Agent), store: {cert.StoreLocation}";
-                    else
-                        txtAgentCert.Text = $"{nameInfo}, store: {cert.StoreLocation}";
+                   DisplaySelectedCertificate(cert);
                 }
                 else
                     MessageBox.Show(this,
@@ -154,8 +162,9 @@ namespace EnrollmentStation
             if (selected.Count > 0)
             {
                 _selectedCertificateThumb = selected[0].Thumbprint;
-                txtAgentCert.Text = selected[0].GetNameInfo(X509NameType.SimpleName, false) + " (Valid Enrollment Agent)";
-                txtAgentCert.BackColor = SystemColors.Control;
+
+                WindowsCertificate cert = WindowsCertStoreUtilities.FindCertificate(_selectedCertificateThumb);
+                DisplaySelectedCertificate(cert);
             }
         }
 
