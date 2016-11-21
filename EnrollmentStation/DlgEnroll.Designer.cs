@@ -53,8 +53,8 @@ namespace EnrollmentStation
             this.cmdEnroll = new System.Windows.Forms.Button();
             this.prgEnroll = new System.Windows.Forms.ProgressBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.drpAlgorithm = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.gbInsertedYubikey.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -146,7 +146,7 @@ namespace EnrollmentStation
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(97, 13);
             this.label5.TabIndex = 6;
-            this.label5.Text = "YubiHSM avaliable";
+            this.label5.Text = "YubiHSM available";
             // 
             // lblInsertedFirmware
             // 
@@ -284,6 +284,14 @@ namespace EnrollmentStation
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Card details";
             // 
+            // drpAlgorithm
+            // 
+            this.drpAlgorithm.FormattingEnabled = true;
+            this.drpAlgorithm.Location = new System.Drawing.Point(114, 17);
+            this.drpAlgorithm.Name = "drpAlgorithm";
+            this.drpAlgorithm.Size = new System.Drawing.Size(177, 21);
+            this.drpAlgorithm.TabIndex = 1;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -292,14 +300,6 @@ namespace EnrollmentStation
             this.label1.Size = new System.Drawing.Size(50, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Algorithm";
-            // 
-            // drpAlgorithm
-            // 
-            this.drpAlgorithm.FormattingEnabled = true;
-            this.drpAlgorithm.Location = new System.Drawing.Point(114, 17);
-            this.drpAlgorithm.Name = "drpAlgorithm";
-            this.drpAlgorithm.Size = new System.Drawing.Size(177, 21);
-            this.drpAlgorithm.TabIndex = 1;
             // 
             // DlgEnroll
             // 
