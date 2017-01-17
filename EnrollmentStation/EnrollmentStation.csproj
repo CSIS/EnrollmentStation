@@ -216,7 +216,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>del /S /Q "$(SolutionDir)Compiled\*"
+    <PostBuildEvent>mkdir "$(SolutionDir)Compiled"
+del /S /Q "$(SolutionDir)Compiled\*"
 xcopy /S /F /Y "$(TargetDir)*" "$(SolutionDir)Compiled"
 del "$(SolutionDir)Compiled\*.vshost.exe"
 del "$(SolutionDir)Compiled\*.vshost.exe.config"</PostBuildEvent>
