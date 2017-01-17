@@ -103,11 +103,8 @@
     <Compile Include="Code\Utilities\Win32DeviceMgmt.cs" />
     <Compile Include="Code\Utilities\WindowsCertificate.cs" />
     <Compile Include="Code\Utilities\WindowsCertStoreUtilities.cs" />
-    <Compile Include="Code\YubicoNeoMode.cs" />
     <Compile Include="Code\YubikeyAlgorithm.cs" />
     <Compile Include="Code\YubikeyDetector.cs" />
-    <Compile Include="Code\YubikeyNeoManager.cs" />
-    <Compile Include="Code\YubikeyPivTool.cs" />
     <Compile Include="Code\YubikeyPolicyUtility.cs" />
     <Compile Include="DlgProgress.cs">
       <SubType>Form</SubType>

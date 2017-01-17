@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
 using EnrollmentStation.Code.DataObjects;
 using EnrollmentStation.Code.Utilities;
+using YubicoLib.YubikeyNeo;
 
 namespace EnrollmentStation
 {
@@ -77,13 +79,15 @@ namespace EnrollmentStation
 
         private void CheckForYubikey()
         {
-            using (YubikeyDetector.Instance.GetExclusiveLock())
-            {
-                _hadDevice = YubikeyNeoManager.Instance.RefreshDevice();
-                if (!_hadDevice)
-                    return;
+            string devName = YubikeyNeoManager.Instance.ListDevices().FirstOrDefault();
+            _hadDevice = !string.IsNullOrEmpty(devName);
 
-                _hasBeenFound = YubikeyNeoManager.Instance.GetSerialNumber() == _key.DeviceSerial;
+            if (!_hadDevice)
+                return;
+
+            using (YubikeyNeoDevice dev = YubikeyNeoManager.Instance.OpenDevice(devName))
+            {
+                _hasBeenFound = dev.GetSerialNumber() == _key.DeviceSerial;
             }
         }
 

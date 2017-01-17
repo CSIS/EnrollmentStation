@@ -177,10 +177,10 @@ namespace EnrollmentStation.Code.Utilities
 
             string toSign = pkcs10Req.RawDataToBeSigned[EncodingType.XCN_CRYPT_STRING_HASHDATA];
 
-            using (YubikeyPivTool piv = new YubikeyPivTool())
-            {
-                //piv.    
-            }
+            //using (YubikeyPivTool piv = new YubikeyPivTool())
+            //{
+            //    //piv.    
+            //}
 
 
             // Create a CMC outer request and initialize

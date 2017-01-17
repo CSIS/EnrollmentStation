@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
 using EnrollmentStation.Code.DataObjects;
+using YubicoLib.YubikeyNeo;
+using YubicoLib.YubikeyPiv;
 
 namespace EnrollmentStation
 {
@@ -16,7 +19,7 @@ namespace EnrollmentStation
 
             if (_yubikey == null)
                 throw new ArgumentNullException("key");
-            
+
             InitializeComponent();
         }
 
@@ -59,17 +62,28 @@ namespace EnrollmentStation
         {
             AcceptButton = cmdChange;
 
-            using (YubikeyDetector.Instance.GetExclusiveLock())
+            string devName = YubikeyNeoManager.Instance.ListDevices().FirstOrDefault();
+            bool hadDevice = !string.IsNullOrEmpty(devName);
+
+            if (!hadDevice)
+                return;
+
+            using (YubikeyNeoDevice dev = YubikeyNeoManager.Instance.OpenDevice(devName))
             {
-                int yubiSerial = YubikeyNeoManager.Instance.GetSerialNumber();
+                int yubiSerial = dev.GetSerialNumber();
                 lblSerialNumber.Text = yubiSerial.ToString();
             }
         }
 
         private void cmdChange_Click(object sender, EventArgs e)
         {
-            using (YubikeyDetector.Instance.GetExclusiveLock())
-            using (YubikeyPivTool piv = new YubikeyPivTool())
+            string devName = YubikeyNeoManager.Instance.ListDevices().FirstOrDefault();
+            bool hadDevice = !string.IsNullOrEmpty(devName);
+
+            if (!hadDevice)
+                return;
+
+            using (YubikeyPivDevice piv = YubikeyPivManager.Instance.OpenDevice(devName))
             {
                 bool authed = piv.Authenticate(_yubikey.ManagementKey);
 

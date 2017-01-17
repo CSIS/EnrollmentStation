@@ -11,6 +11,7 @@ using CERTCLIENTLib;
 using EnrollmentStation.Code;
 using EnrollmentStation.Code.DataObjects;
 using EnrollmentStation.Code.Utilities;
+using YubicoLib.YubikeyPiv;
 
 namespace EnrollmentStation
 {
@@ -46,7 +47,7 @@ namespace EnrollmentStation
             {
                 drpAlgorithm.Items.Add(item);
 
-                if (item.Value == YubikeyPivTool.YKPIV_ALGO_RSA2048)
+                if (item.Value == YubikeyPivNative.YKPIV_ALGO_RSA2048)
                     drpAlgorithm.SelectedItem = item;
             }
 

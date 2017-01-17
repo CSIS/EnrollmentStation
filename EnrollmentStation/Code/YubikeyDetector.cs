@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Utilities.Collections;
 
 namespace EnrollmentStation.Code
 {
@@ -15,13 +18,15 @@ namespace EnrollmentStation.Code
 
         private bool _disposed;
         private bool _hasStarted;
-        private ReaderWriterLockSlim _exclusiveLock = new ReaderWriterLockSlim();
         private Task _backgroundWorker;
+
+        private HashSet<string> _previousList;
 
         public bool CurrentState { get; private set; }
 
         private YubikeyDetector()
         {
+            _previousList = new HashSet<string>();
             _backgroundWorker = new Task(BackgroundWork);
         }
 
@@ -29,29 +34,34 @@ namespace EnrollmentStation.Code
 
         private void BackgroundWork()
         {
+            List<string> missing = new List<string>();
+            List<string> @new = new List<string>();
+
             while (!_disposed)
             {
-                // Open full lock
-                if (!_exclusiveLock.TryEnterWriteLock(1000))
+                HashSet<string> devices = new HashSet<string>(YubicoLib.YubikeyNeo.YubikeyNeoManager.Instance.ListDevices());
+
+                missing.AddRange(_previousList.Except(devices));
+                @new.AddRange(devices.Except(_previousList));
+
+                bool hadChange = false;
+                foreach (string device in missing)
                 {
-                    // Somebody else had it
-                    continue;
+                    hadChange = true;
+
+                    _previousList.Remove(device);
                 }
 
-                bool hadChange;
-                try
+                foreach (string device in @new)
                 {
-                    // Read the state
-                    bool hadDevice = YubikeyNeoManager.Instance.RefreshDevice();
-                    hadChange = hadDevice != CurrentState;
+                    hadChange = true;
 
-                    CurrentState = hadDevice;
-                }
-                finally
-                {
-                    _exclusiveLock.ExitWriteLock();
+                    _previousList.Add(device);
                 }
 
+                missing.Clear();
+                @new.Clear();
+                
                 if (hadChange)
                     // Change
                     OnStateChanged();
@@ -69,12 +79,7 @@ namespace EnrollmentStation.Code
             _hasStarted = true;
             _backgroundWorker.Start();
         }
-
-        public ExclusiveLock GetExclusiveLock()
-        {
-            return new ExclusiveLock(this);
-        }
-
+        
         protected virtual void OnStateChanged()
         {
             StateChanged?.Invoke();
@@ -85,22 +90,6 @@ namespace EnrollmentStation.Code
             _disposed = true;
 
             _backgroundWorker.Wait();
-        }
-
-        public class ExclusiveLock : IDisposable
-        {
-            private readonly YubikeyDetector _yubikeyDetector;
-
-            internal ExclusiveLock(YubikeyDetector yubikeyDetector)
-            {
-                _yubikeyDetector = yubikeyDetector;
-                _yubikeyDetector._exclusiveLock.EnterWriteLock();
-            }
-
-            public void Dispose()
-            {
-                _yubikeyDetector._exclusiveLock.ExitWriteLock();
-            }
         }
     }
 }

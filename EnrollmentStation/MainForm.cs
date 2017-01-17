@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using EnrollmentStation.Code;
 using EnrollmentStation.Code.DataObjects;
 using EnrollmentStation.Code.Utilities;
+using YubicoLib.YubikeyNeo;
+using YubicoLib.YubikeyPiv;
 
 namespace EnrollmentStation
 {
@@ -18,7 +20,6 @@ namespace EnrollmentStation
         public const string FileStore = "store.json";
         public const string FileSettings = "settings.json";
 
-        private bool _devicePresent;
         private bool _hsmPresent;
 
         private readonly Timer _hsmUpdateTimer = new Timer();
@@ -37,10 +38,7 @@ namespace EnrollmentStation
 
             RefreshSelectedKeyInfo();
 
-            using (YubikeyDetector.Instance.GetExclusiveLock())
-            {
-                RefreshInsertedKey();
-            }
+            RefreshInsertedKey();
 
             _hsmUpdateTimer.Interval = 1000;
             _hsmUpdateTimer.Tick += HsmUpdateTimerOnTick;
@@ -75,18 +73,25 @@ namespace EnrollmentStation
 
         private void YubikeyStateChange()
         {
-            _devicePresent = YubikeyDetector.Instance.CurrentState;
+            string devName = YubikeyNeoManager.Instance.ListDevices().FirstOrDefault();
+            bool hasDevice = !string.IsNullOrEmpty(devName);
 
-            using (YubikeyDetector.Instance.GetExclusiveLock())
+            btnExportCert.Enabled = false;
+            btnViewCert.Enabled = false;
+
+            if (hasDevice)
             {
-                YubicoNeoMode currentMode = YubikeyNeoManager.Instance.GetMode();
-                bool enableCcid = !currentMode.HasCcid;
+                using (YubikeyNeoDevice dev = YubikeyNeoManager.Instance.OpenDevice(devName))
+                {
+                    YubicoLib.YubikeyNeo.YubicoNeoMode currentMode = dev.GetMode();
+                    bool enableCcid = !currentMode.HasCcid;
 
-                btnExportCert.Enabled = _devicePresent & !enableCcid;
-                btnViewCert.Enabled = _devicePresent & !enableCcid;
-
-                RefreshInsertedKey();
+                    btnExportCert.Enabled = !enableCcid;
+                    btnViewCert.Enabled = !enableCcid;
+                }
             }
+
+            RefreshInsertedKey();
         }
 
         private void RefreshSelectedKeyInfo()
@@ -130,21 +135,27 @@ namespace EnrollmentStation
 
         private void RefreshInsertedKey()
         {
+            string devName = YubikeyNeoManager.Instance.ListDevices().FirstOrDefault();
+            bool hasDevice = !string.IsNullOrEmpty(devName);
+
             foreach (Control control in gbInsertedKey.Controls)
             {
                 if (control.Name.StartsWith("lbl"))
-                    control.Visible = _devicePresent;
+                    control.Visible = hasDevice;
             }
 
-            if (!_devicePresent)
-                return;
+            if (hasDevice)
+            {
+                using (YubikeyNeoDevice dev = YubikeyNeoManager.Instance.OpenDevice(devName))
+                {
+                    int serialNumber = dev.GetSerialNumber();
+                    lblInsertedSerial.Text = serialNumber.ToString();
+                    lblInsertedFirmware.Text = dev.GetVersion().ToString();
+                    lblInsertedMode.Text = dev.GetMode().ToString();
 
-            int serialNumber = YubikeyNeoManager.Instance.GetSerialNumber();
-            lblInsertedSerial.Text = serialNumber.ToString();
-            lblInsertedFirmware.Text = YubikeyNeoManager.Instance.GetVersion().ToString();
-            lblInsertedMode.Text = YubikeyNeoManager.Instance.GetMode().ToString();
-
-            lblInsertedHasBeenEnrolled.Text = _dataStore.Search(serialNumber).Any().ToString();
+                    lblInsertedHasBeenEnrolled.Text = _dataStore.Search(serialNumber).Any().ToString();
+                }
+            }
         }
 
         private void RefreshUserStore()
@@ -185,14 +196,17 @@ namespace EnrollmentStation
 
         private void btnViewCert_Click(object sender, EventArgs e)
         {
-            if (!_devicePresent)
-                return;
+            X509Certificate2 cert = null;
 
-            X509Certificate2 cert;
+            string devName = YubikeyPivManager.Instance.ListDevices().FirstOrDefault();
 
-            using (YubikeyDetector.Instance.GetExclusiveLock())
-            using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
-                cert = pivTool.GetCertificate9a();
+            if (!string.IsNullOrEmpty(devName))
+            {
+                using (YubikeyPivDevice dev = YubikeyPivManager.Instance.OpenDevice(devName))
+                {
+                    cert = dev.GetCertificate9a();
+                }
+            }
 
             if (cert == null)
                 MessageBox.Show("No certificate on device.", "No Certificate", MessageBoxButtons.OK);
@@ -202,17 +216,22 @@ namespace EnrollmentStation
 
         private void btnExportCert_Click(object sender, EventArgs e)
         {
-            if (!_devicePresent)
-                return;
+            X509Certificate2 cert = null;
+            int deviceSerial = 0;
 
-            X509Certificate2 cert;
-            int deviceSerial;
-            using (YubikeyDetector.Instance.GetExclusiveLock())
+            string devName = YubikeyPivManager.Instance.ListDevices().FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(devName))
             {
-                deviceSerial = YubikeyNeoManager.Instance.GetSerialNumber();
+                using (YubikeyNeoDevice dev = YubikeyNeoManager.Instance.OpenDevice(devName))
+                {
+                    deviceSerial = dev.GetSerialNumber();
+                }
 
-                using (YubikeyPivTool pivTool = YubikeyPivTool.StartPiv())
-                    cert = pivTool.GetCertificate9a();
+                using (YubikeyPivDevice dev = YubikeyPivManager.Instance.OpenDevice(devName))
+                {
+                    cert = dev.GetCertificate9a();
+                }
             }
 
             if (cert == null)
@@ -243,10 +262,7 @@ namespace EnrollmentStation
 
             RefreshUserStore();
 
-            using (YubikeyDetector.Instance.GetExclusiveLock())
-            {
-                RefreshInsertedKey();
-            }
+            RefreshInsertedKey();
         }
 
         private void exportCertificateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -370,10 +386,7 @@ namespace EnrollmentStation
 
             RefreshUserStore();
 
-            using (YubikeyDetector.Instance.GetExclusiveLock())
-            {
-                RefreshInsertedKey();
-            }
+            RefreshInsertedKey();
         }
 
         private void terminateToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -428,22 +441,38 @@ namespace EnrollmentStation
                 // Wipe the Yubikey
                 worker.ReportProgress(50, "Wiping Yubikey ...");
 
-                using (YubikeyDetector.Instance.GetExclusiveLock())
-                using (YubikeyPivTool piv = new YubikeyPivTool())
+                string devName = YubikeyNeoManager.Instance.ListDevices().FirstOrDefault();
+                bool hasDevice = !string.IsNullOrEmpty(devName);
+
+                if (hasDevice)
                 {
-                    piv.BlockPin();
-                    worker.ReportProgress(70);
-
-                    piv.BlockPuk();
-                    worker.ReportProgress(90);
-
-                    bool reset = piv.ResetDevice();
-                    if (!reset)
+                    using (YubikeyNeoDevice dev = YubikeyNeoManager.Instance.OpenDevice(devName))
                     {
-                        MessageBox.Show("Unable to reset the yubikey. Try resetting it manually.", "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        int serial = dev.GetSerialNumber();
+                        if (item.DeviceSerial != serial)
+                        {
+                            // Something went seriously wrong - perhaps the user switched keys?
+                            MessageBox.Show("Unable to reset the yubikey. The inserted key did not match the key you wanted to wipe.", "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
                     }
 
-                    worker.ReportProgress(100);
+                    using (YubikeyPivDevice piv = YubikeyPivManager.Instance.OpenDevice(devName))
+                    {
+                        piv.BlockPin();
+                        worker.ReportProgress(70);
+
+                        piv.BlockPuk();
+                        worker.ReportProgress(90);
+
+                        bool reset = piv.ResetDevice();
+                        if (!reset)
+                        {
+                            MessageBox.Show("Unable to reset the yubikey. Try resetting it manually.", "An error occurred.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+
+                        worker.ReportProgress(100);
+                    }
                 }
 
                 // Write to disk
@@ -454,10 +483,7 @@ namespace EnrollmentStation
 
             RefreshUserStore();
 
-            using (YubikeyDetector.Instance.GetExclusiveLock())
-            {
-                RefreshInsertedKey();
-            }
+            RefreshInsertedKey();
         }
 
         private void tsbAbout_Click(object sender, EventArgs e)
