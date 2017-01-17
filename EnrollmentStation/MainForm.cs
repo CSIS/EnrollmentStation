@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -135,7 +136,8 @@ namespace EnrollmentStation
 
         private void RefreshInsertedKey()
         {
-            string devName = YubikeyNeoManager.Instance.ListDevices().FirstOrDefault();
+            List<string> listDevices = YubikeyNeoManager.Instance.ListDevices().ToList();
+            string devName = listDevices.FirstOrDefault();
             bool hasDevice = !string.IsNullOrEmpty(devName);
 
             foreach (Control control in gbInsertedKey.Controls)
@@ -156,6 +158,11 @@ namespace EnrollmentStation
                     lblInsertedHasBeenEnrolled.Text = _dataStore.Search(serialNumber).Any().ToString();
                 }
             }
+
+            if (listDevices.Count > 1)
+                lblMultipleKeys.Text = $"{listDevices.Count:N0} keys inserted";
+            else
+                lblMultipleKeys.Text = "";
         }
 
         private void RefreshUserStore()
