@@ -87,7 +87,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\YubikeyPiv\YubikeyNeoDeviceHandle.cs" />
+    <Compile Include="Api\YubikeyPiv\YubikeyPivDeviceHandle.cs" />
     <Compile Include="Api\YubikeyPiv\YubikeyPivDevice.cs" />
     <Compile Include="Api\YubikeyPiv\YubikeyPivNative.cs" />
     <Compile Include="Api\YubikeyPiv\YubikeyPivManager.cs" />
