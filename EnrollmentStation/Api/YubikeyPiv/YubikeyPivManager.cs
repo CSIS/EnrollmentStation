@@ -28,7 +28,7 @@ namespace EnrollmentStation.Api.YubikeyPiv
                     ptr = Marshal.AllocHGlobal(len);
 
                     IntPtr dev = deviceHandle.State;
-                    YubicoPivReturnCode res = YubikeyPivNative.YkPivListReaders(ref dev, ptr, ref len);
+                    YubicoPivReturnCode res = YubikeyPivNative.YkPivListReaders(dev, ptr, ref len);
                     if (res != YubicoPivReturnCode.YKPIV_OK)
                         return Enumerable.Empty<string>();
 

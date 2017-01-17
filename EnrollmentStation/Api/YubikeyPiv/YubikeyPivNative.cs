@@ -17,7 +17,7 @@ namespace EnrollmentStation.Api.YubikeyPiv
         public static extern YubicoPivReturnCode YkPivConnect(IntPtr state, string name);
 
         [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_list_readers", SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        public static extern YubicoPivReturnCode YkPivListReaders(ref IntPtr state, IntPtr data, ref int length);
+        public static extern YubicoPivReturnCode YkPivListReaders(IntPtr state, IntPtr data, ref int length);
 
         [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_disconnect", SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
         public static extern YubicoPivReturnCode YkPivDisconnect(IntPtr state);
