@@ -1,6 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
-using System.Text;
 using EnrollmentStation.Code;
 using EnrollmentStation.Code.Enums;
 

@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
+using EnrollmentStation.Api.Utilities;
 using EnrollmentStation.Code.Enums;
 
 namespace EnrollmentStation.Api.YubikeyNeo
@@ -30,36 +31,23 @@ namespace EnrollmentStation.Api.YubikeyNeo
 
         public IEnumerable<string> ListDevices()
         {
-            List<string> devices = new List<string>();
-
+            byte[] data;
             using (YubikeyNeoDeviceHandle deviceHandle = new YubikeyNeoDeviceHandle())
             {
                 IntPtr ptr = IntPtr.Zero;
                 try
                 {
-                    int len = 65 * 1024;
+                    int len = 2048; // A typical reader name is 32 chars long. This gives space for 64 readers.
                     ptr = Marshal.AllocHGlobal(len);
 
                     YubicoNeoReturnCode res = YubikeyNeoNative.YkNeoManagerListDevices(deviceHandle.Device, ptr, ref len);
                     if (res != YubicoNeoReturnCode.YKNEOMGR_OK)
-                        return devices;
+                        return Enumerable.Empty<string>();
 
-                    byte[] data = new byte[len];
+                    data = new byte[len];
                     Marshal.Copy(ptr, data, 0, len);
 
-                    int prev = 0;
-                    for (int i = 0; i < data.Length; i++)
-                    {
-                        if (data[i] != 0)
-                            continue;
-
-                        string strName = Encoding.ASCII.GetString(data, prev, i - prev);
-
-                        if (!string.IsNullOrEmpty(strName))
-                            devices.Add(strName);
-
-                        prev = i + 1;
-                    }
+                    
                 }
                 finally
                 {
@@ -68,7 +56,7 @@ namespace EnrollmentStation.Api.YubikeyNeo
                 }
             }
 
-            return devices;
+            return StringUtils.ParseStrings(data);
         }
     }
 }

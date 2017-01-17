@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using EnrollmentStation.Api.YubikeyNeo;
+using EnrollmentStation.Api.Utilities;
 using EnrollmentStation.Code.Enums;
 
 namespace EnrollmentStation.Api.YubikeyPiv
@@ -18,37 +18,22 @@ namespace EnrollmentStation.Api.YubikeyPiv
 
         public IEnumerable<string> ListDevices()
         {
-            List<string> devices = new List<string>();
-
+            byte[] data;
             using (YubikeyPivDeviceHandle deviceHandle = new YubikeyPivDeviceHandle())
             {
                 IntPtr ptr = IntPtr.Zero;
                 try
                 {
-                    int len = 65 * 1024;
+                    int len = 2048; // A typical reader name is 32 chars long. This gives space for 64 readers.
                     ptr = Marshal.AllocHGlobal(len);
 
                     IntPtr dev = deviceHandle.State;
                     YubicoPivReturnCode res = YubikeyPivNative.YkPivListReaders(ref dev, ptr, ref len);
                     if (res != YubicoPivReturnCode.YKPIV_OK)
-                        return devices;
+                        return Enumerable.Empty<string>();
 
-                    byte[] data = new byte[len];
+                    data = new byte[len];
                     Marshal.Copy(ptr, data, 0, len);
-
-                    int prev = 0;
-                    for (int i = 0; i < data.Length; i++)
-                    {
-                        if (data[i] != 0)
-                            continue;
-
-                        string strName = Encoding.ASCII.GetString(data, prev, i - prev);
-
-                        if (!string.IsNullOrEmpty(strName))
-                            devices.Add(strName);
-
-                        prev = i + 1;
-                    }
                 }
                 finally
                 {
@@ -57,7 +42,7 @@ namespace EnrollmentStation.Api.YubikeyPiv
                 }
             }
 
-            return devices;
+            return StringUtils.ParseStrings(data);
         }
 
         public YubikeyPivDevice OpenDevice(string name)
