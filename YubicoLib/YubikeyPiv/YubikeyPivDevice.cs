@@ -3,9 +3,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using EnrollmentStation.Code.Enums;
 
-namespace EnrollmentStation.Api.YubikeyPiv
+namespace YubicoLib.YubikeyPiv
 {
     public class YubikeyPivDevice : IDisposable
     {

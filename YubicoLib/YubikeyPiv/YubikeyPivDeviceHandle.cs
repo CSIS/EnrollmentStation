@@ -1,6 +1,6 @@
 using System;
 
-namespace EnrollmentStation.Api.YubikeyPiv
+namespace YubicoLib.YubikeyPiv
 {
     internal class YubikeyPivDeviceHandle : IDisposable
     {
@@ -9,7 +9,7 @@ namespace EnrollmentStation.Api.YubikeyPiv
         public YubikeyPivDeviceHandle()
         {
             IntPtr dev = IntPtr.Zero;
-            YubikeyPivNative.YkPivInit(ref dev, 1);
+            YubikeyPivNative.YkPivInit(ref dev, 0);
             State = dev;
         }
 

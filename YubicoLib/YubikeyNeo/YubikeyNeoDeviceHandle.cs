@@ -1,6 +1,6 @@
 using System;
 
-namespace EnrollmentStation.Api.YubikeyNeo
+namespace YubicoLib.YubikeyNeo
 {
     internal class YubikeyNeoDeviceHandle : IDisposable
     {

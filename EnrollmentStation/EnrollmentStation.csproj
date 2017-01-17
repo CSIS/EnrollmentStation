@@ -87,11 +87,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\Utilities\StringUtils.cs" />
-    <Compile Include="Api\YubikeyPiv\YubikeyPivDeviceHandle.cs" />
-    <Compile Include="Api\YubikeyPiv\YubikeyPivDevice.cs" />
-    <Compile Include="Api\YubikeyPiv\YubikeyPivNative.cs" />
-    <Compile Include="Api\YubikeyPiv\YubikeyPivManager.cs" />
     <Compile Include="Code\DataObjects\CertificateDetails.cs" />
     <Compile Include="Code\DataObjects\EnrolledYubikey.cs" />
     <Compile Include="Code\DataObjects\Settings.cs" />
@@ -157,10 +152,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Api\YubikeyNeo\YubikeyNeoDevice.cs" />
-    <Compile Include="Api\YubikeyNeo\YubikeyNeoDeviceHandle.cs" />
-    <Compile Include="Api\YubikeyNeo\YubikeyNeoManager.cs" />
-    <Compile Include="Api\YubikeyNeo\YubikeyNeoNative.cs" />
     <EmbeddedResource Include="DlgProgress.resx">
       <DependentUpon>DlgProgress.cs</DependentUpon>
     </EmbeddedResource>
@@ -192,18 +183,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Binaries\libeay32.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Binaries\libykneomgr-0.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Binaries\libykpiv-1.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Binaries\libzip-2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Binaries\PivTool\libeay32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -229,7 +208,15 @@
     <None Include="Resources\1433811248_gnome-app-install.png" />
     <None Include="Resources\1433811232_applications-system.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Api\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\YubicoLib\YubicoLib.csproj">
+      <Project>{0baceb8e-785c-4f88-82c0-35c60b274aca}</Project>
+      <Name>YubicoLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del /S /Q "$(SolutionDir)Compiled\*"

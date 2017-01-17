@@ -1,8 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
-using EnrollmentStation.Code.Enums;
 
-namespace EnrollmentStation.Api.YubikeyNeo
+namespace YubicoLib.YubikeyNeo
 {
     internal static class YubikeyNeoNative
     {

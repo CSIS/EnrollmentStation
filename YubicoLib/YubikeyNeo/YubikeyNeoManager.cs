@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using EnrollmentStation.Api.Utilities;
-using EnrollmentStation.Code.Enums;
+using YubicoLib.Utilities;
 
-namespace EnrollmentStation.Api.YubikeyNeo
+namespace YubicoLib.YubikeyNeo
 {
     public class YubikeyNeoManager : IDisposable
     {
@@ -13,7 +12,7 @@ namespace EnrollmentStation.Api.YubikeyNeo
 
         private YubikeyNeoManager()
         {
-            YubicoNeoReturnCode code = YubikeyNeoNative.YkNeoManagerGlobalInit(1);
+            YubicoNeoReturnCode code = YubikeyNeoNative.YkNeoManagerGlobalInit(0);
 
             if (code != YubicoNeoReturnCode.YKNEOMGR_OK)
                 throw new Exception("Unable to init global: " + code);
@@ -29,7 +28,7 @@ namespace EnrollmentStation.Api.YubikeyNeo
             return new YubikeyNeoDevice(name);
         }
 
-        public IEnumerable<string> ListDevices()
+        public IEnumerable<string> ListDevices(bool filter = true)
         {
             byte[] data;
             using (YubikeyNeoDeviceHandle deviceHandle = new YubikeyNeoDeviceHandle())
@@ -47,7 +46,7 @@ namespace EnrollmentStation.Api.YubikeyNeo
                     data = new byte[len];
                     Marshal.Copy(ptr, data, 0, len);
 
-                    
+
                 }
                 finally
                 {
@@ -56,7 +55,15 @@ namespace EnrollmentStation.Api.YubikeyNeo
                 }
             }
 
+            if (filter)
+                return StringUtils.ParseStrings(data).Where(IsValidDevice);
+
             return StringUtils.ParseStrings(data);
+        }
+
+        public bool IsValidDevice(string name)
+        {
+            return name.StartsWith("Yubico") && (name.Contains("Yubikey NEO ") || name.Contains("Yubikey 4 "));
         }
     }
 }

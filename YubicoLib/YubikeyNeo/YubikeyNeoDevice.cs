@@ -1,8 +1,6 @@
 using System;
-using EnrollmentStation.Code;
-using EnrollmentStation.Code.Enums;
 
-namespace EnrollmentStation.Api.YubikeyNeo
+namespace YubicoLib.YubikeyNeo
 {
     public class YubikeyNeoDevice : IDisposable
     {

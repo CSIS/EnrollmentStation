@@ -1,9 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using EnrollmentStation.Code.Enums;
 
-namespace EnrollmentStation.Api.YubikeyPiv
+namespace YubicoLib.YubikeyPiv
 {
     internal static class YubikeyPivNative
     {

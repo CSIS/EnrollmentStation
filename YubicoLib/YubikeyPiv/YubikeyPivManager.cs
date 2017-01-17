@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using EnrollmentStation.Api.Utilities;
-using EnrollmentStation.Code.Enums;
+using YubicoLib.Utilities;
 
-namespace EnrollmentStation.Api.YubikeyPiv
+namespace YubicoLib.YubikeyPiv
 {
     public class YubikeyPivManager
     {
@@ -16,7 +15,7 @@ namespace EnrollmentStation.Api.YubikeyPiv
 
         }
 
-        public IEnumerable<string> ListDevices()
+        public IEnumerable<string> ListDevices(bool filter = true)
         {
             byte[] data;
             using (YubikeyPivDeviceHandle deviceHandle = new YubikeyPivDeviceHandle())
@@ -42,7 +41,15 @@ namespace EnrollmentStation.Api.YubikeyPiv
                 }
             }
 
+            if (filter)
+                return StringUtils.ParseStrings(data).Where(IsValidDevice);
+
             return StringUtils.ParseStrings(data);
+        }
+
+        public bool IsValidDevice(string name)
+        {
+            return name.StartsWith("Yubico") && name.Contains("CCID");
         }
 
         public YubikeyPivDevice OpenDevice(string name)
