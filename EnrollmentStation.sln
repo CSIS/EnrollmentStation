@@ -10,6 +10,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HSMRNG", "CertUtilities\HSMRNG\HSMRNG.csproj", "{E36C2960-5187-4EF8-8C7C-9ECC991E0874}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnrollmentStation", "EnrollmentStation\EnrollmentStation.csproj", "{AE47EAD6-6A80-4E62-8898-6299BF9EA0A2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0BACEB8E-785C-4F88-82C0-35C60B274ACA} = {0BACEB8E-785C-4F88-82C0-35C60B274ACA}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertTemplateLister", "CertTemplateLister\CertTemplateLister.csproj", "{A4B66964-E2CD-40A5-A1DD-F524CF1F3C8F}"
 EndProject
