@@ -10,6 +10,9 @@ This project is an entry in the YubiKing 2015 competition and should be consider
 * CCID smart cards from Yubico (currently Premium NEO and Premium NEO-N)
 * (optional) YubiHSM
 
+## Download
+You can find the latest binaries at our [releases page](https://github.com/CSIS/EnrollmentStation/releases). 
+
 ## Prerequisites
 To use this tool you will need an Enrollment Agent Certificate which allows you to enroll certificates on behalf of other users. This certificate template is available on a default Active Directory Certificate Services (Windows CA) installation, but is normally not permitted for any users other than Domain Admins. For added security, create a dedicated user which is used as the enrollment station user.
 
