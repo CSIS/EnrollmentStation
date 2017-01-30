@@ -11,9 +11,10 @@ using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using EnrollmentStation.Code;
 using EnrollmentStation.Code.DataObjects;
-using EnrollmentStation.Code.Enums;
 using EnrollmentStation.Code.Utilities;
 using Tulpep.ActiveDirectoryObjectPicker;
+using YubicoLib.YubikeyNeo;
+using YubicoLib.YubikeyPiv;
 
 namespace EnrollmentStation
 {
@@ -106,10 +107,18 @@ namespace EnrollmentStation
 
         private void YubikeyStateChange()
         {
-            using (YubikeyDetector.Instance.GetExclusiveLock())
+            string devName = YubikeyNeoManager.Instance.ListDevices().FirstOrDefault();
+            bool hasDevice = !string.IsNullOrEmpty(devName);
+
+            _devicePresent = hasDevice;
+            _hasBeenEnrolled = false;
+
+            if (hasDevice)
             {
-                _devicePresent = YubikeyNeoManager.Instance.RefreshDevice();
-                _hasBeenEnrolled = _dataStore.Search(YubikeyNeoManager.Instance.GetSerialNumber()).Any();
+                using (YubikeyNeoDevice dev = YubikeyNeoManager.Instance.OpenDevice(devName))
+                {
+                    _hasBeenEnrolled = _dataStore.Search(dev.GetSerialNumber()).Any();
+                }
             }
 
             RefreshView();
@@ -164,15 +173,21 @@ namespace EnrollmentStation
 
         private void EnrollWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
+            string devName = YubikeyNeoManager.Instance.ListDevices().FirstOrDefault();
+            bool hasDevice = !string.IsNullOrEmpty(devName);
+
+            if (!hasDevice)
+                throw new InvalidOperationException("No yubikey");
+
             // 0. Get lock on yubikey
-            using (YubikeyDetector.Instance.GetExclusiveLock())
+            using (YubikeyNeoDevice dev = YubikeyNeoManager.Instance.OpenDevice(devName))
             {
                 // 1. Prep device info
-                int deviceId = YubikeyNeoManager.Instance.GetSerialNumber();
-                string neoFirmware = YubikeyNeoManager.Instance.GetVersion().ToString();
+                int deviceId = dev.GetSerialNumber();
+                string neoFirmware = dev.GetVersion().ToString();
                 Version pivFirmware;
 
-                using (YubikeyPivTool piv = new YubikeyPivTool())
+                using (YubikeyPivDevice piv = YubikeyPivManager.Instance.OpenDevice(devName))
                     pivFirmware = piv.GetVersion();
 
                 _enrollWorker.ReportProgress(1);
@@ -210,7 +225,7 @@ namespace EnrollmentStation
                 X509Certificate2 cert;
                 byte[] chuid;
 
-                using (YubikeyPivTool pivTool = new YubikeyPivTool())
+                using (YubikeyPivDevice pivTool = YubikeyPivManager.Instance.OpenDevice(devName))
                 {
                     // 5 - Yubico: Reset device
                     pivTool.BlockPin();
@@ -227,7 +242,7 @@ namespace EnrollmentStation
                     _enrollWorker.ReportProgress(5);
 
                     // 6 - Yubico: Management Key
-                    bool authenticated = pivTool.Authenticate(YubikeyPivTool.DefaultManagementKey);
+                    bool authenticated = pivTool.Authenticate(YubikeyPivDevice.DefaultManagementKey);
 
                     if (!authenticated)
                     {
@@ -261,7 +276,7 @@ namespace EnrollmentStation
 
                     // 8 - Yubico: PIN
                     int tmp;
-                    bool setPin = pivTool.ChangePin(YubikeyPivTool.DefaultPin, pin, out tmp);
+                    bool setPin = pivTool.ChangePin(YubikeyPivDevice.DefaultPin, pin, out tmp);
 
                     if (!setPin)
                     {
@@ -273,7 +288,7 @@ namespace EnrollmentStation
                     _enrollWorker.ReportProgress(8);
 
                     // 9 - Yubico: PUK
-                    bool setPuk = pivTool.ChangePuk(YubikeyPivTool.DefaultPuk, puk, out tmp);
+                    bool setPuk = pivTool.ChangePuk(YubikeyPivDevice.DefaultPuk, puk, out tmp);
 
                     if (!setPuk)
                     {
@@ -326,7 +341,7 @@ namespace EnrollmentStation
 
                 _enrollWorker.ReportProgress(12);
 
-                using (YubikeyPivTool pivTool = new YubikeyPivTool())
+                using (YubikeyPivDevice pivTool = YubikeyPivManager.Instance.OpenDevice(devName))
                 {
                     // 13 - Yubico: Import Cert
                     bool authenticatedForCert = pivTool.Authenticate(mgmKey);
@@ -395,30 +410,33 @@ namespace EnrollmentStation
 
         private void RefreshInsertedKeyInfo()
         {
+            string devName = YubikeyNeoManager.Instance.ListDevices().FirstOrDefault();
+            bool hasDevice = !string.IsNullOrEmpty(devName);
+
             foreach (Control control in gbInsertedYubikey.Controls)
             {
                 if (control.Name.StartsWith("lbl"))
-                    control.Visible = _devicePresent;
+                    control.Visible = hasDevice;
             }
 
-            if (!_devicePresent)
+            if (!hasDevice)
                 return;
 
             lblAlreadyEnrolled.Visible = _hasBeenEnrolled;
 
-            using (YubikeyDetector.Instance.GetExclusiveLock())
+            using (YubikeyNeoDevice dev = YubikeyNeoManager.Instance.OpenDevice(devName))
             {
-                YubicoNeoMode currentMode = YubikeyNeoManager.Instance.GetMode();
+                YubicoNeoMode currentMode = dev.GetMode();
 
                 if (currentMode.HasCcid)
                     lblInsertedMode.ForeColor = Color.Black;
                 else
                     lblInsertedMode.ForeColor = Color.Red;
 
-                lblInsertedSerial.Text = YubikeyNeoManager.Instance.GetSerialNumber().ToString();
+                lblInsertedSerial.Text = dev.GetSerialNumber().ToString();
                 lblInsertedMode.Text = currentMode.ToString();
 
-                lblInsertedFirmware.Text = YubikeyNeoManager.Instance.GetVersion().ToString();
+                lblInsertedFirmware.Text = dev.GetVersion().ToString();
             }
         }
 
@@ -446,11 +464,13 @@ namespace EnrollmentStation
 
         private void cmdEnroll_Click(object sender, EventArgs e)
         {
-            if (!_devicePresent)
+            string devName = YubikeyNeoManager.Instance.ListDevices().FirstOrDefault();
+            bool hasDevice = !string.IsNullOrEmpty(devName);
+
+            if (!hasDevice)
                 return;
 
-            using (YubikeyDetector.Instance.GetExclusiveLock())
-            using (YubikeyPivTool piv = new YubikeyPivTool())
+            using (YubikeyPivDevice piv = YubikeyPivManager.Instance.OpenDevice(devName))
             {
                 if (piv.GetCertificate9a() != null)
                 {

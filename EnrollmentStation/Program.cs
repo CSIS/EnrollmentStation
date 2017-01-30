@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using YubicoLib.YubikeyNeo;
 
 namespace EnrollmentStation
 {
@@ -14,6 +15,8 @@ namespace EnrollmentStation
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
+
+            YubikeyNeoManager.Instance.Dispose();
         }
     }
 }

@@ -82,6 +82,7 @@ namespace EnrollmentStation
             this.clmUser = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmEnrolledAt = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmCertificateSerial = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lblMultipleKeys = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -224,6 +225,7 @@ namespace EnrollmentStation
             // 
             // gbInsertedKey
             // 
+            this.gbInsertedKey.Controls.Add(this.lblMultipleKeys);
             this.gbInsertedKey.Controls.Add(this.btnViewCert);
             this.gbInsertedKey.Controls.Add(this.btnExportCert);
             this.gbInsertedKey.Controls.Add(this.lblInsertedHasBeenEnrolled);
@@ -555,6 +557,16 @@ namespace EnrollmentStation
             this.clmCertificateSerial.Text = "Certificate";
             this.clmCertificateSerial.Width = 189;
             // 
+            // lblMultipleKeys
+            // 
+            this.lblMultipleKeys.AutoSize = true;
+            this.lblMultipleKeys.ForeColor = System.Drawing.Color.Red;
+            this.lblMultipleKeys.Location = new System.Drawing.Point(272, 20);
+            this.lblMultipleKeys.Name = "lblMultipleKeys";
+            this.lblMultipleKeys.Size = new System.Drawing.Size(76, 13);
+            this.lblMultipleKeys.TabIndex = 10;
+            this.lblMultipleKeys.Text = "lblMultipleKeys";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -639,5 +651,6 @@ namespace EnrollmentStation
         private ToolStripStatusLabel lblDummyStatusStrip;
         private Button btnViewCert;
         private Button btnExportCert;
+        private Label lblMultipleKeys;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using YubicoLib.YubikeyPiv;
 
 namespace EnrollmentStation.Code
 {
@@ -11,9 +12,8 @@ namespace EnrollmentStation.Code
         {
             Algorithms = new List<YubikeyAlgorithm>
             {
-                new YubikeyAlgorithm(YubikeyPivTool.YKPIV_ALGO_RSA1024, "RSA 1024"),
-                new YubikeyAlgorithm(YubikeyPivTool.YKPIV_ALGO_RSA2048, "RSA 2048"),
-                //new YubikeyAlgorithm(YubikeyPivTool.YKPIV_ALGO_RSA2048+1, "RSA 4096"),
+                new YubikeyAlgorithm(YubikeyPivNative.YKPIV_ALGO_RSA1024, "RSA 1024"),
+                new YubikeyAlgorithm(YubikeyPivNative.YKPIV_ALGO_RSA2048, "RSA 2048"),
                 //new YubikeyAlgorithm(YubikeyPivTool.YKPIV_ALGO_ECCP256, "ECC P-256"),
                 //new YubikeyAlgorithm(YubikeyPivTool.YKPIV_ALGO_ECCP384, "ECC P-384")
             }.AsReadOnly();
@@ -27,23 +27,6 @@ namespace EnrollmentStation.Code
         public static ICollection<YubikeyAlgorithm> GetYubicoAlgorithms()
         {
             return Algorithms;
-        }
-    }
-
-    public class YubikeyAlgorithm
-    {
-        public YubikeyAlgorithm(byte value, string text)
-        {
-            Value = value;
-            Text = text;
-        }
-
-        public byte Value { get; }
-        public string Text { get; }
-
-        public override string ToString()
-        {
-            return Text;
         }
     }
 }

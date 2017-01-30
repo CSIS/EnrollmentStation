@@ -1,7 +1,6 @@
 using System;
-using EnrollmentStation.Code.Enums;
 
-namespace EnrollmentStation.Code
+namespace YubicoLib.YubikeyNeo
 {
     public class YubicoNeoMode
     {

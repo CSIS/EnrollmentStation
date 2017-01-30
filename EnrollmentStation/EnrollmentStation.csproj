@@ -103,10 +103,8 @@
     <Compile Include="Code\Utilities\Win32DeviceMgmt.cs" />
     <Compile Include="Code\Utilities\WindowsCertificate.cs" />
     <Compile Include="Code\Utilities\WindowsCertStoreUtilities.cs" />
-    <Compile Include="Code\YubicoNeoMode.cs" />
+    <Compile Include="Code\YubikeyAlgorithm.cs" />
     <Compile Include="Code\YubikeyDetector.cs" />
-    <Compile Include="Code\YubikeyNeoManager.cs" />
-    <Compile Include="Code\YubikeyPivTool.cs" />
     <Compile Include="Code\YubikeyPolicyUtility.cs" />
     <Compile Include="DlgProgress.cs">
       <SubType>Form</SubType>
@@ -182,18 +180,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Binaries\libeay32.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Binaries\libykneomgr-0.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Binaries\libykpiv-1.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Binaries\libzip-2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Binaries\PivTool\libeay32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -219,10 +205,19 @@
     <None Include="Resources\1433811248_gnome-app-install.png" />
     <None Include="Resources\1433811232_applications-system.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Api\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\YubicoLib\YubicoLib.csproj">
+      <Project>{0baceb8e-785c-4f88-82c0-35c60b274aca}</Project>
+      <Name>YubicoLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>del /S /Q "$(SolutionDir)Compiled\*"
+    <PostBuildEvent>mkdir "$(SolutionDir)Compiled"
+del /S /Q "$(SolutionDir)Compiled\*"
 xcopy /S /F /Y "$(TargetDir)*" "$(SolutionDir)Compiled"
 del "$(SolutionDir)Compiled\*.vshost.exe"
 del "$(SolutionDir)Compiled\*.vshost.exe.config"</PostBuildEvent>

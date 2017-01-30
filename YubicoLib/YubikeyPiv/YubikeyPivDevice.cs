@@ -1,114 +1,33 @@
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using EnrollmentStation.Code.Enums;
 
-namespace EnrollmentStation.Code
+namespace YubicoLib.YubikeyPiv
 {
-    public class YubikeyPivTool : IDisposable
+    public class YubikeyPivDevice : IDisposable
     {
-        [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_init", CharSet = CharSet.Auto, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivInit(ref IntPtr state, int verbose);
-
-        [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_done", CharSet = CharSet.Auto, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivDone(IntPtr state);
-
-        [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_connect", CharSet = CharSet.Auto, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivConnect(IntPtr state, string wanted);
-
-        [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_disconnect", CharSet = CharSet.Auto, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivDisconnect(IntPtr state);
-
-        [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_get_version", CharSet = CharSet.Ansi, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivGetVersion(IntPtr state, StringBuilder version, int length);
-
-        [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_fetch_object", CharSet = CharSet.Ansi, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivFetchObject(IntPtr state, int objectId, byte[] data, ref int length);
-
-        [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_save_object", CharSet = CharSet.Ansi, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivSaveObject(IntPtr state, int objectId, byte[] data, int length);
-
-        [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_verify", CharSet = CharSet.Ansi, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivVerifyPin(IntPtr state, string pin, ref int tries);
-
-        [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_authenticate", CharSet = CharSet.Ansi, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivAuthenticate(IntPtr state, byte[] key);
-
-        [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_set_mgmkey", CharSet = CharSet.Ansi, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivSetManagementKey(IntPtr state, byte[] newKey);
-
-        [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_sign_data", CharSet = CharSet.Ansi, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivSignData(IntPtr state, byte[] inData, int inLength, byte[] outData, ref int outLength, byte algorithm, byte key);
-
-        [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_transfer_data", CharSet = CharSet.Ansi, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-        private static extern YubicoPivReturnCode YkPivTransferData(IntPtr state, byte[] templ, byte[] inData, int inLength, byte[] outData, ref int outLength, ref int sw);
-
-        private const int YKPIV_ALGO_3DES = 0x03;
-        public const int YKPIV_ALGO_RSA1024 = 0x06;
-        public const int YKPIV_ALGO_RSA2048 = 0x07;
-        public const int YKPIV_ALGO_ECCP256 = 0x11;
-        public const int YKPIV_ALGO_ECCP384 = 0x14;
-
-        private const int YKPIV_KEY_AUTHENTICATION = 0x9a;
-        private const int YKPIV_KEY_CARDMGM = 0x9b;
-        private const int YKPIV_KEY_SIGNATURE = 0x9c;
-        private const int YKPIV_KEY_KEYMGM = 0x9d;
-        private const int YKPIV_KEY_CARDAUTH = 0x9e;
-
-        private const int YKPIV_OBJ_CAPABILITY = 0x5fc107;
-        private const int YKPIV_OBJ_CHUID = 0x5fc102;
-        private const int YKPIV_OBJ_AUTHENTICATION = 0x5fc105;/* cert for 9a key */
-        private const int YKPIV_OBJ_FINGERPRINTS = 0x5fc103;
-        private const int YKPIV_OBJ_SECURITY = 0x5fc106;
-        private const int YKPIV_OBJ_FACIAL = 0x5fc108;
-        private const int YKPIV_OBJ_PRINTED = 0x5fc109;
-        private const int YKPIV_OBJ_SIGNATURE = 0x5fc10a; /* cert for 9c key */
-        private const int YKPIV_OBJ_KEY_MANAGEMENT = 0x5fc10b; /* cert for 9d key */
-        private const int YKPIV_OBJ_CARD_AUTH = 0x5fc101;/* cert for 9e key */
-        private const int YKPIV_OBJ_DISCOVERY = 0x7e;
-        private const int YKPIV_OBJ_KEY_HISTORY = 0x5fc10c;
-        private const int YKPIV_OBJ_IRIS = 0x5fc121;
-
-        private const int YKPIV_INS_VERIFY = 0x20;
-        private const int YKPIV_INS_CHANGE_REFERENCE = 0x24;
-        private const int YKPIV_INS_RESET_RETRY = 0x2c;
-        private const int YKPIV_INS_GENERATE_ASYMMETRIC = 0x47;
-        private const int YKPIV_INS_AUTHENTICATE = 0x87;
-        private const int YKPIV_INS_GET_DATA = 0xcb;
-        private const int YKPIV_INS_PUT_DATA = 0xdb;
-
-        /* Yubico vendor specific instructions */
-        private const int YKPIV_INS_SET_MGMKEY = 0xff;
-        private const int YKPIV_INS_IMPORT_KEY = 0xfe;
-        private const int YKPIV_INS_GET_VERSION = 0xfd;
-        private const int YKPIV_INS_RESET = 0xfb;
-        private const int YKPIV_INS_SET_PIN_RETRIES = 0xfa;
-
-        private IntPtr _state = IntPtr.Zero;
+        private readonly YubikeyPivDeviceHandle _deviceHandle;
 
         public static byte[] DefaultManagementKey = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
         public static string DefaultPin = "123456";
         public static string DefaultPuk = "12345678";
 
-        public static YubikeyPivTool StartPiv()
+        internal YubikeyPivDevice(string name)
         {
-            return new YubikeyPivTool();
-        }
+            _deviceHandle = new YubikeyPivDeviceHandle();
 
-        internal YubikeyPivTool()
-        {
-            YubicoPivReturnCode code = YkPivInit(ref _state, 1);
-
-            if (code != YubicoPivReturnCode.YKPIV_OK)
-                throw new Exception("Unable to init PIV: " + code);
-
-            code = YkPivConnect(_state, null);
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivConnect(_deviceHandle.State, name);
 
             if (code != YubicoPivReturnCode.YKPIV_OK)
                 throw new Exception("Unable to connect to PIV: " + code);
+        }
+
+        public void Dispose()
+        {
+            YubikeyPivNative.YkPivDisconnect(_deviceHandle.State);
+            _deviceHandle.Dispose();
         }
 
         public Version GetVersion()
@@ -116,7 +35,7 @@ namespace EnrollmentStation.Code
             const int length = 256;
 
             StringBuilder sb = new StringBuilder(length);
-            YubicoPivReturnCode code = YkPivGetVersion(_state, sb, length);
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivGetVersion(_deviceHandle.State, sb, length);
 
             if (code != YubicoPivReturnCode.YKPIV_OK)
                 throw new Exception("Unable to fetch PIV version: " + code);
@@ -129,13 +48,13 @@ namespace EnrollmentStation.Code
             if (managementKey == null || managementKey.Length != 24)
                 throw new ArgumentException("Must be 24 bytes");
 
-            return YkPivAuthenticate(_state, managementKey) == YubicoPivReturnCode.YKPIV_OK;
+            return YubikeyPivNative.YkPivAuthenticate(_deviceHandle.State, managementKey) == YubicoPivReturnCode.YKPIV_OK;
         }
 
         public int GetPinTriesLeft()
         {
             int triesLeft = -1;
-            YkPivVerifyPin(_state, null, ref triesLeft);
+            YubikeyPivNative.YkPivVerify(_deviceHandle.State, null, ref triesLeft);
 
             return triesLeft;
         }
@@ -143,7 +62,7 @@ namespace EnrollmentStation.Code
         public bool VerifyPin(string pin, out int remainingTries)
         {
             int triesLeft = -1;
-            YubicoPivReturnCode code = YkPivVerifyPin(_state, pin, ref triesLeft);
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivVerify(_deviceHandle.State, pin, ref triesLeft);
 
             remainingTries = triesLeft;
 
@@ -155,7 +74,7 @@ namespace EnrollmentStation.Code
 
         public bool ChangePin(string oldPin, string pin, out int remainingTries)
         {
-            byte[] templ = { 0, YKPIV_INS_CHANGE_REFERENCE, 0, 0x80 };
+            byte[] templ = { 0, YubikeyPivNative.YKPIV_INS_CHANGE_REFERENCE, 0, 0x80 };
             byte[] inData = new byte[16];
             byte[] outData = new byte[256];
             int outLength = outData.Length, sw = -1;
@@ -167,7 +86,7 @@ namespace EnrollmentStation.Code
             Encoding.ASCII.GetBytes(oldPin, 0, Math.Min(8, oldPin.Length), inData, 0);
             Encoding.ASCII.GetBytes(pin, 0, Math.Min(8, pin.Length), inData, 8);
 
-            YubicoPivReturnCode code = YkPivTransferData(_state, templ, inData, inData.Length, outData, ref outLength, ref sw);
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivTransferData(_deviceHandle.State, templ, inData, inData.Length, outData, ref outLength, ref sw);
 
             if (code != YubicoPivReturnCode.YKPIV_OK)
             {
@@ -197,7 +116,7 @@ namespace EnrollmentStation.Code
 
         public bool ChangePuk(string oldPuk, string puk, out int remainingTries)
         {
-            byte[] templ = { 0, YKPIV_INS_CHANGE_REFERENCE, 0, 0x81 };
+            byte[] templ = { 0, YubikeyPivNative.YKPIV_INS_CHANGE_REFERENCE, 0, 0x81 };
             byte[] inData = new byte[16];
             byte[] outData = new byte[256];
             int outLength = outData.Length, sw = -1;
@@ -209,7 +128,7 @@ namespace EnrollmentStation.Code
             Encoding.ASCII.GetBytes(oldPuk, 0, Math.Min(8, oldPuk.Length), inData, 0);
             Encoding.ASCII.GetBytes(puk, 0, Math.Min(8, puk.Length), inData, 8);
 
-            YubicoPivReturnCode code = YkPivTransferData(_state, templ, inData, inData.Length, outData, ref outLength, ref sw);
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivTransferData(_deviceHandle.State, templ, inData, inData.Length, outData, ref outLength, ref sw);
 
             if (code != YubicoPivReturnCode.YKPIV_OK)
             {
@@ -241,7 +160,7 @@ namespace EnrollmentStation.Code
         {
             publicKey = new RSAParameters();
 
-            byte[] templ = { 0, YKPIV_INS_GENERATE_ASYMMETRIC, 0, 0x9A };
+            byte[] templ = { 0, YubikeyPivNative.YKPIV_INS_GENERATE_ASYMMETRIC, 0, 0x9A };
             byte[] inData = new byte[5];    // TODO: Newer versions of yubico-piv-tool use 11 bytes of data, see: https://github.com/Yubico/yubico-piv-tool/blob/b08de955970c5cd544c740990fb68f496fedb814/tool/yubico-piv-tool.c#L122
             byte[] outData = new byte[1024];
             int outLength = outData.Length, sw = -1;
@@ -253,7 +172,7 @@ namespace EnrollmentStation.Code
             inData[3] = 1;
             inData[4] = algorithm;
 
-            YubicoPivReturnCode code = YkPivTransferData(_state, templ, inData, inData.Length, outData, ref outLength, ref sw);
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivTransferData(_deviceHandle.State, templ, inData, inData.Length, outData, ref outLength, ref sw);
 
             if (code != YubicoPivReturnCode.YKPIV_OK)
             {
@@ -305,7 +224,7 @@ namespace EnrollmentStation.Code
         //    byte[] result = new byte[256];
         //    int outputLength = result.Length;
 
-        //    YubicoPivReturnCode code = YkPivSignData(_state, toSign, toSign.Length, result, ref outputLength, YKPIV_ALGO_RSA2048, key);
+        //    YubicoPivReturnCode code = YkPivSignData(_deviceHandle.State, toSign, toSign.Length, result, ref outputLength, YKPIV_ALGO_RSA2048, key);
 
         //    if (code != YubicoPivReturnCode.YKPIV_OK)
         //        return false;
@@ -319,17 +238,17 @@ namespace EnrollmentStation.Code
             if (newKey == null || newKey.Length != 24)
                 throw new ArgumentException("Must be 24 bytes");
 
-            return YkPivSetManagementKey(_state, newKey) == YubicoPivReturnCode.YKPIV_OK;
+            return YubikeyPivNative.YkPivSetManagementKey(_deviceHandle.State, newKey) == YubicoPivReturnCode.YKPIV_OK;
         }
 
         public bool ResetDevice()
         {
-            byte[] templ = { 0, YKPIV_INS_RESET, 0, 0 };
+            byte[] templ = { 0, YubikeyPivNative.YKPIV_INS_RESET, 0, 0 };
             byte[] inData = new byte[0];
             byte[] outData = new byte[256];
             int outLength = outData.Length, sw = -1;
 
-            YubicoPivReturnCode code = YkPivTransferData(_state, templ, inData, inData.Length, outData, ref outLength, ref sw);
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivTransferData(_deviceHandle.State, templ, inData, inData.Length, outData, ref outLength, ref sw);
 
             return code == YubicoPivReturnCode.YKPIV_OK && sw == 0x9000;
         }
@@ -347,7 +266,7 @@ namespace EnrollmentStation.Code
 
                 data = new byte[length];
                 int tmpLength = length;
-                code = YkPivFetchObject(_state, YKPIV_OBJ_AUTHENTICATION, data, ref tmpLength);
+                code = YubikeyPivNative.YkPivFetchObject(_deviceHandle.State, YubikeyPivNative.YKPIV_OBJ_AUTHENTICATION, data, ref tmpLength);
 
                 if (code == YubicoPivReturnCode.YKPIV_GENERIC_ERROR)
                     // Object is not set
@@ -393,8 +312,8 @@ namespace EnrollmentStation.Code
             data[offset++] = 0xFE; // LRC
             data[offset++] = 0;
 
-            YubicoPivReturnCode code = YkPivSaveObject(_state, YKPIV_OBJ_AUTHENTICATION, data, offset);
-            
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivSaveObject(_deviceHandle.State, YubikeyPivNative.YKPIV_OBJ_AUTHENTICATION, data, offset);
+
             return code;
         }
 
@@ -414,7 +333,7 @@ namespace EnrollmentStation.Code
             byte[] guidBytes = newId.ToByteArray();
             Array.Copy(guidBytes, 0, newChuid, writeOffset, guidBytes.Length);
 
-            YubicoPivReturnCode code = YkPivSaveObject(_state, YKPIV_OBJ_CHUID, newChuid, newChuid.Length);
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivSaveObject(_deviceHandle.State, YubikeyPivNative.YKPIV_OBJ_CHUID, newChuid, newChuid.Length);
 
             if (code != YubicoPivReturnCode.YKPIV_OK)
                 return false;
@@ -427,7 +346,7 @@ namespace EnrollmentStation.Code
             byte[] tmp = new byte[2048];
             int length = tmp.Length;
 
-            YubicoPivReturnCode code = YkPivFetchObject(_state, YKPIV_OBJ_CHUID, tmp, ref length);
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivFetchObject(_deviceHandle.State, YubikeyPivNative.YKPIV_OBJ_CHUID, tmp, ref length);
 
             if (code != YubicoPivReturnCode.YKPIV_OK)
             {
@@ -508,7 +427,7 @@ namespace EnrollmentStation.Code
 
         public bool UnblockPin(string puk, string newPin)
         {
-            byte[] templ = { 0, YKPIV_INS_RESET_RETRY, 0, 0x80 };
+            byte[] templ = { 0, YubikeyPivNative.YKPIV_INS_RESET_RETRY, 0, 0x80 };
             byte[] inData = new byte[16];
             byte[] outData = new byte[256];
             int outLength = outData.Length, sw = -1;
@@ -520,7 +439,7 @@ namespace EnrollmentStation.Code
             Encoding.ASCII.GetBytes(puk, 0, Math.Min(8, puk.Length), inData, 0);
             Encoding.ASCII.GetBytes(newPin, 0, Math.Min(8, newPin.Length), inData, 8);
 
-            YubicoPivReturnCode code = YkPivTransferData(_state, templ, inData, inData.Length, outData, ref outLength, ref sw);
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivTransferData(_deviceHandle.State, templ, inData, inData.Length, outData, ref outLength, ref sw);
 
             return code == YubicoPivReturnCode.YKPIV_OK;
         }
@@ -540,12 +459,6 @@ namespace EnrollmentStation.Code
                     randomPin = "DROWSSAP";
                 }
             } while (tmpRemaining > 0);
-        }
-
-        public void Dispose()
-        {
-            YkPivDisconnect(_state);
-            YkPivDone(_state);
         }
     }
 }
