@@ -157,6 +157,13 @@ namespace EnrollmentStation
 
                     lblInsertedHasBeenEnrolled.Text = _dataStore.Search(serialNumber).Any().ToString();
                 }
+
+                using (var piv = YubikeyPivManager.Instance.OpenDevice(devName))
+                {
+                    int remainingPin = piv.GetPinTriesLeft();
+
+                    lblInsertedTries.Text = $"{remainingPin:N0} remaining";
+                }
             }
 
             if (listDevices.Count > 1)

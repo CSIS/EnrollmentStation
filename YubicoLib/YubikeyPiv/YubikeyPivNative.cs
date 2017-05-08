@@ -33,8 +33,6 @@ namespace YubicoLib.YubikeyPiv
         [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_verify", CharSet = CharSet.Ansi, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
         internal static extern YubicoPivReturnCode YkPivVerify(IntPtr state, string pin, ref int tries);
 
-
-
         [DllImport("Binaries\\libykpiv-1.dll", EntryPoint = "ykpiv_get_version", CharSet = CharSet.Ansi, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
         internal static extern YubicoPivReturnCode YkPivGetVersion(IntPtr state, StringBuilder version, int length);
 
@@ -87,5 +85,7 @@ namespace YubicoLib.YubikeyPiv
         internal const int YKPIV_INS_GET_VERSION = 0xfd;
         internal const int YKPIV_INS_RESET = 0xfb;
         internal const int YKPIV_INS_SET_PIN_RETRIES = 0xfa;
+
+        internal const int SW_SUCCESS = 0x9000;
     }
 }

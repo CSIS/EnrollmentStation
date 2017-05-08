@@ -49,6 +49,9 @@ namespace EnrollmentStation
             this.tsbSettings = new System.Windows.Forms.ToolStripButton();
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.gbInsertedKey = new System.Windows.Forms.GroupBox();
+            this.lblInsertedTries = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lblMultipleKeys = new System.Windows.Forms.Label();
             this.btnViewCert = new System.Windows.Forms.Button();
             this.btnExportCert = new System.Windows.Forms.Button();
             this.lblInsertedHasBeenEnrolled = new System.Windows.Forms.Label();
@@ -82,7 +85,6 @@ namespace EnrollmentStation
             this.clmUser = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmEnrolledAt = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmCertificateSerial = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lblMultipleKeys = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -151,7 +153,7 @@ namespace EnrollmentStation
             this.lblHSMPresent,
             this.lblDummyStatusStrip,
             this.lblStatusStripVersion});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 452);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 468);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(880, 22);
             this.statusStrip1.TabIndex = 8;
@@ -225,6 +227,8 @@ namespace EnrollmentStation
             // 
             // gbInsertedKey
             // 
+            this.gbInsertedKey.Controls.Add(this.lblInsertedTries);
+            this.gbInsertedKey.Controls.Add(this.label3);
             this.gbInsertedKey.Controls.Add(this.lblMultipleKeys);
             this.gbInsertedKey.Controls.Add(this.btnViewCert);
             this.gbInsertedKey.Controls.Add(this.btnExportCert);
@@ -238,16 +242,44 @@ namespace EnrollmentStation
             this.gbInsertedKey.Controls.Add(this.lblInsertedSerial);
             this.gbInsertedKey.Location = new System.Drawing.Point(4, 288);
             this.gbInsertedKey.Name = "gbInsertedKey";
-            this.gbInsertedKey.Size = new System.Drawing.Size(354, 157);
+            this.gbInsertedKey.Size = new System.Drawing.Size(354, 173);
             this.gbInsertedKey.TabIndex = 3;
             this.gbInsertedKey.TabStop = false;
             this.gbInsertedKey.Text = "Inserted Yubikey";
+            // 
+            // lblInsertedTries
+            // 
+            this.lblInsertedTries.AutoSize = true;
+            this.lblInsertedTries.Location = new System.Drawing.Point(107, 117);
+            this.lblInsertedTries.Name = "lblInsertedTries";
+            this.lblInsertedTries.Size = new System.Drawing.Size(78, 13);
+            this.lblInsertedTries.TabIndex = 13;
+            this.lblInsertedTries.Text = "lblInsertedTries";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(8, 117);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(90, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Tries (PIN / PUK)";
+            // 
+            // lblMultipleKeys
+            // 
+            this.lblMultipleKeys.AutoSize = true;
+            this.lblMultipleKeys.ForeColor = System.Drawing.Color.Red;
+            this.lblMultipleKeys.Location = new System.Drawing.Point(272, 20);
+            this.lblMultipleKeys.Name = "lblMultipleKeys";
+            this.lblMultipleKeys.Size = new System.Drawing.Size(76, 13);
+            this.lblMultipleKeys.TabIndex = 10;
+            this.lblMultipleKeys.Text = "lblMultipleKeys";
             // 
             // btnViewCert
             // 
             this.btnViewCert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnViewCert.Enabled = false;
-            this.btnViewCert.Location = new System.Drawing.Point(71, 124);
+            this.btnViewCert.Location = new System.Drawing.Point(71, 140);
             this.btnViewCert.Name = "btnViewCert";
             this.btnViewCert.Size = new System.Drawing.Size(104, 23);
             this.btnViewCert.TabIndex = 8;
@@ -259,7 +291,7 @@ namespace EnrollmentStation
             // 
             this.btnExportCert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnExportCert.Enabled = false;
-            this.btnExportCert.Location = new System.Drawing.Point(181, 124);
+            this.btnExportCert.Location = new System.Drawing.Point(181, 140);
             this.btnExportCert.Name = "btnExportCert";
             this.btnExportCert.Size = new System.Drawing.Size(104, 23);
             this.btnExportCert.TabIndex = 9;
@@ -270,7 +302,7 @@ namespace EnrollmentStation
             // lblInsertedHasBeenEnrolled
             // 
             this.lblInsertedHasBeenEnrolled.AutoSize = true;
-            this.lblInsertedHasBeenEnrolled.Location = new System.Drawing.Point(88, 95);
+            this.lblInsertedHasBeenEnrolled.Location = new System.Drawing.Point(107, 95);
             this.lblInsertedHasBeenEnrolled.Name = "lblInsertedHasBeenEnrolled";
             this.lblInsertedHasBeenEnrolled.Size = new System.Drawing.Size(137, 13);
             this.lblInsertedHasBeenEnrolled.TabIndex = 7;
@@ -288,7 +320,7 @@ namespace EnrollmentStation
             // lblInsertedFirmware
             // 
             this.lblInsertedFirmware.AutoSize = true;
-            this.lblInsertedFirmware.Location = new System.Drawing.Point(88, 72);
+            this.lblInsertedFirmware.Location = new System.Drawing.Point(107, 72);
             this.lblInsertedFirmware.Name = "lblInsertedFirmware";
             this.lblInsertedFirmware.Size = new System.Drawing.Size(97, 13);
             this.lblInsertedFirmware.TabIndex = 5;
@@ -306,7 +338,7 @@ namespace EnrollmentStation
             // lblInsertedMode
             // 
             this.lblInsertedMode.AutoSize = true;
-            this.lblInsertedMode.Location = new System.Drawing.Point(88, 45);
+            this.lblInsertedMode.Location = new System.Drawing.Point(107, 45);
             this.lblInsertedMode.Name = "lblInsertedMode";
             this.lblInsertedMode.Size = new System.Drawing.Size(82, 13);
             this.lblInsertedMode.TabIndex = 3;
@@ -333,7 +365,7 @@ namespace EnrollmentStation
             // lblInsertedSerial
             // 
             this.lblInsertedSerial.AutoSize = true;
-            this.lblInsertedSerial.Location = new System.Drawing.Point(88, 20);
+            this.lblInsertedSerial.Location = new System.Drawing.Point(107, 20);
             this.lblInsertedSerial.Name = "lblInsertedSerial";
             this.lblInsertedSerial.Size = new System.Drawing.Size(81, 13);
             this.lblInsertedSerial.TabIndex = 1;
@@ -357,7 +389,7 @@ namespace EnrollmentStation
             // lblYubikeyFirmware
             // 
             this.lblYubikeyFirmware.AutoSize = true;
-            this.lblYubikeyFirmware.Location = new System.Drawing.Point(88, 70);
+            this.lblYubikeyFirmware.Location = new System.Drawing.Point(107, 70);
             this.lblYubikeyFirmware.Name = "lblYubikeyFirmware";
             this.lblYubikeyFirmware.Size = new System.Drawing.Size(97, 13);
             this.lblYubikeyFirmware.TabIndex = 5;
@@ -384,7 +416,7 @@ namespace EnrollmentStation
             // lblYubikeyPivVersion
             // 
             this.lblYubikeyPivVersion.AutoSize = true;
-            this.lblYubikeyPivVersion.Location = new System.Drawing.Point(88, 45);
+            this.lblYubikeyPivVersion.Location = new System.Drawing.Point(107, 45);
             this.lblYubikeyPivVersion.Name = "lblYubikeyPivVersion";
             this.lblYubikeyPivVersion.Size = new System.Drawing.Size(105, 13);
             this.lblYubikeyPivVersion.TabIndex = 3;
@@ -402,7 +434,7 @@ namespace EnrollmentStation
             // lblYubikeySerial
             // 
             this.lblYubikeySerial.AutoSize = true;
-            this.lblYubikeySerial.Location = new System.Drawing.Point(88, 20);
+            this.lblYubikeySerial.Location = new System.Drawing.Point(107, 20);
             this.lblYubikeySerial.Name = "lblYubikeySerial";
             this.lblYubikeySerial.Size = new System.Drawing.Size(81, 13);
             this.lblYubikeySerial.TabIndex = 1;
@@ -430,7 +462,7 @@ namespace EnrollmentStation
             // lblCertThumbprint
             // 
             this.lblCertThumbprint.AutoSize = true;
-            this.lblCertThumbprint.Location = new System.Drawing.Point(88, 120);
+            this.lblCertThumbprint.Location = new System.Drawing.Point(107, 120);
             this.lblCertThumbprint.Name = "lblCertThumbprint";
             this.lblCertThumbprint.Size = new System.Drawing.Size(89, 13);
             this.lblCertThumbprint.TabIndex = 9;
@@ -448,7 +480,7 @@ namespace EnrollmentStation
             // lblCertCA
             // 
             this.lblCertCA.AutoSize = true;
-            this.lblCertCA.Location = new System.Drawing.Point(88, 95);
+            this.lblCertCA.Location = new System.Drawing.Point(107, 95);
             this.lblCertCA.Name = "lblCertCA";
             this.lblCertCA.Size = new System.Drawing.Size(50, 13);
             this.lblCertCA.TabIndex = 7;
@@ -466,7 +498,7 @@ namespace EnrollmentStation
             // lblCertUser
             // 
             this.lblCertUser.AutoSize = true;
-            this.lblCertUser.Location = new System.Drawing.Point(88, 20);
+            this.lblCertUser.Location = new System.Drawing.Point(107, 20);
             this.lblCertUser.Name = "lblCertUser";
             this.lblCertUser.Size = new System.Drawing.Size(58, 13);
             this.lblCertUser.TabIndex = 1;
@@ -484,7 +516,7 @@ namespace EnrollmentStation
             // lblCertEnrolledOn
             // 
             this.lblCertEnrolledOn.AutoSize = true;
-            this.lblCertEnrolledOn.Location = new System.Drawing.Point(88, 70);
+            this.lblCertEnrolledOn.Location = new System.Drawing.Point(107, 70);
             this.lblCertEnrolledOn.Name = "lblCertEnrolledOn";
             this.lblCertEnrolledOn.Size = new System.Drawing.Size(88, 13);
             this.lblCertEnrolledOn.TabIndex = 5;
@@ -502,7 +534,7 @@ namespace EnrollmentStation
             // lblCertSerial
             // 
             this.lblCertSerial.AutoSize = true;
-            this.lblCertSerial.Location = new System.Drawing.Point(88, 45);
+            this.lblCertSerial.Location = new System.Drawing.Point(107, 45);
             this.lblCertSerial.Name = "lblCertSerial";
             this.lblCertSerial.Size = new System.Drawing.Size(62, 13);
             this.lblCertSerial.TabIndex = 3;
@@ -532,7 +564,7 @@ namespace EnrollmentStation
             this.lstItems.Location = new System.Drawing.Point(364, 41);
             this.lstItems.MultiSelect = false;
             this.lstItems.Name = "lstItems";
-            this.lstItems.Size = new System.Drawing.Size(509, 404);
+            this.lstItems.Size = new System.Drawing.Size(509, 420);
             this.lstItems.TabIndex = 7;
             this.lstItems.UseCompatibleStateImageBehavior = false;
             this.lstItems.View = System.Windows.Forms.View.Details;
@@ -557,21 +589,11 @@ namespace EnrollmentStation
             this.clmCertificateSerial.Text = "Certificate";
             this.clmCertificateSerial.Width = 189;
             // 
-            // lblMultipleKeys
-            // 
-            this.lblMultipleKeys.AutoSize = true;
-            this.lblMultipleKeys.ForeColor = System.Drawing.Color.Red;
-            this.lblMultipleKeys.Location = new System.Drawing.Point(272, 20);
-            this.lblMultipleKeys.Name = "lblMultipleKeys";
-            this.lblMultipleKeys.Size = new System.Drawing.Size(76, 13);
-            this.lblMultipleKeys.TabIndex = 10;
-            this.lblMultipleKeys.Text = "lblMultipleKeys";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(880, 474);
+            this.ClientSize = new System.Drawing.Size(880, 490);
             this.Controls.Add(this.gbInsertedKey);
             this.Controls.Add(this.gbSelectedKey);
             this.Controls.Add(this.gbSelectedKeyCertificate);
@@ -652,5 +674,7 @@ namespace EnrollmentStation
         private Button btnViewCert;
         private Button btnExportCert;
         private Label lblMultipleKeys;
+        private Label label3;
+        private Label lblInsertedTries;
     }
 }

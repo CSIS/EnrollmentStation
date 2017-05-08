@@ -72,6 +72,22 @@ namespace YubicoLib.YubikeyPiv
             return false;
         }
 
+        public bool ChangePinPukRetries(byte pinRetryCount, byte pukRetryCount)
+        {
+            if (pinRetryCount <= 0)
+                throw new ArgumentOutOfRangeException(nameof(pinRetryCount));
+            if (pukRetryCount <= 0)
+                throw new ArgumentOutOfRangeException(nameof(pukRetryCount));
+
+            byte[] templ = { 0, YubikeyPivNative.YKPIV_INS_SET_PIN_RETRIES, pinRetryCount, pukRetryCount };
+            byte[] outData = new byte[256];
+            int outLength = outData.Length, sw = -1;
+
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivTransferData(_deviceHandle.State, templ, null, 0, outData, ref outLength, ref sw);
+
+            return code == YubicoPivReturnCode.YKPIV_OK && sw == YubikeyPivNative.SW_SUCCESS;
+        }
+
         public bool ChangePin(string oldPin, string pin, out int remainingTries)
         {
             byte[] templ = { 0, YubikeyPivNative.YKPIV_INS_CHANGE_REFERENCE, 0, 0x80 };
@@ -94,7 +110,7 @@ namespace YubicoLib.YubikeyPiv
                 return false;
             }
 
-            if (sw != 0x9000)
+            if (sw != YubikeyPivNative.SW_SUCCESS)
             {
                 if ((sw >> 8) == 0x63)
                 {
@@ -136,7 +152,7 @@ namespace YubicoLib.YubikeyPiv
                 return false;
             }
 
-            if (sw != 0x9000)
+            if (sw != YubikeyPivNative.SW_SUCCESS)
             {
                 if ((sw >> 8) == 0x63)
                 {
@@ -179,7 +195,7 @@ namespace YubicoLib.YubikeyPiv
                 return false;
             }
 
-            if (sw != 0x9000)
+            if (sw != YubikeyPivNative.SW_SUCCESS)
             {
                 return false;
             }
@@ -250,7 +266,7 @@ namespace YubicoLib.YubikeyPiv
 
             YubicoPivReturnCode code = YubikeyPivNative.YkPivTransferData(_deviceHandle.State, templ, inData, inData.Length, outData, ref outLength, ref sw);
 
-            return code == YubicoPivReturnCode.YKPIV_OK && sw == 0x9000;
+            return code == YubicoPivReturnCode.YKPIV_OK && sw == YubikeyPivNative.SW_SUCCESS;
         }
 
         public X509Certificate2 GetCertificate9a()
