@@ -50,9 +50,16 @@ namespace EnrollmentStation
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.drpAlgorithm = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.nmPinRetries = new System.Windows.Forms.NumericUpDown();
+            this.nmPukRetries = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmPinRetries)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmPukRetries)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -65,7 +72,7 @@ namespace EnrollmentStation
             this.groupBox1.Controls.Add(this.txtCaTemplate);
             this.groupBox1.Controls.Add(this.llBrowseCA);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 52);
+            this.groupBox1.Location = new System.Drawing.Point(12, 80);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(517, 94);
             this.groupBox1.TabIndex = 1;
@@ -150,7 +157,8 @@ namespace EnrollmentStation
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(373, 203);
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.Location = new System.Drawing.Point(373, 233);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 2;
@@ -160,8 +168,9 @@ namespace EnrollmentStation
             // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(454, 203);
+            this.btnCancel.Location = new System.Drawing.Point(454, 233);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -171,12 +180,17 @@ namespace EnrollmentStation
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.label8);
+            this.groupBox3.Controls.Add(this.label7);
+            this.groupBox3.Controls.Add(this.label6);
+            this.groupBox3.Controls.Add(this.nmPukRetries);
+            this.groupBox3.Controls.Add(this.nmPinRetries);
             this.groupBox3.Controls.Add(this.llGenerateMgtKey);
             this.groupBox3.Controls.Add(this.txtManagementKey);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Location = new System.Drawing.Point(12, 2);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(517, 44);
+            this.groupBox3.Size = new System.Drawing.Size(517, 72);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "YubiKey";
@@ -204,7 +218,7 @@ namespace EnrollmentStation
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(14, 20);
+            this.label4.Location = new System.Drawing.Point(13, 20);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(89, 13);
             this.label4.TabIndex = 2;
@@ -214,7 +228,7 @@ namespace EnrollmentStation
             // 
             this.groupBox2.Controls.Add(this.drpAlgorithm);
             this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Location = new System.Drawing.Point(12, 152);
+            this.groupBox2.Location = new System.Drawing.Point(12, 180);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(517, 45);
             this.groupBox2.TabIndex = 6;
@@ -238,6 +252,77 @@ namespace EnrollmentStation
             this.label2.TabIndex = 0;
             this.label2.Text = "Default algorithm";
             // 
+            // nmPinRetries
+            // 
+            this.nmPinRetries.Location = new System.Drawing.Point(216, 42);
+            this.nmPinRetries.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.nmPinRetries.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmPinRetries.Name = "nmPinRetries";
+            this.nmPinRetries.Size = new System.Drawing.Size(71, 20);
+            this.nmPinRetries.TabIndex = 5;
+            this.nmPinRetries.Value = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            // 
+            // nmPukRetries
+            // 
+            this.nmPukRetries.Location = new System.Drawing.Point(385, 42);
+            this.nmPukRetries.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.nmPukRetries.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmPukRetries.Name = "nmPukRetries";
+            this.nmPukRetries.Size = new System.Drawing.Size(69, 20);
+            this.nmPukRetries.TabIndex = 6;
+            this.nmPukRetries.Value = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(13, 44);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(89, 13);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "PIN / PUK retries";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(185, 44);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(25, 13);
+            this.label7.TabIndex = 8;
+            this.label7.Text = "PIN";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(354, 44);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(29, 13);
+            this.label8.TabIndex = 9;
+            this.label8.Text = "PUK";
+            // 
             // DlgSettings
             // 
             this.AcceptButton = this.btnSave;
@@ -245,7 +330,7 @@ namespace EnrollmentStation
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(541, 236);
+            this.ClientSize = new System.Drawing.Size(541, 266);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnCancel);
@@ -265,6 +350,8 @@ namespace EnrollmentStation
             this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmPinRetries)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmPukRetries)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -289,5 +376,10 @@ namespace EnrollmentStation
         private GroupBox groupBox2;
         private ComboBox drpAlgorithm;
         private Label label2;
+        private Label label8;
+        private Label label7;
+        private Label label6;
+        private NumericUpDown nmPukRetries;
+        private NumericUpDown nmPinRetries;
     }
 }
