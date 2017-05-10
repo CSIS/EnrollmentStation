@@ -47,6 +47,7 @@ namespace EnrollmentStation
             {
                 drpAlgorithm.Items.Add(item);
 
+                // By default, we will set RSA2048 as the chosen algorithm
                 if (item.Value == YubikeyPivNative.YKPIV_ALGO_RSA2048)
                     drpAlgorithm.SelectedItem = item;
             }
@@ -97,7 +98,7 @@ namespace EnrollmentStation
 
                 if (cert != null)
                 {
-                   DisplaySelectedCertificate(cert);
+                    DisplaySelectedCertificate(cert);
                 }
                 else
                     MessageBox.Show(this,
@@ -113,6 +114,12 @@ namespace EnrollmentStation
                 if (algo != null)
                     drpAlgorithm.SelectedItem = algo;
             }
+
+            if (_settings.PinRetries > 0)
+                nmPinRetries.Value = _settings.PinRetries;
+
+            if (_settings.PukRetries > 0)
+                nmPukRetries.Value = _settings.PukRetries;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -125,6 +132,8 @@ namespace EnrollmentStation
             _settings.EnrollmentManagementKey = Utilities.StringToByteArray(txtManagementKey.Text);
             _settings.EnrollmentCaTemplate = txtCaTemplate.Text;
             _settings.DefaultAlgorithm = ((YubikeyAlgorithm)drpAlgorithm.SelectedItem).Value;
+            _settings.PinRetries = (byte)nmPinRetries.Value;
+            _settings.PukRetries = (byte)nmPukRetries.Value;
 
             _settings.Save(MainForm.FileSettings);
 

@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -18,6 +19,14 @@ namespace EnrollmentStation.Code.DataObjects
         public string EnrollmentCaTemplate { get; set; }
 
         public byte DefaultAlgorithm { get; set; }
+
+        [DefaultValue(3)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public byte PinRetries { get; set; }
+
+        [DefaultValue(3)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public byte PukRetries { get; set; }
 
         public static Settings Load(string file)
         {

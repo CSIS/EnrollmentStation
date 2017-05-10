@@ -240,8 +240,11 @@ namespace EnrollmentStation
                     }
 
                     _enrollWorker.ReportProgress(5);
+                }
 
-                    // 6 - Yubico: Management Key
+                using (YubikeyPivDevice pivTool = YubikeyPivManager.Instance.OpenDevice(devName))
+                {
+                    // 6 - Yubico: Authenticate #1
                     bool authenticated = pivTool.Authenticate(YubikeyPivDevice.DefaultManagementKey);
 
                     if (!authenticated)
@@ -251,6 +254,9 @@ namespace EnrollmentStation
                         return;
                     }
 
+                    _enrollWorker.ReportProgress(6);
+
+                    // 7 - Yubico: Change the management Key
                     bool setMgmKey = pivTool.SetManagementKey(mgmKey);
 
                     if (!setMgmKey)
@@ -260,9 +266,36 @@ namespace EnrollmentStation
                         return;
                     }
 
-                    _enrollWorker.ReportProgress(6);
+                    _enrollWorker.ReportProgress(7);
+                }
 
-                    // 7 - Yubico: Set CHUID
+                using (YubikeyPivDevice pivTool = YubikeyPivManager.Instance.OpenDevice(devName))
+                {
+                    // 8 - Yubico: Authenticate #2
+                    bool authenticated = pivTool.Authenticate(mgmKey);
+
+                    if (!authenticated)
+                    {
+                        doWorkEventArgs.Cancel = true;
+                        _enrollWorkerMessage = "Unable to authenticate with the YubiKey the second time";
+                        return;
+                    }
+
+                    _enrollWorker.ReportProgress(8);
+
+                    // 9 - Yubico: Change pin/puk retries
+                    bool setPinPukRetries = pivTool.ChangePinPukRetries(_settings.PinRetries, _settings.PukRetries);
+
+                    if (!setPinPukRetries)
+                    {
+                        doWorkEventArgs.Cancel = true;
+                        _enrollWorkerMessage = "Unable to set PIN and PUK retry counts";
+                        return;
+                    }
+
+                    _enrollWorker.ReportProgress(9);
+
+                    // 10 - Yubico: Set CHUID
                     bool setChuid = pivTool.SetCHUID(Guid.NewGuid(), out chuid);
 
                     if (!setChuid)
@@ -272,9 +305,9 @@ namespace EnrollmentStation
                         return;
                     }
 
-                    _enrollWorker.ReportProgress(7);
+                    _enrollWorker.ReportProgress(10);
 
-                    // 8 - Yubico: PIN
+                    // 11 - Yubico: PIN
                     int tmp;
                     bool setPin = pivTool.ChangePin(YubikeyPivDevice.DefaultPin, pin, out tmp);
 
@@ -285,9 +318,9 @@ namespace EnrollmentStation
                         return;
                     }
 
-                    _enrollWorker.ReportProgress(8);
+                    _enrollWorker.ReportProgress(11);
 
-                    // 9 - Yubico: PUK
+                    // 12 - Yubico: PUK
                     bool setPuk = pivTool.ChangePuk(YubikeyPivDevice.DefaultPuk, puk, out tmp);
 
                     if (!setPuk)
@@ -297,9 +330,9 @@ namespace EnrollmentStation
                         return;
                     }
 
-                    _enrollWorker.ReportProgress(9);
+                    _enrollWorker.ReportProgress(12);
 
-                    // 10 - Yubico: Generate Key
+                    // 13 - Yubico: Generate Key
                     YubikeyAlgorithm algorithm = (YubikeyAlgorithm)drpAlgorithm.SelectedItem;
 
                     bool keyGenerated = pivTool.GenerateKey9a(algorithm.Value, out publicKey);
@@ -311,10 +344,10 @@ namespace EnrollmentStation
                         return;
                     }
 
-                    _enrollWorker.ReportProgress(10);
+                    _enrollWorker.ReportProgress(13);
                 }
 
-                // 11 - Yubico: Make CSR
+                // 14 - Yubico: Make CSR
                 string csr;
                 string csrError;
                 bool madeCsr = MakeCsr(Utilities.ExportPublicKeyToPEMFormat(publicKey), pin, out csrError, out csr);
@@ -326,9 +359,9 @@ namespace EnrollmentStation
                     return;
                 }
 
-                _enrollWorker.ReportProgress(11);
+                _enrollWorker.ReportProgress(14);
 
-                // 12 - Enroll
+                // 15 - Enroll
                 string enrollError;
                 bool enrolled = CertificateUtilities.Enroll(user, enrollmentAgent, ca, caTemplate, csr, out enrollError, out cert);
 
@@ -339,11 +372,11 @@ namespace EnrollmentStation
                     return;
                 }
 
-                _enrollWorker.ReportProgress(12);
+                _enrollWorker.ReportProgress(15);
 
                 using (YubikeyPivDevice pivTool = YubikeyPivManager.Instance.OpenDevice(devName))
                 {
-                    // 13 - Yubico: Import Cert
+                    // 16 - Yubico: Authenticate #3
                     bool authenticatedForCert = pivTool.Authenticate(mgmKey);
 
                     if (!authenticatedForCert)
@@ -353,6 +386,9 @@ namespace EnrollmentStation
                         return;
                     }
 
+                    _enrollWorker.ReportProgress(16);
+
+                    // 17 - Yubico: Import Cert
                     YubicoPivReturnCode imported = pivTool.SetCertificate9a(cert);
 
                     if (imported != YubicoPivReturnCode.YKPIV_OK)
@@ -362,10 +398,10 @@ namespace EnrollmentStation
                         return;
                     }
 
-                    _enrollWorker.ReportProgress(13);
+                    _enrollWorker.ReportProgress(17);
                 }
 
-                // 14 - Create enrolled item
+                // 18 - Create enrolled item
                 EnrolledYubikey newEnrollment = new EnrolledYubikey();
                 newEnrollment.DeviceSerial = deviceId;
 
@@ -390,12 +426,12 @@ namespace EnrollmentStation
 
                 _dataStore.Add(newEnrollment);
 
-                _enrollWorker.ReportProgress(14);
+                _enrollWorker.ReportProgress(18);
 
-                // 15 - Save store
+                // 19 - Save store
                 _dataStore.Save(MainForm.FileStore);
 
-                _enrollWorker.ReportProgress(15);
+                _enrollWorker.ReportProgress(19);
 
                 // Report
                 doWorkEventArgs.Cancel = false;

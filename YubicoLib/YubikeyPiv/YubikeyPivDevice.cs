@@ -48,7 +48,9 @@ namespace YubicoLib.YubikeyPiv
             if (managementKey == null || managementKey.Length != 24)
                 throw new ArgumentException("Must be 24 bytes");
 
-            return YubikeyPivNative.YkPivAuthenticate(_deviceHandle.State, managementKey) == YubicoPivReturnCode.YKPIV_OK;
+            YubicoPivReturnCode code = YubikeyPivNative.YkPivAuthenticate(_deviceHandle.State, managementKey);
+
+            return code == YubicoPivReturnCode.YKPIV_OK;
         }
 
         public int GetPinTriesLeft()

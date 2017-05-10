@@ -44,22 +44,22 @@ namespace EnrollmentStation
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.nmPukRetries = new System.Windows.Forms.NumericUpDown();
+            this.nmPinRetries = new System.Windows.Forms.NumericUpDown();
             this.llGenerateMgtKey = new System.Windows.Forms.LinkLabel();
             this.txtManagementKey = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.drpAlgorithm = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.nmPinRetries = new System.Windows.Forms.NumericUpDown();
-            this.nmPukRetries = new System.Windows.Forms.NumericUpDown();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nmPinRetries)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nmPukRetries)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmPinRetries)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -195,6 +195,77 @@ namespace EnrollmentStation
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "YubiKey";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(354, 44);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(29, 13);
+            this.label8.TabIndex = 9;
+            this.label8.Text = "PUK";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(185, 44);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(25, 13);
+            this.label7.TabIndex = 8;
+            this.label7.Text = "PIN";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(13, 44);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(89, 13);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "PIN / PUK retries";
+            // 
+            // nmPukRetries
+            // 
+            this.nmPukRetries.Location = new System.Drawing.Point(385, 42);
+            this.nmPukRetries.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.nmPukRetries.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmPukRetries.Name = "nmPukRetries";
+            this.nmPukRetries.Size = new System.Drawing.Size(69, 20);
+            this.nmPukRetries.TabIndex = 6;
+            this.nmPukRetries.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            // 
+            // nmPinRetries
+            // 
+            this.nmPinRetries.Location = new System.Drawing.Point(216, 42);
+            this.nmPinRetries.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.nmPinRetries.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmPinRetries.Name = "nmPinRetries";
+            this.nmPinRetries.Size = new System.Drawing.Size(71, 20);
+            this.nmPinRetries.TabIndex = 5;
+            this.nmPinRetries.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            // 
             // llGenerateMgtKey
             // 
             this.llGenerateMgtKey.AutoSize = true;
@@ -252,77 +323,6 @@ namespace EnrollmentStation
             this.label2.TabIndex = 0;
             this.label2.Text = "Default algorithm";
             // 
-            // nmPinRetries
-            // 
-            this.nmPinRetries.Location = new System.Drawing.Point(216, 42);
-            this.nmPinRetries.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.nmPinRetries.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nmPinRetries.Name = "nmPinRetries";
-            this.nmPinRetries.Size = new System.Drawing.Size(71, 20);
-            this.nmPinRetries.TabIndex = 5;
-            this.nmPinRetries.Value = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            // 
-            // nmPukRetries
-            // 
-            this.nmPukRetries.Location = new System.Drawing.Point(385, 42);
-            this.nmPukRetries.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.nmPukRetries.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nmPukRetries.Name = "nmPukRetries";
-            this.nmPukRetries.Size = new System.Drawing.Size(69, 20);
-            this.nmPukRetries.TabIndex = 6;
-            this.nmPukRetries.Value = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 44);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(89, 13);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "PIN / PUK retries";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(185, 44);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(25, 13);
-            this.label7.TabIndex = 8;
-            this.label7.Text = "PIN";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(354, 44);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(29, 13);
-            this.label8.TabIndex = 9;
-            this.label8.Text = "PUK";
-            // 
             // DlgSettings
             // 
             this.AcceptButton = this.btnSave;
@@ -348,10 +348,10 @@ namespace EnrollmentStation
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmPukRetries)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmPinRetries)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nmPinRetries)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nmPukRetries)).EndInit();
             this.ResumeLayout(false);
 
         }

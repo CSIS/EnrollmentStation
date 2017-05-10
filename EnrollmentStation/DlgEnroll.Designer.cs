@@ -268,7 +268,7 @@ namespace EnrollmentStation
             // prgEnroll
             // 
             this.prgEnroll.Location = new System.Drawing.Point(12, 307);
-            this.prgEnroll.Maximum = 15;
+            this.prgEnroll.Maximum = 19;
             this.prgEnroll.Name = "prgEnroll";
             this.prgEnroll.Size = new System.Drawing.Size(251, 23);
             this.prgEnroll.TabIndex = 3;
