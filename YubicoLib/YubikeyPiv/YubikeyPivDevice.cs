@@ -429,18 +429,31 @@ namespace YubicoLib.YubikeyPiv
         public void BlockPin()
         {
             string randomPin = "PASSWORD";
+            
+            // Note: A flaw in the Yubikey means that it will return remaining tries in "groups" of 16. For this reason, we need to block the PIN one more time to see if we still can do it.
+            // Example: Tries is 17. On the first failed attempt, the Yubikey will return 0 tries remaining ("blocked"), but a second attempt will return 15 tries remaining.
 
-            int tmpRemaining;
+            int attempts;
             do
             {
-                bool success = VerifyPin(randomPin, out tmpRemaining);
+                attempts = 0;
 
-                if (success)
+                int tmpRemaining;
+                do
                 {
-                    // Wow, someone had PASSWORD as their PIN. Alter our test.
-                    randomPin = "DROWSSAP";
-                }
-            } while (tmpRemaining > 0);
+                    bool success = VerifyPin(randomPin, out tmpRemaining);
+
+                    if (success)
+                    {
+                        // Wow, someone had PASSWORD as their PIN. Alter our test.
+                        randomPin = "DROWSSAP";
+                    }
+
+                    if (tmpRemaining > 0)
+                        attempts++;
+
+                } while (tmpRemaining > 0);
+            } while (attempts > 0);
         }
 
         public bool UnblockPin(string puk, string newPin)
@@ -466,17 +479,30 @@ namespace YubicoLib.YubikeyPiv
         {
             string randomPin = "PASSWORD";
 
-            int tmpRemaining;
+            // Note: A flaw in the Yubikey means that it will return remaining tries in "groups" of 16. For this reason, we need to block the PUK one more time to see if we still can do it.
+            // Example: Tries is 17. On the first failed attempt, the Yubikey will return 0 tries remaining ("blocked"), but a second attempt will return 15 tries remaining.
+
+            int attempts;
             do
             {
-                bool success = ChangePuk(randomPin, randomPin, out tmpRemaining);
+                attempts = 0;
 
-                if (success)
+                int tmpRemaining;
+                do
                 {
-                    // Wow, someone had PASSWORD as their PUK. Alter our test.
-                    randomPin = "DROWSSAP";
-                }
-            } while (tmpRemaining > 0);
+                    bool success = ChangePuk(randomPin, randomPin, out tmpRemaining);
+
+                    if (success)
+                    {
+                        // Wow, someone had PASSWORD as their PUK. Alter our test.
+                        randomPin = "DROWSSAP";
+                    }
+
+                    if (tmpRemaining > 0)
+                        attempts++;
+
+                } while (tmpRemaining > 0);
+            } while (attempts > 0);
         }
     }
 }

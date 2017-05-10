@@ -198,7 +198,7 @@ namespace EnrollmentStation
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(354, 44);
+            this.label8.Location = new System.Drawing.Point(349, 44);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(29, 13);
             this.label8.TabIndex = 9;
@@ -216,7 +216,7 @@ namespace EnrollmentStation
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 44);
+            this.label6.Location = new System.Drawing.Point(14, 44);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(89, 13);
             this.label6.TabIndex = 7;
@@ -224,9 +224,9 @@ namespace EnrollmentStation
             // 
             // nmPukRetries
             // 
-            this.nmPukRetries.Location = new System.Drawing.Point(385, 42);
+            this.nmPukRetries.Location = new System.Drawing.Point(384, 42);
             this.nmPukRetries.Maximum = new decimal(new int[] {
-            255,
+            127,
             0,
             0,
             0});
@@ -236,7 +236,7 @@ namespace EnrollmentStation
             0,
             0});
             this.nmPukRetries.Name = "nmPukRetries";
-            this.nmPukRetries.Size = new System.Drawing.Size(69, 20);
+            this.nmPukRetries.Size = new System.Drawing.Size(70, 20);
             this.nmPukRetries.TabIndex = 6;
             this.nmPukRetries.Value = new decimal(new int[] {
             3,
@@ -248,7 +248,7 @@ namespace EnrollmentStation
             // 
             this.nmPinRetries.Location = new System.Drawing.Point(216, 42);
             this.nmPinRetries.Maximum = new decimal(new int[] {
-            255,
+            127,
             0,
             0,
             0});
@@ -258,7 +258,7 @@ namespace EnrollmentStation
             0,
             0});
             this.nmPinRetries.Name = "nmPinRetries";
-            this.nmPinRetries.Size = new System.Drawing.Size(71, 20);
+            this.nmPinRetries.Size = new System.Drawing.Size(70, 20);
             this.nmPinRetries.TabIndex = 5;
             this.nmPinRetries.Value = new decimal(new int[] {
             3,
