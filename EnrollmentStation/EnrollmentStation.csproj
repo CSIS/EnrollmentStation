@@ -215,7 +215,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <PostBuildEvent>mkdir "$(SolutionDir)Compiled"
 del /S /Q "$(SolutionDir)Compiled\*"
 xcopy /S /F /Y "$(TargetDir)*" "$(SolutionDir)Compiled"
