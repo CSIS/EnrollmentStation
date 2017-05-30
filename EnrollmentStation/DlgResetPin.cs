@@ -11,10 +11,12 @@ namespace EnrollmentStation
 {
     public partial class DlgResetPin : Form
     {
+        private readonly Settings _settings;
         private EnrolledYubikey _yubikey;
 
-        public DlgResetPin(EnrolledYubikey key)
+        public DlgResetPin(Settings settings, EnrolledYubikey key)
         {
+            _settings = settings;
             _yubikey = key;
 
             if (_yubikey == null)
@@ -97,6 +99,12 @@ namespace EnrollmentStation
                 piv.BlockPin();
 
                 bool changed = piv.UnblockPin(_yubikey.PukKey, txtPinNew.Text);
+
+                // Change retries count
+                bool setRetries = piv.ChangePinPukRetries(_settings.PinRetries, _settings.PukRetries);
+
+                if (!setRetries)
+                    MessageBox.Show("Unable to set PIN/PUK try counts", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 if (changed)
                 {

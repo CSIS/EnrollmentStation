@@ -158,7 +158,7 @@ namespace EnrollmentStation
                     lblInsertedHasBeenEnrolled.Text = _dataStore.Search(serialNumber).Any().ToString();
                 }
 
-                using (var piv = YubikeyPivManager.Instance.OpenDevice(devName))
+                using (YubikeyPivDevice piv = YubikeyPivManager.Instance.OpenDevice(devName))
                 {
                     int remainingPin = piv.GetPinTriesLeft();
 
@@ -343,8 +343,10 @@ namespace EnrollmentStation
             if (item == null)
                 return;
 
-            DlgResetPin changePin = new DlgResetPin(item);
+            DlgResetPin changePin = new DlgResetPin(_settings, item);
             changePin.ShowDialog();
+
+            RefreshInsertedKey();
         }
 
         private void revokeToolStripMenuItem_Click_1(object sender, EventArgs e)
