@@ -95,18 +95,17 @@ namespace EnrollmentStation
                     return;
                 }
 
-                // Reset PIN
-                piv.BlockPin();
-
-                bool changed = piv.UnblockPin(_yubikey.PukKey, txtPinNew.Text);
-
                 // Change retries count
                 bool setRetries = piv.ChangePinPukRetries(_settings.PinRetries, _settings.PukRetries);
 
                 if (!setRetries)
                     MessageBox.Show("Unable to set PIN/PUK try counts", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                if (changed)
+                // Change PIN
+                bool changedPin = piv.ChangePin(YubikeyPivDevice.DefaultPin, txtPinNew.Text, out _);
+                bool changedPuk = piv.ChangePuk(YubikeyPivDevice.DefaultPuk, _yubikey.PukKey, out _);
+
+                if (changedPin && changedPuk)
                 {
                     MessageBox.Show("The PIN code has been reset.", "Success.", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
