@@ -283,19 +283,7 @@ namespace EnrollmentStation
 
                     _enrollWorker.ReportProgress(8);
 
-                    // 9 - Yubico: Change pin/puk retries
-                    bool setPinPukRetries = pivTool.ChangePinPukRetries(_settings.PinRetries, _settings.PukRetries);
-
-                    if (!setPinPukRetries)
-                    {
-                        doWorkEventArgs.Cancel = true;
-                        _enrollWorkerMessage = "Unable to set PIN and PUK retry counts";
-                        return;
-                    }
-
-                    _enrollWorker.ReportProgress(9);
-
-                    // 10 - Yubico: Set CHUID
+                    // 9 - Yubico: Set CHUID
                     bool setChuid = pivTool.SetCHUID(Guid.NewGuid(), out chuid);
 
                     if (!setChuid)
@@ -305,9 +293,9 @@ namespace EnrollmentStation
                         return;
                     }
 
-                    _enrollWorker.ReportProgress(10);
+                    _enrollWorker.ReportProgress(9);
 
-                    // 11 - Yubico: PIN
+                    // 10 - Yubico: PIN
                     int tmp;
                     bool setPin = pivTool.ChangePin(YubikeyPivDevice.DefaultPin, pin, out tmp);
 
@@ -318,15 +306,27 @@ namespace EnrollmentStation
                         return;
                     }
 
-                    _enrollWorker.ReportProgress(11);
+                    _enrollWorker.ReportProgress(10);
 
-                    // 12 - Yubico: PUK
+                    // 11 - Yubico: PUK
                     bool setPuk = pivTool.ChangePuk(YubikeyPivDevice.DefaultPuk, puk, out tmp);
 
                     if (!setPuk)
                     {
                         doWorkEventArgs.Cancel = true;
                         _enrollWorkerMessage = "Unable to set the PUK code";
+                        return;
+                    }
+
+                    _enrollWorker.ReportProgress(11);
+
+                    // 12 - Yubico: Change pin/puk retries
+                    bool setPinPukRetries = pivTool.ChangePinPukRetries(_settings.PinRetries, _settings.PukRetries);
+
+                    if (!setPinPukRetries)
+                    {
+                        doWorkEventArgs.Cancel = true;
+                        _enrollWorkerMessage = "Unable to set PIN and PUK retry counts";
                         return;
                     }
 
